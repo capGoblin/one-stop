@@ -423,7 +423,7 @@ const App: React.FC = () => {
   const [roomId, setRoomId] = useState<string>("");
 
   // const remoteStreamMS = new MediaStream();
-  const createPeerConnection = () => {
+  const createPeerConnection = async () => {
     const peerConnection = new RTCPeerConnection(iceServers);
 
     const remoteStream = new MediaStream();
@@ -502,7 +502,7 @@ const App: React.FC = () => {
     console.log(peerConnection);
     peerConnection.onicecandidate = sendIceCandidate;
 
-    addLocalTracks(peerConnection);
+    await addLocalTracks(peerConnection);
 
     setRtcPeerConnection(peerConnection); // Set it here
     return peerConnection;
@@ -705,7 +705,9 @@ const App: React.FC = () => {
                 sdpMLineIndex: event.label,
                 candidate: event.candidate,
               });
-              await peerConnection!
+              await (
+                await peerConnection!
+              )
                 .addIceCandidate(candidate)
                 .then(() => {
                   console.log("added IceCandidate at start_call for caller.");
@@ -723,7 +725,7 @@ const App: React.FC = () => {
                 sdpMLineIndex: event.label,
                 candidate: event.candidate,
               });
-              await peerConnection!.addIceCandidate(candidate);
+              await (await peerConnection!).addIceCandidate(candidate);
             }
           });
 
@@ -751,7 +753,9 @@ const App: React.FC = () => {
             console.log(peerConnection);
 
             if (isCaller) {
-              await peerConnection!
+              await (
+                await peerConnection!
+              )
                 .setRemoteDescription(new RTCSessionDescription(event))
                 .then(() => {
                   console.log("Remote description set successfully.");
@@ -774,7 +778,7 @@ const App: React.FC = () => {
             //   };
             // }
           });
-          await createOffer(peerConnection);
+          await createOffer(await peerConnection);
         }
       });
 
@@ -795,14 +799,16 @@ const App: React.FC = () => {
                 sdpMLineIndex: event.label,
                 candidate: event.candidate,
               });
-              await peerConnection!.addIceCandidate(candidate);
+              await (await peerConnection!).addIceCandidate(candidate);
             } else {
               console.log(isCaller);
               const candidate = new RTCIceCandidate({
                 sdpMLineIndex: event.label,
                 candidate: event.candidate,
               });
-              await peerConnection!
+              await (
+                await peerConnection!
+              )
                 .addIceCandidate(candidate)
                 .then(() => {
                   console.log("added IceCandidate at start_call for callee");
@@ -837,7 +843,9 @@ const App: React.FC = () => {
 
           // // pcCallee.ontrack = setRemoteMediaStream;
           // peerConnection.onicecandidate = sendIceCandidate;
-          await peerConnection
+          await (
+            await peerConnection
+          )
             .setRemoteDescription(new RTCSessionDescription(event))
             .then(() => {
               console.log("Remote description set successfully.");
@@ -846,7 +854,7 @@ const App: React.FC = () => {
             .catch((error) => {
               console.error("Error setting remote description:", error);
             });
-          await createAnswer(peerConnection);
+          await createAnswer(await peerConnection);
         }
       });
 
