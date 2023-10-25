@@ -399,8 +399,9 @@ const App: React.FC = () => {
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
 
-  // const [localStream, setLocalStream] = useState<MediaStream>();
-  let stream: MediaStream;
+  const [localStream, setLocalStream] = useState<MediaStream>();
+  const [remoteStream, setRemoteStream] = useState<MediaStream>();
+  // let stream: MediaStream;
   // let remoteStream: MediaStream;
   const [isCaller, setIsCaller] = useState<string>("");
   const [rtcPeerConnection, setRtcPeerConnection] =
@@ -426,6 +427,8 @@ const App: React.FC = () => {
     const peerConnection = new RTCPeerConnection(iceServers);
 
     const remoteStream = new MediaStream();
+
+    setRemoteStream(remoteStream);
     console.log(isCaller);
     console.log(remoteStream);
     if (remoteVideoRef.current) {
@@ -572,13 +575,14 @@ const App: React.FC = () => {
   const addLocalTracks = async (rtcPeerConnection: RTCPeerConnection) => {
     console.log(isCaller);
 
-    stream = await navigator.mediaDevices.getUserMedia({
+    const stream = await navigator.mediaDevices.getUserMedia({
       audio: true,
       video: true,
     });
+    setLocalStream(stream);
     console.log(stream);
     // setLocalStream(stream);
-    // console.log(localStream);
+    console.log(localStream);
     if (localVideoRef.current) {
       localVideoRef.current.srcObject = stream;
     }
