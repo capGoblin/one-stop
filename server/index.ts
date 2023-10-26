@@ -50,7 +50,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175"],
   },
 });
 
@@ -63,6 +63,8 @@ io.on("connection", (socket) => {
     const selectedRoom = io.sockets.adapter.rooms.get(roomId);
     const numberOfClients = selectedRoom ? selectedRoom.size : 0;
 
+
+    
     if (numberOfClients === 0) {
       console.log(
         `Creating room ${roomId} and emitting room_created socket event by ${socket.id}`
@@ -80,7 +82,12 @@ io.on("connection", (socket) => {
       socket.emit("full_room", roomId);
     }
   });
-
+  
+  socket.on('leaveRoom', (roomId) => {
+    socket.leave(roomId);
+    // Broadcast to others in the same room that this user left
+    socket.to(roomId).emit('userLeft', socket.id);
+  });
   socket.on("start_call", (roomId: string, isCaller: string) => {
     console.log(`Broadcasting start_call event to peers in room ${roomId}`);
     socket.broadcast.to(roomId).to(isCaller).emit("start_call");

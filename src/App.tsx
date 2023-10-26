@@ -518,15 +518,36 @@ const App: React.FC = () => {
       setRoomId(room);
       socket.emit("join", room);
 
-      // if (isCaller) {
-      //   const peerConnection = createPeerConnection(); // Create and set RTC peer connection
-      //   addLocalTracks(peerConnection);
-      //   createOffer(peerConnection);
-      // }
-
       showVideoConference();
     }
   };
+
+  const disconnectRoom = () => {
+    console.log(rtcPeerConnection);
+    console.log(localStream);
+    if (rtcPeerConnection) {
+      rtcPeerConnection.close();
+    }
+  
+    // Stop the local stream if it exists.
+    if (localStream) {
+      localStream.getTracks().forEach((track) => track.stop());
+    }
+
+
+    socket.emit('leaveRoom', roomId);
+
+
+
+    const remoteVideo = remoteVideoRef.current;
+    if (remoteVideo) {
+      remoteVideo.srcObject = null;
+    }
+    const localVideo = localVideoRef.current;
+    if (localVideo) {
+      localVideo.srcObject = null;
+    }
+  }
 
   const showVideoConference = () => {
     if (roomInputRef.current) {
@@ -688,6 +709,16 @@ const App: React.FC = () => {
       socket.on("full_room", () => {
         console.log("Socket event callback: full_room");
         alert("The room is full, please try another one");
+      });
+
+      socket.on('userLeft', (userId) => {
+        // Remove the video element for the user who left
+        if (userId) {
+          const remoteVideo = remoteVideoRef.current;
+          if (remoteVideo) {
+            remoteVideo.srcObject = null;
+          }
+        }
       });
 
       socket.on("start_call", async () => {
@@ -910,6 +941,8 @@ const App: React.FC = () => {
     }
   }, [isCaller, roomId, socket, rtcPeerConnection]);
 
+
+
   return (
     <div>
       <div>
@@ -932,6 +965,7 @@ const App: React.FC = () => {
             playsInline
             style={{ border: "1px solid red" }}
           ></video>
+          <button onClick={disconnectRoom}>Leave</button>
         </div>
       </div>
     </div>
