@@ -59,6 +59,10 @@ app.use("/", express.static("public"));
 io.on("connection", (socket) => {
   console.log(`${socket.id} user connected`);
 
+
+  const TotalRooms = new Map<string, string[]>();
+
+
   socket.on("join", async (roomId: string) => {
     const selectedRoom = io.sockets.adapter.rooms.get(roomId);
     const numberOfClients = selectedRoom ? selectedRoom.size : 0;
@@ -70,12 +74,29 @@ io.on("connection", (socket) => {
         `Creating room ${roomId} and emitting room_created socket event by ${socket.id}`
       );
       await socket.join(roomId);
+
+
+
+      
+      if (!TotalRooms.has(roomId)) {
+        TotalRooms.set(roomId, []);
+      }
+      TotalRooms.get(roomId)!.push(socket.id); 
+      
+
+
+
+
       socket.emit("room_created", roomId);
     } else if (numberOfClients === 1) {
       console.log(
         `Joining room ${roomId} and emitting room_joined socket event by ${socket.id}`
       );
       await socket.join(roomId);
+
+      TotalRooms.get(roomId)?.push(socket.id); 
+
+
       socket.emit("room_joined", roomId);
     } else {
       console.log(`Can't join room ${roomId}, emitting full_room socket event`);
@@ -85,12 +106,19 @@ io.on("connection", (socket) => {
   
   socket.on('leaveRoom', (roomId) => {
     socket.leave(roomId);
+
+    const array = TotalRooms.get(roomId);
+    const index = array?.indexOf(socket.id);
+    if (index !== -1) array?.splice(index as number, 1);
+
+
+    
     // Broadcast to others in the same room that this user left
     socket.to(roomId).emit('userLeft', socket.id);
   });
-  socket.on("start_call", (roomId: string, isCaller: string) => {
+  socket.on("start_call", (roomId: string, callerId: string) => {
     console.log(`Broadcasting start_call event to peers in room ${roomId}`);
-    socket.broadcast.to(roomId).to(isCaller).emit("start_call");
+    socket.broadcast.to(roomId).emit("start_call", callerId);
   });
 
   socket.on("webrtc_offer", (event: { roomId: string; sdp: string }) => {
@@ -100,11 +128,11 @@ io.on("connection", (socket) => {
     socket.broadcast.to(event.roomId).emit("webrtc_offer", event.sdp);
   });
 
-  socket.on("webrtc_answer", (event: { roomId: string; sdp: string }) => {
+  socket.on("webrtc_answer", (event: { roomId: string; sdp: string , isCaller: string }) => {
     console.log(
       `Broadcasting webrtc_answer event to peers in room ${event.roomId}`
     );
-    socket.broadcast.to(event.roomId).emit("webrtc_answer", event.sdp);
+    socket.broadcast.to(event.roomId).to(event.isCaller).emit("webrtc_answer", event.sdp);
   });
 
   socket.on(
