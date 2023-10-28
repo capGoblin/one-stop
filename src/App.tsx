@@ -27,13 +27,9 @@ const App: React.FC = () => {
       { urls: "stun:stun4.l.google.com:19302" },
     ],
   };
-  // const pcCaller = new RTCPeerConnection(iceServers);
-  // const pcCallee = new RTCPeerConnection(iceServers);
-  // console.log(pcCaller);
-  // console.log(pcCallee);
+
   const [roomId, setRoomId] = useState<string>("");
 
-  // const remoteStreamMS = new MediaStream();
   const createPeerConnection = async () => {
     const peerConnection = new RTCPeerConnection(iceServers);
 
@@ -53,14 +49,11 @@ const App: React.FC = () => {
     peerConnection.ontrack = (event) => {
       console.log("ontrack event triggered.");
 
-      // Add remote tracks to the remoteStream
       event.streams[0].getTracks().forEach((track) => {
         remoteStream.addTrack(track);
       });
 
-      // Ensure that remoteVideoRef has a reference
       if (remoteVideoRef.current) {
-        // Set the srcObject of the remote video element
         remoteVideoRef.current.srcObject = remoteStream;
       } else {
         console.log(
@@ -70,52 +63,13 @@ const App: React.FC = () => {
     };
 
     console.log(peerConnection);
-    // peerConnection.ontrack = (event) => {
-    //   if (remoteVideoRef.current) {
-    //     console.log(remoteVideoRef.current.srcObject);
-    //     remoteVideoRef.current.srcObject = event.streams[0];
-    //   } else {
-    //     if (remoteVideoRef.current) console.log(remoteVideoRef.current);
-    //     console.log("remoteVideoRef is null why????");
-    //   }
-    // };
-
-    // remoteStream = new MediaStream();
-    // console.log(callerId);
-    // console.log(remoteStream);
-    // if (remoteVideoRef.current) {
-    //   console.log(remoteVideoRef.current.srcObject);
-    //   remoteVideoRef.current.srcObject = remoteStream;
-    //   console.log(remoteVideoRef.current.srcObject);
-    // } else {
-    //   if (remoteVideoRef.current) console.log(remoteVideoRef.current);
-    //   console.log("remoteVideoRef is null why????");
-    // }
-    // peerConnection.ontrack = (event) => {
-    //   console.log("ontrack event triggered.");
-
-    //   // Add remote tracks to the remoteStream
-    //   event.streams[0].getTracks().forEach((track) => {
-    //     remoteStream.addTrack(track);
-    //   });
-
-    //   // Ensure that remoteVideoRef has a reference
-    //   if (remoteVideoRef.current) {
-    //     // Set the srcObject of the remote video element
-    //     remoteVideoRef.current.srcObject = remoteStream;
-    //   } else {
-    //     console.log(
-    //       "remoteVideoRef is null. The reference might not be properly set."
-    //     );
-    //   }
-    // };
-
+  
     console.log(peerConnection);
     peerConnection.onicecandidate = sendIceCandidate;
 
     await addLocalTracks(peerConnection);
 
-    setRtcPeerConnection(peerConnection); // Set it here
+    setRtcPeerConnection(peerConnection);
     return peerConnection;
   };
 
@@ -140,7 +94,6 @@ const App: React.FC = () => {
       rtcPeerConnection.close();
     }
   
-    // Stop the local stream if it exists.
     if (localStream) {
       localStream.getTracks().forEach((track) => track.stop());
     }
@@ -173,37 +126,7 @@ const App: React.FC = () => {
       remoteVideoRef.current.style.display = "block";
     }
   };
-
-  // const setLocalMediaStream = async (constraints: MediaStreamConstraints) => {
-  //   try {
-  //     console.log(callerId);
-  //     stream = await navigator.mediaDevices.getUserMedia(constraints);
-  //     console.log(stream);
-  //     // setLocalStream(stream);
-  //     // console.log(localStream);
-  //     if (localVideoRef.current) {
-  //       localVideoRef.current.srcObject = stream;
-  //     }
-  //     console.log(localVideoRef);
-  //   } catch (error) {
-  //     console.error("Could not get user media", error);
-  //   }
-  // };
-
-  // const setRemoteMediaStream = (event: RTCTrackEvent) => {
-
-  //   console.log(callerId);
-  //   event.streams[0].getTracks().forEach((track) => {
-  //     remoteStream.addTrack(track);
-  //   });
-  //   // if (remoteVideoRef.current) {
-  //   //   console.log(remoteVideoRef.current.srcObject);
-  //   // } else {
-  //   //   if (remoteVideoRef.current) console.log(remoteVideoRef.current);
-  //   //   console.log("remoteVideoRef is null why????");
-  //   // }
-  // };
-
+  
   const addLocalTracks = async (rtcPeerConnection: RTCPeerConnection) => {
     console.log(callerId);
 
@@ -220,7 +143,6 @@ const App: React.FC = () => {
     }
 
     stream.getTracks().forEach((track) => {
-      // callee doesn't add tracks
       rtcPeerConnection.addTrack(track, stream as MediaStream);
 
       const addedTracks = rtcPeerConnection
@@ -229,7 +151,7 @@ const App: React.FC = () => {
       if (addedTracks.length > 0) {
         console.log("Tracks added to the RTCPeerConnection:");
         addedTracks.forEach((track) => {
-          console.log(track?.kind); // "audio" or "video"
+          console.log(track?.kind);
         });
       } else {
         console.log("No tracks added to the RTCPeerConnection.");
@@ -299,10 +221,7 @@ const App: React.FC = () => {
       socket.on("room_created", async () => {
         console.log("Socket event callback: room_created");
         console.log(callerId);
-        // await setLocalMediaStream({
-        //   audio: true,
-        //   video: true,
-        // });
+
         callerIdRef.current = socket.id;
         console.log(callerIdRef.current)
         callerId = callerIdRef.current;
@@ -313,10 +232,7 @@ const App: React.FC = () => {
       socket.on("room_joined", async () => {
         console.log("Socket event callback: room_joined");
         console.log(callerId);
-        // await setLocalMediaStream({
-        //   audio: true,
-        //   video: true,
-        // });
+
         socket.emit("start_call", roomId, callerId);
         console.log(callerId);
       });
@@ -345,7 +261,6 @@ const App: React.FC = () => {
           socket.on("webrtc_ice_candidate", async (event) => {
             console.log("Socket event callback: webrtc_ice_candidate");
 
-            // if (callerId) {
               console.log(callerId);
               const candidate = new RTCIceCandidate({
                 sdpMLineIndex: event.label,
@@ -357,7 +272,6 @@ const App: React.FC = () => {
                 .addIceCandidate(candidate)
                 .then(() => {
                   console.log("added IceCandidate at start_call for caller.");
-                  // Add any additional handling here if needed
                 })
                 .catch((error) => {
                   console.error(
@@ -365,71 +279,32 @@ const App: React.FC = () => {
                     error
                   );
                 });
-            // } else {
-            //   console.log(callerId);
-            //   const candidate = new RTCIceCandidate({
-            //     sdpMLineIndex: event.label,
-            //     candidate: event.candidate,
-            //   });
-            //   await (await peerConnection!).addIceCandidate(candidate);
-            // }
           });
 
           const peerConnection = createPeerConnection();
-          // const peerConnection = new RTCPeerConnection(iceServers);
           console.log(peerConnection);
-          // setRtcPeerConnection(peerConnection);
           console.log(rtcPeerConnection);
-
-          // addLocalTracks(peerConnection);
-
-          // peerConnection.ontrack = (event) => {
-          //   if (remoteVideoRef.current) {
-          //     remoteVideoRef.current.srcObject = event.streams[0];
-          //   }
-
-          //   console.log(remoteVideoRef);
-          //   console.log(event.streams[0]);
-          // };
           console.log(callerId);
-          // peerConnection.onicecandidate = sendIceCandidate;
           console.log(peerConnection);
           socket.on("webrtc_answer", async (event) => {
             console.log("Socket event callback: webrtc_answer");
             console.log(peerConnection);
-
-            if (callerId) {
               await (
                 await peerConnection!
               )
                 .setRemoteDescription(new RTCSessionDescription(event))
                 .then(() => {
                   console.log("Remote description set successfully.");
-                  // Add any additional handling here if needed
                 })
                 .catch((error) => {
                   console.error("Error setting Remote description :", error);
                 });
               console.log(callerId);
-            }
-            // if (callerId) {
-            //   console.log(callerId);
-            //   pcCaller.ontrack = (event) => {
-            //     if (remoteVideoRef.current) {
-            //       remoteVideoRef.current.srcObject = event.streams[0];
-            //     }
-
-            //     console.log(remoteVideoRef);
-            //     console.log(event.streams[0]);
-            //   };
-            // }
           });
           await createOffer(await peerConnection);
         }
       });
 
-      // callee listens for offer and emits answer back to caller
-      // <-
       socket.on("webrtc_offer", async (event) => {
         console.log("Socket event callback: webrtc_offer");
         console.log(callerId);
@@ -438,15 +313,6 @@ const App: React.FC = () => {
 
           socket.on("webrtc_ice_candidate", async (event) => {
             console.log("Socket event callback: webrtc_ice_candidate");
-
-            // if (callerId) {
-            //   console.log(callerId);
-            //   const candidate = new RTCIceCandidate({
-            //     sdpMLineIndex: event.label,
-            //     candidate: event.candidate,
-            //   });
-            //   await (await peerConnection!).addIceCandidate(candidate);
-            // } else {
               console.log(callerId);
               const candidate = new RTCIceCandidate({
                 sdpMLineIndex: event.label,
@@ -458,7 +324,6 @@ const App: React.FC = () => {
                 .addIceCandidate(candidate)
                 .then(() => {
                   console.log("added IceCandidate at start_call for callee");
-                  // Add any additional handling here if needed
                 })
                 .catch((error) => {
                   console.error(
@@ -466,36 +331,18 @@ const App: React.FC = () => {
                     error
                   );
                 });
-            // }
           });
 
           const peerConnection = createPeerConnection();
 
-          // const peerConnection = new RTCPeerConnection(iceServers);
           console.log(peerConnection);
-          // setRtcPeerConnection(peerConnection);
           console.log(peerConnection);
-
-          // addLocalTracks(peerConnection);
-
-          // peerConnection.ontrack = (event) => {
-          //   if (remoteVideoRef.current) {
-          //     remoteVideoRef.current.srcObject = event.streams[0];
-          //   }
-
-          //   console.log(remoteVideoRef);
-          //   console.log(event.streams[0]);
-          // };
-
-          // // pcCallee.ontrack = setRemoteMediaStream;
-          // peerConnection.onicecandidate = sendIceCandidate;
           await (
             await peerConnection
           )
             .setRemoteDescription(new RTCSessionDescription(event))
             .then(() => {
               console.log("Remote description set successfully.");
-              // Add any additional handling here if needed
             })
             .catch((error) => {
               console.error("Error setting remote description:", error);
@@ -503,56 +350,6 @@ const App: React.FC = () => {
           await createAnswer(await peerConnection);
         }
       });
-
-      // caller listens for the answer from callee
-      // .<-
-      // socket.on("webrtc_answer", async (event) => {
-      //   console.log("Socket event callback: webrtc_answer");
-
-      //   if (callerId) {
-      //     await rtcPeerConnection!
-      //       .setRemoteDescription(new RTCSessionDescription(event))
-      //       .then(() => {
-      //         console.log("Remote description set successfully.");
-      //         // Add any additional handling here if needed
-      //       })
-      //       .catch((error) => {
-      //         console.error("Error setting remote description:", error);
-      //       });
-      //     console.log(callerId);
-      //   }
-      //   // if (callerId) {
-      //   //   console.log(callerId);
-      //   //   pcCaller.ontrack = (event) => {
-      //   //     if (remoteVideoRef.current) {
-      //   //       remoteVideoRef.current.srcObject = event.streams[0];
-      //   //     }
-
-      //   //     console.log(remoteVideoRef);
-      //   //     console.log(event.streams[0]);
-      //   //   };
-      //   // }
-      // });
-
-      // socket.on("webrtc_ice_candidate", async (event) => {
-      //   console.log("Socket event callback: webrtc_ice_candidate");
-
-      //   if (callerId) {
-      //     console.log(callerId);
-      //     const candidate = new RTCIceCandidate({
-      //       sdpMLineIndex: event.label,
-      //       candidate: event.candidate,
-      //     });
-      //     await rtcPeerConnection!.addIceCandidate(candidate);
-      //   } else {
-      //     console.log(callerId);
-      //     const candidate = new RTCIceCandidate({
-      //       sdpMLineIndex: event.label,
-      //       candidate: event.candidate,
-      //     });
-      //     await rtcPeerConnection!.addIceCandidate(candidate);
-      //   }
-      // });
     }
   }, [roomId, socket, rtcPeerConnection]);
 
