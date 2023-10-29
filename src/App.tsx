@@ -12,9 +12,7 @@ const App: React.FC = () => {
 
   const [localStream, setLocalStream] = useState<MediaStream>();
   const [remoteStream, setRemoteStream] = useState<MediaStream>();
-  // let stream: MediaStream;
-  // let remoteStream: MediaStream;
-  // const [callerId, setIsCaller] = useState<string>("");
+
   const [rtcPeerConnection, setRtcPeerConnection] =
     useState<RTCPeerConnection>();
 
@@ -63,7 +61,7 @@ const App: React.FC = () => {
     };
 
     console.log(peerConnection);
-  
+
     console.log(peerConnection);
     peerConnection.onicecandidate = sendIceCandidate;
 
@@ -93,15 +91,12 @@ const App: React.FC = () => {
     if (rtcPeerConnection) {
       rtcPeerConnection.close();
     }
-  
+
     if (localStream) {
       localStream.getTracks().forEach((track) => track.stop());
     }
 
-
-    socket.emit('leaveRoom', roomId);
-
-
+    socket.emit("leaveRoom", roomId);
 
     const remoteVideo = remoteVideoRef.current;
     if (remoteVideo) {
@@ -111,7 +106,7 @@ const App: React.FC = () => {
     if (localVideo) {
       localVideo.srcObject = null;
     }
-  }
+  };
 
   const showVideoConference = () => {
     if (roomInputRef.current) {
@@ -126,7 +121,7 @@ const App: React.FC = () => {
       remoteVideoRef.current.style.display = "block";
     }
   };
-  
+
   const addLocalTracks = async (rtcPeerConnection: RTCPeerConnection) => {
     console.log(callerId);
 
@@ -192,7 +187,7 @@ const App: React.FC = () => {
         type: "webrtc_answer",
         sdp: sessionDescription,
         roomId,
-        callerId
+        callerId,
       });
       console.log(callerId);
       console.log(rtcPeerConnection);
@@ -223,7 +218,7 @@ const App: React.FC = () => {
         console.log(callerId);
 
         callerIdRef.current = socket.id;
-        console.log(callerIdRef.current)
+        console.log(callerIdRef.current);
         callerId = callerIdRef.current;
         // setIsCaller(socket.id);
         console.log(callerId);
@@ -242,7 +237,7 @@ const App: React.FC = () => {
         alert("The room is full, please try another one");
       });
 
-      socket.on('userLeft', (userId) => {
+      socket.on("userLeft", (userId) => {
         // Remove the video element for the user who left
         if (userId) {
           const remoteVideo = remoteVideoRef.current;
@@ -261,24 +256,24 @@ const App: React.FC = () => {
           socket.on("webrtc_ice_candidate", async (event) => {
             console.log("Socket event callback: webrtc_ice_candidate");
 
-              console.log(callerId);
-              const candidate = new RTCIceCandidate({
-                sdpMLineIndex: event.label,
-                candidate: event.candidate,
+            console.log(callerId);
+            const candidate = new RTCIceCandidate({
+              sdpMLineIndex: event.label,
+              candidate: event.candidate,
+            });
+            await (
+              await peerConnection!
+            )
+              .addIceCandidate(candidate)
+              .then(() => {
+                console.log("added IceCandidate at start_call for caller.");
+              })
+              .catch((error) => {
+                console.error(
+                  "Error adding IceCandidate at start_call for caller",
+                  error
+                );
               });
-              await (
-                await peerConnection!
-              )
-                .addIceCandidate(candidate)
-                .then(() => {
-                  console.log("added IceCandidate at start_call for caller.");
-                })
-                .catch((error) => {
-                  console.error(
-                    "Error adding IceCandidate at start_call for caller",
-                    error
-                  );
-                });
           });
 
           const peerConnection = createPeerConnection();
@@ -289,17 +284,17 @@ const App: React.FC = () => {
           socket.on("webrtc_answer", async (event) => {
             console.log("Socket event callback: webrtc_answer");
             console.log(peerConnection);
-              await (
-                await peerConnection!
-              )
-                .setRemoteDescription(new RTCSessionDescription(event))
-                .then(() => {
-                  console.log("Remote description set successfully.");
-                })
-                .catch((error) => {
-                  console.error("Error setting Remote description :", error);
-                });
-              console.log(callerId);
+            await (
+              await peerConnection!
+            )
+              .setRemoteDescription(new RTCSessionDescription(event))
+              .then(() => {
+                console.log("Remote description set successfully.");
+              })
+              .catch((error) => {
+                console.error("Error setting Remote description :", error);
+              });
+            console.log(callerId);
           });
           await createOffer(await peerConnection);
         }
@@ -313,24 +308,24 @@ const App: React.FC = () => {
 
           socket.on("webrtc_ice_candidate", async (event) => {
             console.log("Socket event callback: webrtc_ice_candidate");
-              console.log(callerId);
-              const candidate = new RTCIceCandidate({
-                sdpMLineIndex: event.label,
-                candidate: event.candidate,
+            console.log(callerId);
+            const candidate = new RTCIceCandidate({
+              sdpMLineIndex: event.label,
+              candidate: event.candidate,
+            });
+            await (
+              await peerConnection!
+            )
+              .addIceCandidate(candidate)
+              .then(() => {
+                console.log("added IceCandidate at start_call for callee");
+              })
+              .catch((error) => {
+                console.error(
+                  "Error adding IceCandidate at start_call for callee:",
+                  error
+                );
               });
-              await (
-                await peerConnection!
-              )
-                .addIceCandidate(candidate)
-                .then(() => {
-                  console.log("added IceCandidate at start_call for callee");
-                })
-                .catch((error) => {
-                  console.error(
-                    "Error adding IceCandidate at start_call for callee:",
-                    error
-                  );
-                });
           });
 
           const peerConnection = createPeerConnection();
@@ -352,8 +347,6 @@ const App: React.FC = () => {
       });
     }
   }, [roomId, socket, rtcPeerConnection]);
-
-
 
   return (
     <div>
