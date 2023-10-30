@@ -158,10 +158,7 @@ const App: React.FC = () => {
 
   const createOffer = async (rtcPeerConnection: RTCPeerConnection) => {
     try {
-      const sessionDescription = await rtcPeerConnection.createOffer({
-        offerToReceiveVideo: true,
-        offerToReceiveAudio: true,
-      });
+      const sessionDescription = await rtcPeerConnection.createOffer();
       console.log(callerId);
       console.log(sessionDescription);
       await rtcPeerConnection.setLocalDescription(sessionDescription);
