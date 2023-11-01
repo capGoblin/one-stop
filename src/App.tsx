@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
-import io, { Socket } from "socket.io-client";
+import React, { useEffect, useRef, useState } from "react";
+import io from "socket.io-client";
+import TextEditor from "./components/TextEditor.tsx";
 
 const socket = io("http://localhost:3000");
 
@@ -55,7 +56,7 @@ const App: React.FC = () => {
         remoteVideoRef.current.srcObject = remoteStream;
       } else {
         console.log(
-          "remoteVideoRef is null. The reference might not be properly set."
+          "remoteVideoRef is null. The reference might not be properly set.",
         );
       }
     };
@@ -106,6 +107,8 @@ const App: React.FC = () => {
     if (localVideo) {
       localVideo.srcObject = null;
     }
+
+    socket.disconnect();
   };
 
   const showVideoConference = () => {
@@ -268,7 +271,7 @@ const App: React.FC = () => {
               .catch((error) => {
                 console.error(
                   "Error adding IceCandidate at start_call for caller",
-                  error
+                  error,
                 );
               });
           });
@@ -320,7 +323,7 @@ const App: React.FC = () => {
               .catch((error) => {
                 console.error(
                   "Error adding IceCandidate at start_call for callee:",
-                  error
+                  error,
                 );
               });
           });
@@ -359,15 +362,20 @@ const App: React.FC = () => {
             autoPlay
             playsInline
             muted
-            style={{ border: "1px solid green" }}
+            style={{
+              height: "200px",
+              width: "200px",
+              border: "1px solid green",
+            }}
           ></video>
           <video
             ref={remoteVideoRef}
             autoPlay
             playsInline
-            style={{ border: "1px solid red" }}
+            style={{ height: "200px", width: "200px", border: "1px solid red" }}
           ></video>
           <button onClick={disconnectRoom}>Leave</button>
+          <TextEditor roomId={roomId} />
         </div>
       </div>
     </div>
