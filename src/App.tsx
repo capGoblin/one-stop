@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
-import TextEditor from "./components/TextEditor.tsx";
+import Draw from "./components/Draw.tsx";
 
 const socket = io("http://localhost:3000");
 
@@ -246,138 +246,139 @@ const App: React.FC = () => {
           }
         }
       });
-
-      socket.on("start_call", async () => {
-        console.log("Socket event callback: start_call");
-        console.log(callerId);
-        if (callerId) {
-          console.log(callerId);
-
-          socket.on("webrtc_ice_candidate", async (event) => {
-            console.log("Socket event callback: webrtc_ice_candidate");
-
-            console.log(callerId);
-            const candidate = new RTCIceCandidate({
-              sdpMLineIndex: event.label,
-              candidate: event.candidate,
-            });
-            await (
-              await peerConnection!
-            )
-              .addIceCandidate(candidate)
-              .then(() => {
-                console.log("added IceCandidate at start_call for caller.");
-              })
-              .catch((error) => {
-                console.error(
-                  "Error adding IceCandidate at start_call for caller",
-                  error,
-                );
-              });
-          });
-
-          const peerConnection = createPeerConnection();
-          console.log(peerConnection);
-          console.log(rtcPeerConnection);
-          console.log(callerId);
-          console.log(peerConnection);
-          socket.on("webrtc_answer", async (event) => {
-            console.log("Socket event callback: webrtc_answer");
-            console.log(peerConnection);
-            await (
-              await peerConnection!
-            )
-              .setRemoteDescription(new RTCSessionDescription(event))
-              .then(() => {
-                console.log("Remote description set successfully.");
-              })
-              .catch((error) => {
-                console.error("Error setting Remote description :", error);
-              });
-            console.log(callerId);
-          });
-          await createOffer(await peerConnection);
-        }
-      });
-
-      socket.on("webrtc_offer", async (event) => {
-        console.log("Socket event callback: webrtc_offer");
-        console.log(callerId);
-        if (!callerId) {
-          console.log(callerId);
-
-          socket.on("webrtc_ice_candidate", async (event) => {
-            console.log("Socket event callback: webrtc_ice_candidate");
-            console.log(callerId);
-            const candidate = new RTCIceCandidate({
-              sdpMLineIndex: event.label,
-              candidate: event.candidate,
-            });
-            await (
-              await peerConnection!
-            )
-              .addIceCandidate(candidate)
-              .then(() => {
-                console.log("added IceCandidate at start_call for callee");
-              })
-              .catch((error) => {
-                console.error(
-                  "Error adding IceCandidate at start_call for callee:",
-                  error,
-                );
-              });
-          });
-
-          const peerConnection = createPeerConnection();
-
-          console.log(peerConnection);
-          console.log(peerConnection);
-          await (
-            await peerConnection
-          )
-            .setRemoteDescription(new RTCSessionDescription(event))
-            .then(() => {
-              console.log("Remote description set successfully.");
-            })
-            .catch((error) => {
-              console.error("Error setting remote description:", error);
-            });
-          await createAnswer(await peerConnection);
-        }
-      });
+      //
+      // socket.on("start_call", async () => {
+      //   console.log("Socket event callback: start_call");
+      //   console.log(callerId);
+      //   if (callerId) {
+      //     console.log(callerId);
+      //
+      //     socket.on("webrtc_ice_candidate", async (event) => {
+      //       console.log("Socket event callback: webrtc_ice_candidate");
+      //
+      //       console.log(callerId);
+      //       const candidate = new RTCIceCandidate({
+      //         sdpMLineIndex: event.label,
+      //         candidate: event.candidate,
+      //       });
+      //       await (
+      //         await peerConnection!
+      //       )
+      //         .addIceCandidate(candidate)
+      //         .then(() => {
+      //           console.log("added IceCandidate at start_call for caller.");
+      //         })
+      //         .catch((error) => {
+      //           console.error(
+      //             "Error adding IceCandidate at start_call for caller",
+      //             error,
+      //           );
+      //         });
+      //     });
+      //
+      //     const peerConnection = createPeerConnection();
+      //     console.log(peerConnection);
+      //     console.log(rtcPeerConnection);
+      //     console.log(callerId);
+      //     console.log(peerConnection);
+      //     socket.on("webrtc_answer", async (event) => {
+      //       console.log("Socket event callback: webrtc_answer");
+      //       console.log(peerConnection);
+      //       await (
+      //         await peerConnection!
+      //       )
+      //         .setRemoteDescription(new RTCSessionDescription(event))
+      //         .then(() => {
+      //           console.log("Remote description set successfully.");
+      //         })
+      //         .catch((error) => {
+      //           console.error("Error setting Remote description :", error);
+      //         });
+      //       console.log(callerId);
+      //     });
+      //     await createOffer(await peerConnection);
+      //   }
+      // });
+      //
+      // socket.on("webrtc_offer", async (event) => {
+      //   console.log("Socket event callback: webrtc_offer");
+      //   console.log(callerId);
+      //   if (!callerId) {
+      //     console.log(callerId);
+      //
+      //     socket.on("webrtc_ice_candidate", async (event) => {
+      //       console.log("Socket event callback: webrtc_ice_candidate");
+      //       console.log(callerId);
+      //       const candidate = new RTCIceCandidate({
+      //         sdpMLineIndex: event.label,
+      //         candidate: event.candidate,
+      //       });
+      //       await (
+      //         await peerConnection!
+      //       )
+      //         .addIceCandidate(candidate)
+      //         .then(() => {
+      //           console.log("added IceCandidate at start_call for callee");
+      //         })
+      //         .catch((error) => {
+      //           console.error(
+      //             "Error adding IceCandidate at start_call for callee:",
+      //             error,
+      //           );
+      //         });
+      //     });
+      //
+      //     const peerConnection = createPeerConnection();
+      //
+      //     console.log(peerConnection);
+      //     console.log(peerConnection);
+      //     await (
+      //       await peerConnection
+      //     )
+      //       .setRemoteDescription(new RTCSessionDescription(event))
+      //       .then(() => {
+      //         console.log("Remote description set successfully.");
+      //       })
+      //       .catch((error) => {
+      //         console.error("Error setting remote description:", error);
+      //       });
+      //     await createAnswer(await peerConnection);
+      //   }
+      // });
     }
   }, [roomId, socket, rtcPeerConnection]);
 
   return (
     <div>
-      <div>
-        <label>Room ID: </label>
-        <input type="text" ref={roomInputRef} />
-        <button onClick={joinRoom}>Connect</button>
-      </div>
-      <div>
-        <div>
-          <video
-            ref={localVideoRef}
-            autoPlay
-            playsInline
-            muted
-            style={{
-              height: "200px",
-              width: "200px",
-              border: "1px solid green",
-            }}
-          ></video>
-          <video
-            ref={remoteVideoRef}
-            autoPlay
-            playsInline
-            style={{ height: "200px", width: "200px", border: "1px solid red" }}
-          ></video>
-          <button onClick={disconnectRoom}>Leave</button>
-          <TextEditor roomId={roomId} />
-        </div>
-      </div>
+      {/*<div>*/}
+      {/*  <label>Room ID: </label>*/}
+      {/*  <input type="text" ref={roomInputRef} />*/}
+      {/*  <button onClick={joinRoom}>Connect</button>*/}
+      {/*</div>*/}
+      {/*<div>*/}
+      {/*  <div>*/}
+      {/*    <video*/}
+      {/*      ref={localVideoRef}*/}
+      {/*      autoPlay*/}
+      {/*      playsInline*/}
+      {/*      muted*/}
+      {/*      style={{*/}
+      {/*        height: "200px",*/}
+      {/*        width: "200px",*/}
+      {/*        border: "1px solid green",*/}
+      {/*      }}*/}
+      {/*    ></video>*/}
+      {/*    <video*/}
+      {/*      ref={remoteVideoRef}*/}
+      {/*      autoPlay*/}
+      {/*      playsInline*/}
+      {/*      style={{ height: "200px", width: "200px", border: "1px solid red" }}*/}
+      {/*    ></video>*/}
+      {/*    <button onClick={disconnectRoom}>Leave</button>*/}
+      {/*<TextEditor roomId={roomId} />*/}
+      <Draw />
+      {/*  </div>*/}
+      {/*</div>*/}
     </div>
   );
 };
