@@ -48,7 +48,7 @@ function TextEditor({ roomId }: Props) {
         quillRef.current.getEditor().updateContents(delta);
       }
 
-      console.log(quillRef.current.getEditor());
+      console.log(quillRef.current!.getEditor());
     });
   }, [quillRef, socket]);
 

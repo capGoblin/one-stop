@@ -196,7 +196,7 @@ function Draw() {
               setExcalidrawAPI(api as ExcalidrawImperativeAPI | undefined);
             }
           }}
-          onChange={throttle(handleDataChange, 3000)}
+          onChange={throttle(handleDataChange, 4000)}
           renderTopRightUI={() => (
             <LiveCollaborationTrigger
               isCollaborating={false}
