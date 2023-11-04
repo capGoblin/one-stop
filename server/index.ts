@@ -16,10 +16,6 @@ const io = new Server(server, {
 });
 
 app.use("/", express.static("public"));
-// io.on("connection", (socket) => {
-//
-// });
-
 io.on("connection", (socket) => {
   console.log(`${socket.id} user connected`);
   let thisRoomId;

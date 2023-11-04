@@ -112,7 +112,7 @@
 // export default Draw;
 
 import React, { useEffect, useRef, useState } from "react";
-import { Excalidraw, LiveCollaborationTrigger } from "@excalidraw/excalidraw";
+import { Excalidraw } from "@excalidraw/excalidraw";
 import { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types/types";
 import io, { Socket } from "socket.io-client";
 import { ExcalidrawElement } from "@excalidraw/excalidraw/types/element/types";
@@ -137,15 +137,23 @@ function Draw() {
   }, []);
 
   useEffect(() => {
+    if (!excalidrawAPI) {
+      return;
+    }
+    // to open the library sidebar
+    excalidrawAPI.updateScene({ appState: { openSidebar: "library" } });
+  }, [excalidrawAPI]);
+  useEffect(() => {
     if (socket) {
       socket.on("receive-data", (data) => {
         if (excalidrawAPI) {
-          console.log(data, "agsgagfas");
+          console.log(data, "received");
           const updateScene = () => {
             const sceneData = {
-              elements: data,
+              elements: data.elements,
+              appState: data.appState,
             };
-            excalidrawAPI.updateScene(sceneData);
+            excalidrawAPI.updateScene(data);
           };
           updateScene();
         } else {
@@ -155,12 +163,22 @@ function Draw() {
     }
   }, [excalidrawAPI, socket]);
 
-  const handleDataChange = (elements: readonly ExcalidrawElement[]): void => {
+  const handleDataChange = (
+    elements: readonly ExcalidrawElement[] | null,
+    // state: Readonly<
+    //   Partial<
+    //     AppState & {
+    //       [T in keyof LegacyAppState]: LegacyAppState[T][0];
+    //     }
+    //   >
+    // > | null,
+  ): void => {
     if (excalidrawAPI && elements) {
       // Check if the length of elements is larger than the previousElements
       // if (elements.length > previousElements.current.length) {
-      console.log(elements);
-      socket?.emit("send-data", elements);
+      const sceneData = { elements: elements };
+      console.log(sceneData);
+      socket?.emit("send-data", sceneData);
       // }
 
       // Update previousElements with the current elements
@@ -193,33 +211,33 @@ function Draw() {
         <Excalidraw
           ref={(api) => {
             if (!excalidrawAPI) {
-              setExcalidrawAPI(api as ExcalidrawImperativeAPI | undefined);
+              setExcalidrawAPI(api);
             }
           }}
-          onChange={throttle(handleDataChange, 4000)}
-          renderTopRightUI={() => (
-            <LiveCollaborationTrigger
-              isCollaborating={false}
-              onSelect={() => {
-                if (!isCollaborating) {
-                  const collaborators = new Map();
-                  collaborators.set(string, {
-                    username: "Doremon",
-                    avatarUrl: "../../../../img/doremon.png",
-                  });
-
-                  excalidrawAPI?.updateScene({
-                    collaborators: collaborators,
-                  });
-                } else {
-                  excalidrawAPI?.updateScene({
-                    collaborators: new Map(),
-                  });
-                }
-                setIsCollaborating(!isCollaborating);
-              }}
-            />
-          )}
+          onChange={throttle(handleDataChange, 3000)}
+          // renderTopRightUI={() => (
+          //   <LiveCollaborationTrigger
+          //     isCollaborating={false}
+          //     onSelect={() => {
+          //       if (!isCollaborating) {
+          //         const collaborators = new Map();
+          //         collaborators.set(string, {
+          //           username: "Doremon",
+          //           avatarUrl: "../../../../img/doremon.png",
+          //         });
+          //
+          //         excalidrawAPI?.updateScene({
+          //           collaborators: collaborators,
+          //         });
+          //       } else {
+          //         excalidrawAPI?.updateScene({
+          //           collaborators: new Map(),
+          //         });
+          //       }
+          //       setIsCollaborating(!isCollaborating);
+          //     }}
+          //   />
+          // )}
         />
       </div>
     </>
