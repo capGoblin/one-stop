@@ -71,6 +71,8 @@ io.on("connection", (socket) => {
     console.log("text is in server");
 
     // await socket.join(roomId);
+    // setTimeout(() => socket.broadcast.emit("receive-changes", delta), 3000);
+
     socket.broadcast.emit("receive-changes", delta);
   });
 
