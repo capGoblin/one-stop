@@ -3,6 +3,7 @@ import { Excalidraw } from "@excalidraw/excalidraw";
 import {
   AppState,
   BinaryFiles,
+  ExcalidrawAPIRefValue,
   ExcalidrawImperativeAPI,
 } from "@excalidraw/excalidraw/types/types";
 import io, { Socket } from "socket.io-client";
@@ -15,7 +16,7 @@ interface ExData {
 }
 
 function Draw() {
-  const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI>();
+  const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawAPIRefValue>();
 
   const [socket, setSocket] = useState<Socket | null>(null);
 
@@ -132,6 +133,12 @@ function Draw() {
     };
   }
 
+  function throttledHandleDataChange(
+    elements: readonly ExcalidrawElement[] | null,
+  ) {
+    const throttledHandleDataChange = throttle(handleDataChange, 500);
+  }
+
   function savaChanges(
     elements: readonly ExcalidrawElement[] | null,
     state: AppState,
@@ -191,7 +198,8 @@ function Draw() {
               setExcalidrawAPI(api as ExcalidrawImperativeAPI | undefined);
             }
           }}
-          onChange={throttle(savaChanges, 3000)}
+          // onChange={throttle(savaChanges, 3000)}
+          onChange={throttledHandleDataChange}
           // renderTopRightUI={() => (
           // <LiveCollaborationTrigger
           //   isCollaborating={isCollaborating}

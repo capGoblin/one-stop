@@ -1,14 +1,14 @@
 import express from "express";
 import http from "http";
-import { Server } from "socket.io";
+import {Server} from "socket.io";
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: [
-      "http://127.0.0.1:5173",
-      "http://127.0.0.1:5174",
+      "http://localhost:5173",
+      "http://localhost:5174",
       "http://localhost:5175",
     ],
     methods: ["GET", "POST"],
@@ -67,14 +67,14 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("send-changes", async (delta) => {
-    console.log("text is in server");
-
-    // await socket.join(roomId);
-    // setTimeout(() => socket.broadcast.emit("receive-changes", delta), 3000);
-
-    socket.broadcast.emit("receive-changes", delta);
-  });
+  // socket.on("send-changes", async (delta) => {
+  //   console.log("text is in server");
+  //
+  //   // await socket.join(roomId);
+  //   // setTimeout(() => socket.broadcast.emit("receive-changes", delta), 3000);
+  //
+  //   socket.broadcast.emit("receive-changes", delta);
+  // });
 
   socket.on("leaveRoom", (roomId) => {
     socket.leave(roomId);
@@ -87,15 +87,15 @@ io.on("connection", (socket) => {
     socket.to(roomId).emit("userLeft", socket.id);
   });
 
-  socket.on("send-data", (data) => {
-    console.log(`${data} is in server`);
-
-    // await socket.join(roomId);
-    // setTimeout(() => {
-    // Emit the "receive-data" event after a 2-second delay
-    socket.broadcast.emit("receive-data", data);
-    // }, 5000);
-  });
+  // socket.on("send-data", (data) => {
+  //   console.log(`${data} is in server`);
+  //
+  //   // await socket.join(roomId);
+  //   // setTimeout(() => {
+  //   // Emit the "receive-data" event after a 2-second delay
+  //   socket.broadcast.emit("receive-data", data);
+  //   // }, 5000);
+  // });
   socket.on("start_call", (roomId: string, callerId: string) => {
     console.log(`Broadcasting start_call event to peers in room ${roomId}`);
     socket.broadcast.to(roomId).emit("start_call", callerId);

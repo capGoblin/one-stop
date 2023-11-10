@@ -1,9 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import io from "socket.io-client";
-import Draw from "./Draw.tsx";
-import TextEditor from "./TextEditor.tsx";
-import { useNavigate } from "react-router-dom";
-import { UserButton } from "@clerk/clerk-react";
+import {useNavigate} from "react-router-dom";
+import {UserButton} from "@clerk/clerk-react";
 
 const socket = io("http://localhost:3000");
 
@@ -11,6 +9,10 @@ const HomePage: React.FC = () => {
   const roomInputRef = useRef<HTMLInputElement | null>(null);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
+
+  const remoteVideoRefs: Record<string, React.RefObject<HTMLVideoElement>> = {};
+
+
   const callerIdRef = useRef<string>("");
   let callerId: string;
 
@@ -22,11 +24,11 @@ const HomePage: React.FC = () => {
 
   const iceServers = {
     iceServers: [
-      { urls: "stun:stun.l.google.com:19302" },
-      { urls: "stun:stun1.l.google.com:19302" },
-      { urls: "stun:stun2.l.google.com:19302" },
-      { urls: "stun:stun3.l.google.com:19302" },
-      { urls: "stun:stun4.l.google.com:19302" },
+      {urls: "stun:stun.l.google.com:19302"},
+      {urls: "stun:stun1.l.google.com:19302"},
+      {urls: "stun:stun2.l.google.com:19302"},
+      {urls: "stun:stun3.l.google.com:19302"},
+      {urls: "stun:stun4.l.google.com:19302"},
     ],
   };
 
@@ -266,6 +268,8 @@ const HomePage: React.FC = () => {
             });
             await (
               await peerConnection!
+
+
             )
               .addIceCandidate(candidate)
               .then(() => {
@@ -361,9 +365,9 @@ const HomePage: React.FC = () => {
     <div>
       <div>
         <label>Room ID: </label>
-        <input type="text" ref={roomInputRef} />
+        <input type="text" ref={roomInputRef}/>
         <button onClick={joinRoom}>Connect</button>
-        <UserButton />
+        <UserButton/>
 
         <button onClick={handleSignOutClickEvent}>Sign out</button>
       </div>
@@ -384,11 +388,11 @@ const HomePage: React.FC = () => {
             ref={remoteVideoRef}
             autoPlay
             playsInline
-            style={{ height: "200px", width: "200px", border: "1px solid red" }}
+            style={{height: "200px", width: "200px", border: "1px solid red"}}
           ></video>
           <button onClick={disconnectRoom}>Leave</button>
-          <TextEditor roomId={roomId} />
-          <Draw />
+          {/*<TextEditor roomId={roomId}/>*/}
+          {/*<Draw/>*/}
         </div>
       </div>
     </div>
@@ -396,3 +400,245 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
+
+
+// import React, {useEffect, useRef, useState} from 'react';
+// import {useNavigate} from 'react-router-dom';
+// import {UserButton} from "@clerk/clerk-react";
+// import io from "socket.io-client";
+//
+// const HomePage: React.FC = () => {
+//   const roomInputRef = useRef<HTMLInputElement | null>(null);
+//   const localVideoRef = useRef<HTMLVideoElement | null>(null);
+//   const remoteVideoRefs: Record<string, React.RefObject<HTMLVideoElement>> = {};
+//   const [localStream, setLocalStream] = useState<MediaStream>();
+//   const [roomId, setRoomId] = useState<string>('');
+//   const [peerConnections, setPeerConnections] = useState<Record<string, RTCPeerConnection>>(
+//     {}
+//   );
+//
+//   const iceServers = {
+//     iceServers: [
+//       {urls: 'stun:stun.l.google.com:19302'},
+//       {urls: 'stun:stun1.l.google.com:19302'},
+//       {urls: 'stun:stun2.l.google.com:19302'},
+//       {urls: 'stun:stun3.l.google.com:19302'},
+//       {urls: 'stun:stun4.l.google.com:19302'},
+//     ],
+//   };
+//
+//   const socket = io("http://localhost:3000");
+//
+//
+//   const navigate = useNavigate();
+//
+//   useEffect(() => {
+//     if (socket) {
+//       socket.on('room_created', async () => {
+//         const localStream = await navigator.mediaDevices.getUserMedia({
+//           audio: true,
+//           video: true,
+//         });
+//         setLocalStream(localStream);
+//         if (localVideoRef.current) {
+//           localVideoRef.current.srcObject = localStream;
+//         }
+//         createPeerConnections();
+//       });
+//
+//       socket.on('room_joined', async () => {
+//         const localStream = await navigator.mediaDevices.getUserMedia({
+//           audio: true,
+//           video: true,
+//         });
+//         setLocalStream(localStream);
+//         if (localVideoRef.current) {
+//           localVideoRef.current.srcObject = localStream;
+//         }
+//         createPeerConnections();
+//       });
+//
+//       socket.on('full_room', () => {
+//         alert('The room is full, please try another one');
+//       });
+//
+//       socket.on('userLeft', (userId) => {
+//         // Remove the video element for the user who left
+//         const remoteVideo = remoteVideoRefs[userId]?.current;
+//         if (remoteVideo) {
+//           remoteVideo.srcObject = null;
+//         }
+//         // Close the peer connection
+//         const peerConnection = peerConnections[userId];
+//         if (peerConnection) {
+//           peerConnection.close();
+//         }
+//       });
+//
+//       socket.on('webrtc_offer', async (event) => {
+//         if (!peerConnections[event.callerId]) {
+//           createPeerConnection(event.callerId);
+//         }
+//         const peerConnection = peerConnections[event.callerId];
+//         await peerConnection.setRemoteDescription(new RTCSessionDescription(event.sdp));
+//         const answer = await peerConnection.createAnswer();
+//         await peerConnection.setLocalDescription(answer);
+//         socket.emit('webrtc_answer', {
+//           type: 'webrtc_answer',
+//           sdp: answer,
+//           roomId,
+//           callerId: socket.id,
+//         });
+//       });
+//
+//       socket.on('webrtc_answer', async (event) => {
+//         const peerConnection = peerConnections[event.callerId];
+//         await peerConnection.setRemoteDescription(new RTCSessionDescription(event.sdp));
+//       });
+//
+//       socket.on('webrtc_ice_candidate', async (event) => {
+//         const peerConnection = peerConnections[event.callerId];
+//         const candidate = new RTCIceCandidate({
+//           sdpMLineIndex: event.label,
+//           candidate: event.candidate,
+//         });
+//         await peerConnection.addIceCandidate(candidate);
+//       });
+//     }
+//   }, [socket, roomId, peerConnections]);
+//
+//   const createPeerConnections = () => {
+//     // Create a peer connection for each user in the room
+//     socket.emit('get_users_in_room', roomId, (userIds: string[]) => {
+//       const newPeerConnections: Record<string, RTCPeerConnection> = {};
+//       userIds.forEach((userId) => {
+//         if (userId !== socket.id) {
+//           newPeerConnections[userId] = createPeerConnection(userId);
+//         }
+//       });
+//       setPeerConnections(newPeerConnections);
+//     });
+//   };
+//
+//   const createPeerConnection = (remoteUserId: string) => {
+//     const peerConnection = new RTCPeerConnection(iceServers);
+//     // Add local tracks to the peer connection
+//     localStream?.getTracks().forEach((track) => {
+//       peerConnection.addTrack(track, localStream as MediaStream);
+//     });
+//     // Set up event listeners
+//     peerConnection.ontrack = (event) => {
+//       const remoteVideo = remoteVideoRefs[remoteUserId]?.current;
+//       if (remoteVideo) {
+//         remoteVideo.srcObject = event.streams[0];
+//       }
+//     };
+//     peerConnection.onicecandidate = (event) => {
+//       if (event.candidate) {
+//         socket.emit('webrtc_ice_candidate', {
+//           roomId,
+//           callerId: socket.id,
+//           targetUserId: remoteUserId,
+//           label: event.candidate.sdpMLineIndex,
+//           candidate: event.candidate.candidate,
+//         });
+//       }
+//     };
+//     // Create offer and set local description
+//     peerConnection.createOffer().then((offer) => {
+//       peerConnection.setLocalDescription(offer).then(() => {
+//         socket.emit('webrtc_offer', {
+//           type: 'webrtc_offer',
+//           sdp: offer,
+//           roomId,
+//           callerId: socket.id,
+//           targetUserId: remoteUserId,
+//         });
+//       });
+//     });
+//     return peerConnection;
+//   };
+//
+//   const joinRoom = () => {
+//     const room = roomInputRef.current?.value;
+//
+//     if (!room) {
+//       alert('Please type a room ID');
+//       return;
+//     } else {
+//       setRoomId(room);
+//       socket.emit('join', room);
+//     }
+//   };
+//
+//   const disconnectRoom = () => {
+//     // Close all peer connections
+//     Object.values(peerConnections).forEach((peerConnection) => {
+//       peerConnection.close();
+//     });
+//
+//     if (localStream) {
+//       localStream.getTracks().forEach((track) => track.stop());
+//     }
+//
+//     socket.emit('leaveRoom', roomId);
+//
+//     const remoteVideo = remoteVideoRefs[socket.id]?.current;
+//     if (remoteVideo) {
+//       remoteVideo.srcObject = null;
+//     }
+//     const localVideo = localVideoRef.current;
+//     if (localVideo) {
+//       localVideo.srcObject = null;
+//     }
+//
+//     socket.disconnect();
+//   };
+//
+//   const handleSignOutClickEvent = () => {
+//     navigate('/sign-out/');
+//   };
+//
+//   return (
+//     <div>
+//       <div>
+//         <label>Room ID: </label>
+//         <input type="text" ref={roomInputRef}/>
+//         <button onClick={joinRoom}>Connect</button>
+//         <UserButton/>
+//         <button onClick={handleSignOutClickEvent}>Sign out</button>
+//       </div>
+//       <div>
+//         <div>
+//           <video
+//             ref={localVideoRef}
+//             autoPlay
+//             playsInline
+//             muted
+//             style={{height: '200px', width: '200px', border: '1px solid green'}}
+//           ></video>
+//           {Object.keys(peerConnections).map((userId) => (
+//             <video
+//               key={userId}
+//               ref={(videoRef) => {
+//                 if (videoRef) {
+//                   remoteVideoRefs[userId] = React.createRef<HTMLVideoElement>();
+//                   Object.assign(remoteVideoRefs[userId], {current: videoRef});
+//                 }
+//               }}
+//
+//
+//               autoPlay
+//               playsInline
+//               style={{height: '200px', width: '200px', border: '1px solid red'}}
+//             ></video>
+//           ))}
+//           <button onClick={disconnectRoom}>Leave</button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+//
+// export default HomePage;
+//
