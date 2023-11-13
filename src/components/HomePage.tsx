@@ -1,7 +1,7 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
-import {useNavigate} from "react-router-dom";
-import {UserButton} from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
+// import {UserButton} from "@clerk/clerk-react";
 
 const socket = io("http://localhost:3000");
 
@@ -11,7 +11,6 @@ const HomePage: React.FC = () => {
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
 
   const remoteVideoRefs: Record<string, React.RefObject<HTMLVideoElement>> = {};
-
 
   const callerIdRef = useRef<string>("");
   let callerId: string;
@@ -24,11 +23,11 @@ const HomePage: React.FC = () => {
 
   const iceServers = {
     iceServers: [
-      {urls: "stun:stun.l.google.com:19302"},
-      {urls: "stun:stun1.l.google.com:19302"},
-      {urls: "stun:stun2.l.google.com:19302"},
-      {urls: "stun:stun3.l.google.com:19302"},
-      {urls: "stun:stun4.l.google.com:19302"},
+      { urls: "stun:stun.l.google.com:19302" },
+      { urls: "stun:stun1.l.google.com:19302" },
+      { urls: "stun:stun2.l.google.com:19302" },
+      { urls: "stun:stun3.l.google.com:19302" },
+      { urls: "stun:stun4.l.google.com:19302" },
     ],
   };
 
@@ -61,7 +60,7 @@ const HomePage: React.FC = () => {
         remoteVideoRef.current.srcObject = remoteStream;
       } else {
         console.log(
-          "remoteVideoRef is null. The reference might not be properly set.",
+          "remoteVideoRef is null. The reference might not be properly set."
         );
       }
     };
@@ -268,8 +267,6 @@ const HomePage: React.FC = () => {
             });
             await (
               await peerConnection!
-
-
             )
               .addIceCandidate(candidate)
               .then(() => {
@@ -278,7 +275,7 @@ const HomePage: React.FC = () => {
               .catch((error) => {
                 console.error(
                   "Error adding IceCandidate at start_call for caller",
-                  error,
+                  error
                 );
               });
           });
@@ -330,7 +327,7 @@ const HomePage: React.FC = () => {
               .catch((error) => {
                 console.error(
                   "Error adding IceCandidate at start_call for callee:",
-                  error,
+                  error
                 );
               });
           });
@@ -355,21 +352,21 @@ const HomePage: React.FC = () => {
     }
   }, [roomId, socket, rtcPeerConnection]);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  function handleSignOutClickEvent() {
-    navigate("/sign-out/");
-  }
+  // function handleSignOutClickEvent() {
+  //   navigate("/sign-out/");
+  // }
 
   return (
     <div>
       <div>
         <label>Room ID: </label>
-        <input type="text" ref={roomInputRef}/>
+        <input type="text" ref={roomInputRef} />
         <button onClick={joinRoom}>Connect</button>
-        <UserButton/>
+        {/* <UserButton/>
 
-        <button onClick={handleSignOutClickEvent}>Sign out</button>
+        <button onClick={handleSignOutClickEvent}>Sign out</button> */}
       </div>
       <div>
         <div>
@@ -388,7 +385,7 @@ const HomePage: React.FC = () => {
             ref={remoteVideoRef}
             autoPlay
             playsInline
-            style={{height: "200px", width: "200px", border: "1px solid red"}}
+            style={{ height: "200px", width: "200px", border: "1px solid red" }}
           ></video>
           <button onClick={disconnectRoom}>Leave</button>
           {/*<TextEditor roomId={roomId}/>*/}
@@ -400,7 +397,6 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
-
 
 // import React, {useEffect, useRef, useState} from 'react';
 // import {useNavigate} from 'react-router-dom';
