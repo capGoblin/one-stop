@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import { useNavigate } from "react-router-dom";
-// import {UserButton} from "@clerk/clerk-react";
+import { UserButton } from "@clerk/clerk-react";
 
 const socket = io("http://localhost:3000");
 
@@ -352,11 +352,11 @@ const HomePage: React.FC = () => {
     }
   }, [roomId, socket, rtcPeerConnection]);
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // function handleSignOutClickEvent() {
-  //   navigate("/sign-out/");
-  // }
+  function handleSignOutClickEvent() {
+    navigate("/sign-out/");
+  }
 
   return (
     <div>
@@ -364,9 +364,9 @@ const HomePage: React.FC = () => {
         <label>Room ID: </label>
         <input type="text" ref={roomInputRef} />
         <button onClick={joinRoom}>Connect</button>
-        {/* <UserButton/>
+        <UserButton />
 
-        <button onClick={handleSignOutClickEvent}>Sign out</button> */}
+        <button onClick={handleSignOutClickEvent}>Sign out</button>
       </div>
       <div>
         <div>
