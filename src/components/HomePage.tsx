@@ -437,6 +437,7 @@ const HomePage: React.FC = () => {
             {/* </div> */}
           </div>
         ) : null}
+
         {clickedIcon === "FileText" ? <TextEditor roomId={roomId} /> : null}
         {clickedIcon === "Draw" ? <Draw /> : null}
       </div>

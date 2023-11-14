@@ -8,7 +8,7 @@ import { ExcalidrawElement } from "@excalidraw/excalidraw/types/element/types";
 import { Excalidraw } from "@excalidraw/excalidraw";
 import debounce from "lodash.debounce";
 
-const socket = io("http://localhost:8080");
+const socket = io("http://localhost:3000");
 
 function Draw() {
   // const [socket, setSocket] = useState<Socket | null>(null);
