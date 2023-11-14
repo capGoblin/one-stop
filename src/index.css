@@ -1,3 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .sidebar-icons {
+    @apply relative flex items-center justify-center h-12 w-12 mt-3 mb-3 hover:mt-6 hover:mb-6 mx-auto text-secondary bg-gray-900
+            hover:text-gray-900 hover:bg-secondary rounded-3xl hover:rounded-2xl transition-all duration-300 ease-linear cursor-pointer;
+  }
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -14,7 +25,7 @@
   -webkit-text-size-adjust: 100%;
 }
 
-a {
+/* a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
@@ -67,4 +78,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */
