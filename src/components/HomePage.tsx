@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 import { UserButton } from "@clerk/clerk-react";
+import SideBar from "./SideBar";
+import TextEditor from "./TextEditor";
+import Draw from "./Draw";
 
 const socket = io("http://localhost:3000");
 
@@ -352,45 +355,90 @@ const HomePage: React.FC = () => {
     }
   }, [roomId, socket, rtcPeerConnection]);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  function handleSignOutClickEvent() {
-    navigate("/sign-out/");
-  }
+  // function handleSignOutClickEvent() {
+  //   navigate("/sign-out/");
+  // }
+
+  const [clickedIcon, setClickedIcon] = useState<string>("");
 
   return (
     <div>
-      <div>
+      <SideBar
+        clickedIcon={(arg0) => {
+          setClickedIcon(arg0);
+          // console.log(arg0);
+        }}
+      />
+      {/* <div>
         <label>Room ID: </label>
         <input type="text" ref={roomInputRef} />
-        <button onClick={joinRoom}>Connect</button>
-        <UserButton />
+        <button onClick={joinRoom}>Connect</button> */}
+      {/* <UserButton /> */}
 
-        <button onClick={handleSignOutClickEvent}>Sign out</button>
-      </div>
+      {/* <button onClick={handleSignOutClickEvent}>Sign out</button> */}
+      {/* </div> */}
       <div>
-        <div>
-          <video
-            ref={localVideoRef}
-            autoPlay
-            playsInline
-            muted
-            style={{
-              height: "200px",
-              width: "200px",
-              border: "1px solid green",
-            }}
-          ></video>
-          <video
-            ref={remoteVideoRef}
-            autoPlay
-            playsInline
-            style={{ height: "200px", width: "200px", border: "1px solid red" }}
-          ></video>
-          <button onClick={disconnectRoom}>Leave</button>
-          {/*<TextEditor roomId={roomId}/>*/}
-          {/*<Draw/>*/}
-        </div>
+        {clickedIcon === "Video" ? (
+          // <div className="flex flex-col items-center justify-center h-screen space-x-20">
+          <div className="flex flex-col items-center">
+            {/* <div className="flex flex-col justify-evenly"> */}
+            <div className="flex space-x-10 mt-10">
+              {/* <div className=""> */}
+              {/* <label>Room ID: </label> */}
+              <input
+                className="placeholder:italic placeholder:text-secondary block bg-gray-900  rounded-md py-2 px-5 pl-9 pr-4 shadow-sm  focus:outline-none focus:ring-gray-700 focus:ring-1 sm:text-sm"
+                type="text"
+                ref={roomInputRef}
+                placeholder="Type the damn Room Id..."
+              />
+              <button
+                className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider py-2 px-6 rounded-lg w-min grow-0"
+                onClick={joinRoom}
+              >
+                Connect
+              </button>
+            </div>
+            {/* <div className="flex space-x-10"> */}
+            {/* <div className="mx-auto"> */}
+            <div className="flex">
+              <video
+                className="m-20"
+                ref={localVideoRef}
+                autoPlay
+                playsInline
+                muted
+                style={{
+                  height: "250px",
+                  width: "60%",
+                  border: "1px solid green",
+                }}
+              ></video>
+              <video
+                className="m-20"
+                ref={remoteVideoRef}
+                autoPlay
+                playsInline
+                style={{
+                  height: "250px",
+                  width: "60%",
+                  border: "1px solid red",
+                }}
+              ></video>
+            </div>
+            {/* </div> */}
+            <button
+              className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider rounded-lg w-min py-2 px-6 grow-0 mb-10"
+              onClick={disconnectRoom}
+            >
+              Leave
+            </button>
+            {/* </div> */}
+          </div>
+        ) : null}
+        {clickedIcon === "FileText" ? <TextEditor roomId={roomId} /> : null}
+        {clickedIcon === "Draw" ? <Draw /> : null}
       </div>
     </div>
   );
