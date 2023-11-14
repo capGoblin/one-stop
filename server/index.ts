@@ -89,15 +89,15 @@ io.on("connection", (socket) => {
     socket.to(roomId).emit("userLeft", socket.id);
   });
 
-  // socket.on("send-data", (data) => {
-  //   console.log(`${data} is in server`);
-  //
-  //   // await socket.join(roomId);
-  //   // setTimeout(() => {
-  //   // Emit the "receive-data" event after a 2-second delay
-  //   socket.broadcast.emit("receive-data", data);
-  //   // }, 5000);
-  // });
+  socket.on("send-data", (data) => {
+    console.log(`${data} is in server`);
+
+    // await socket.join(roomId);
+    // setTimeout(() => {
+    // Emit the "receive-data" event after a 2-second delay
+    socket.broadcast.emit("receive-data", data);
+    // }, 5000);
+  });
   socket.on("start_call", (roomId: string, callerId: string) => {
     console.log(`Broadcasting start_call event to peers in room ${roomId}`);
     socket.broadcast.to(roomId).emit("start_call", callerId);
