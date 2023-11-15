@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaVideo } from "react-icons/fa";
 import { GoHome } from "react-icons/go";
 import { BsPencilFill } from "react-icons/bs";
@@ -12,8 +12,14 @@ interface Props {
   clickedIcon: (arg0: string) => void;
 }
 const SideBar = (props: Props) => {
+  const initial = "Video";
+  // const [initial, setInitial] = useState<string>("Video");
+
   function handleIconClick(arg0: string) {
-    props.clickedIcon(arg0);
+    // console.log(arg0);
+    // setInitial(arg0);
+    // console.log(initial);
+    props.clickedIcon(arg0 === undefined ? initial : arg0);
   }
 
   return (

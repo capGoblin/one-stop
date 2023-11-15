@@ -361,10 +361,26 @@ const HomePage: React.FC = () => {
   //   navigate("/sign-out/");
   // }
 
-  const [clickedIcon, setClickedIcon] = useState<string>("");
+  const [clickedIcon, setClickedIcon] = useState<string>("Video");
 
   return (
     <div>
+      <div className="flex space-x-10 mt-10">
+        {/* <div className=""> */}
+        {/* <label>Room ID: </label> */}
+        <input
+          className="placeholder:italic placeholder:text-secondary block bg-gray-900  rounded-md py-2 px-5 pl-9 pr-4 shadow-sm  focus:outline-none focus:ring-gray-700 focus:ring-1 sm:text-sm"
+          type="text"
+          ref={roomInputRef}
+          placeholder="Type the damn Room Id..."
+        />
+        <button
+          className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider py-2 px-6 rounded-lg w-min grow-0"
+          onClick={joinRoom}
+        >
+          Connect
+        </button>
+      </div>
       <SideBar
         clickedIcon={(arg0) => {
           setClickedIcon(arg0);
@@ -380,63 +396,58 @@ const HomePage: React.FC = () => {
       {/* <button onClick={handleSignOutClickEvent}>Sign out</button> */}
       {/* </div> */}
       <div>
-        {clickedIcon === "Video" ? (
-          // <div className="flex flex-col items-center justify-center h-screen space-x-20">
-          <div className="flex flex-col items-center">
-            {/* <div className="flex flex-col justify-evenly"> */}
-            <div className="flex space-x-10 mt-10">
-              {/* <div className=""> */}
-              {/* <label>Room ID: </label> */}
-              <input
-                className="placeholder:italic placeholder:text-secondary block bg-gray-900  rounded-md py-2 px-5 pl-9 pr-4 shadow-sm  focus:outline-none focus:ring-gray-700 focus:ring-1 sm:text-sm"
-                type="text"
-                ref={roomInputRef}
-                placeholder="Type the damn Room Id..."
-              />
-              <button
-                className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider py-2 px-6 rounded-lg w-min grow-0"
-                onClick={joinRoom}
-              >
-                Connect
-              </button>
-            </div>
-            {/* <div className="flex space-x-10"> */}
-            {/* <div className="mx-auto"> */}
-            <div className="flex">
-              <video
-                className="m-20"
-                ref={localVideoRef}
-                autoPlay
-                playsInline
-                muted
-                style={{
-                  height: "250px",
-                  width: "60%",
-                  border: "1px solid green",
-                }}
-              ></video>
-              <video
-                className="m-20"
-                ref={remoteVideoRef}
-                autoPlay
-                playsInline
-                style={{
-                  height: "250px",
-                  width: "60%",
-                  border: "1px solid red",
-                }}
-              ></video>
-            </div>
-            {/* </div> */}
-            <button
-              className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider rounded-lg w-min py-2 px-6 grow-0 mb-10"
-              onClick={disconnectRoom}
-            >
-              Leave
-            </button>
-            {/* </div> */}
+        <div
+          className={`flex flex-col items-center ${
+            clickedIcon === "Video" ? "block" : "none"
+          }`}
+        >
+          {/* <div className="flex flex-col justify-evenly"> */}
+
+          {/* <div className="flex space-x-10"> */}
+          {/* <div className="mx-auto"> */}
+          <div className="flex">
+            <video
+              className="m-20"
+              ref={localVideoRef}
+              autoPlay
+              playsInline
+              muted
+              style={{
+                height: "250px",
+                width: "60%",
+                border: "1px solid green",
+                display: clickedIcon === "Video" ? "block" : "none",
+              }}
+            ></video>
+            <video
+              className="m-20"
+              ref={remoteVideoRef}
+              autoPlay
+              playsInline
+              style={{
+                height: "250px",
+                width: "60%",
+                border: "1px solid red",
+                display: clickedIcon === "Video" ? "block" : "none",
+              }}
+            ></video>
           </div>
-        ) : null}
+          {/* </div> */}
+          <button
+            className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider rounded-lg w-min py-2 px-6 grow-0 mb-10"
+            style={{
+              display: clickedIcon === "Video" ? "block" : "none",
+            }}
+            onClick={disconnectRoom}
+          >
+            Leave
+          </button>
+          {/* </div> */}
+        </div>
+        {/* {clickedIcon === "Video" ? (
+          // <div className="flex flex-col items-center justify-center h-screen space-x-20">
+          
+        ) : null} */}
 
         {clickedIcon === "FileText" ? <TextEditor roomId={roomId} /> : null}
         {clickedIcon === "Draw" ? <Draw /> : null}
