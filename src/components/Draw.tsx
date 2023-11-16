@@ -7,12 +7,14 @@ import { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types/types";
 import { ExcalidrawElement } from "@excalidraw/excalidraw/types/element/types";
 import { Excalidraw } from "@excalidraw/excalidraw";
 import debounce from "lodash.debounce";
+import useMeetStore from "../store";
 
 const socket = io("http://localhost:3000");
 
 function Draw() {
   // const [socket, setSocket] = useState<Socket | null>(null);
-  const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI>();
+  // const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI>();
+  const { excalidrawAPI, setExcalidrawAPI } = useMeetStore();
 
   // const [pendingUpdates, setPendingUpdates] = useState([]);
   // const update = () => {
