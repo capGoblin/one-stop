@@ -13,13 +13,13 @@ const HomePage: React.FC = () => {
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
 
-  const remoteVideoRefs: Record<string, React.RefObject<HTMLVideoElement>> = {};
+  // const remoteVideoRefs: Record<string, React.RefObject<HTMLVideoElement>> = {};
 
   const callerIdRef = useRef<string>("");
   let callerId: string;
 
   const [localStream, setLocalStream] = useState<MediaStream>();
-  const [remoteStream, setRemoteStream] = useState<MediaStream>();
+  // const [remoteStream, setRemoteStream] = useState<MediaStream>();
 
   const [rtcPeerConnection, setRtcPeerConnection] =
     useState<RTCPeerConnection>();
@@ -41,7 +41,7 @@ const HomePage: React.FC = () => {
 
     const remoteStream = new MediaStream();
 
-    setRemoteStream(remoteStream);
+    // setRemoteStream(remoteStream);
     console.log(callerId);
     console.log(remoteStream);
     if (remoteVideoRef.current) {
