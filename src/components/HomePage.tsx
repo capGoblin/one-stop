@@ -5,24 +5,27 @@ import { UserButton } from "@clerk/clerk-react";
 import SideBar from "./SideBar";
 import TextEditor from "./TextEditor";
 import Draw from "./Draw";
+import useMeetStore from "../store";
 
 const socket = io("http://localhost:3000");
 
 const HomePage: React.FC = () => {
+  const { rtcPeerConnection, setRtcPeerConnection } = useMeetStore();
+  // TODO: use something from mesh for roomInputRef
   const roomInputRef = useRef<HTMLInputElement | null>(null);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
 
-  // const remoteVideoRefs: Record<string, React.RefObject<HTMLVideoElement>> = {};
-
   const callerIdRef = useRef<string>("");
   let callerId: string;
 
-  const [localStream, setLocalStream] = useState<MediaStream>();
+  // const remoteVideoRefs: Record<string, React.RefObject<HTMLVideoElement>> = {};
+
+  // const [localStream, setLocalStream] = useState<MediaStream>();
   // const [remoteStream, setRemoteStream] = useState<MediaStream>();
 
-  const [rtcPeerConnection, setRtcPeerConnection] =
-    useState<RTCPeerConnection>();
+  // const [rtcPeerConnection, setRtcPeerConnection] =
+  //   useState<RTCPeerConnection>();
 
   const iceServers = {
     iceServers: [
@@ -95,14 +98,14 @@ const HomePage: React.FC = () => {
 
   const disconnectRoom = () => {
     console.log(rtcPeerConnection);
-    console.log(localStream);
+    // console.log(localStream);
     if (rtcPeerConnection) {
       rtcPeerConnection.close();
     }
 
-    if (localStream) {
-      localStream.getTracks().forEach((track) => track.stop());
-    }
+    // if (localStream) {
+    //   localStream.getTracks().forEach((track) => track.stop());
+    // }
 
     socket.emit("leaveRoom", roomId);
 
@@ -139,10 +142,10 @@ const HomePage: React.FC = () => {
       audio: true,
       video: true,
     });
-    setLocalStream(stream);
+    // setLocalStream(stream);
     console.log(stream);
     // setLocalStream(stream);
-    console.log(localStream);
+    // console.log(localStream);
     if (localVideoRef.current) {
       localVideoRef.current.srcObject = stream;
     }
