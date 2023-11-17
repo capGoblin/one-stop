@@ -6,7 +6,8 @@ import SideBar from "./SideBar";
 import TextEditor from "./TextEditor";
 import Draw from "./Draw";
 import useMeetStore from "../store";
-
+// TODO: global socket!
+// TODO: Batch Update the draw and text once comp switched
 const socket = io("http://localhost:3000");
 
 const HomePage: React.FC = () => {
@@ -15,7 +16,7 @@ const HomePage: React.FC = () => {
   const roomInputRef = useRef<HTMLInputElement | null>(null);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
-
+  // TODO: room&user management to global
   const callerIdRef = useRef<string>("");
   let callerId: string;
 
