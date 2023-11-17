@@ -1,11 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import ReactQuill, {
-  DeltaStatic,
-  Sources,
-  UnprivilegedEditor,
-} from "react-quill";
+import ReactQuill, { DeltaStatic, Sources } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import io, { Socket } from "socket.io-client";
+import useMeetStore from "../store";
 
 const TOOLBAR_OPTIONS = [
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -25,8 +22,9 @@ interface Props {
 
 function TextEditor({ roomId }: Props) {
   const [socket, setSocket] = useState<Socket | null>();
+  const { editorValue, setEditorValue } = useMeetStore();
   // const [quill, setQuill] = useState<>();
-  const [editorValue, setEditorValue] = useState("");
+  // const [editorValue, setEditorValue] = useState("");
   const quillRef = useRef<ReactQuill>(); // Create a ref for the ReactQuill component
 
   useEffect(() => {
@@ -70,8 +68,7 @@ function TextEditor({ roomId }: Props) {
   function handleTextChange(
     value: string,
     delta: DeltaStatic,
-    source: Sources,
-    editor: UnprivilegedEditor,
+    source: Sources
   ): void {
     if (source == "user") {
       setEditorValue(value);

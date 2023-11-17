@@ -7,17 +7,23 @@ interface VideoStore {
 interface ExcalidrawStore {
   excalidrawAPI: ExcalidrawImperativeAPI | undefined;
 }
-interface MeetStore extends ExcalidrawStore, VideoStore {
+interface TextEditorStore {
+  editorValue: string;
+}
+interface MeetStore extends ExcalidrawStore, VideoStore, TextEditorStore {
   setExcalidrawAPI: (api: ExcalidrawImperativeAPI) => void;
   setRtcPeerConnection: (peerConnection: RTCPeerConnection) => void;
+  setEditorValue: (editorValue: string) => void;
 }
 
 const useMeetStore = create<MeetStore>((set) => ({
   excalidrawAPI: undefined,
   rtcPeerConnection: undefined,
+  editorValue: "",
   setExcalidrawAPI: (api) => set({ excalidrawAPI: api }),
   setRtcPeerConnection: (peerConnection) =>
     set({ rtcPeerConnection: peerConnection }),
+  setEditorValue: (value) => set({ editorValue: value }),
 }));
 
 export default useMeetStore;
