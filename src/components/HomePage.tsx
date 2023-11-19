@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 import { UserButton } from "@clerk/clerk-react";
@@ -6,11 +6,14 @@ import SideBar from "./SideBar";
 import TextEditor from "./TextEditor";
 import Draw from "./Draw";
 import useMeetStore from "../store";
+import { SocketContext, useSocket } from "../Contexts/SocketContext";
 // TODO: global socket!
 // TODO: Batch Update the draw and text once comp switched
-const socket = io("http://localhost:3000");
+// const socket = io("http://localhost:3000");
 
 const HomePage: React.FC = () => {
+  const { socket } = useContext(SocketContext);
+  // const { socket } = useSocket();
   const { rtcPeerConnection, setRtcPeerConnection } = useMeetStore();
   // TODO: use something from mesh for roomInputRef
   const roomInputRef = useRef<HTMLInputElement | null>(null);

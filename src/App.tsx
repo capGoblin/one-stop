@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import HomePage from "./components/HomePage";
+import HomePage from "./Components/HomePage";
+import SocketProvider from "./Contexts";
 
 function App(props) {
   // const navigate = useNavigate();
@@ -14,7 +15,9 @@ function App(props) {
   // }
   return (
     <>
-      <HomePage />
+      <SocketProvider>
+        <HomePage />
+      </SocketProvider>
       {/* <button onClick={handleSignInClickEvent}>Sign In</button>
       <button onClick={handleSignUpClickEvent}>Sign Up</button> */}
     </>

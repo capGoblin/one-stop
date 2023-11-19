@@ -11,7 +11,7 @@ import {
   SignUp,
 } from "@clerk/clerk-react";
 import App from "./App.tsx";
-import HomePage from "./components/HomePage.tsx";
+import HomePage from "./Components/HomePage.tsx";
 
 if (!import.meta.env.VITE_REACT_APP_CLERK_PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key");
