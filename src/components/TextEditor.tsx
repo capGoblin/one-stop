@@ -17,11 +17,7 @@ const TOOLBAR_OPTIONS = [
   ["clean"],
 ];
 
-interface Props {
-  roomId: string;
-}
-
-function TextEditor({ roomId }: Props) {
+function TextEditor({ clickedIcon }: { clickedIcon: string }) {
   const { socket } = useContext(SocketContext);
 
   // const [socket, setSocket] = useState<Socket | null>();
@@ -80,15 +76,28 @@ function TextEditor({ roomId }: Props) {
   }
 
   return (
-    <ReactQuill
-      ref={quillRef}
-      theme="snow"
-      value={editorValue}
-      modules={{
-        toolbar: TOOLBAR_OPTIONS,
-      }}
-      onChange={handleTextChange}
-    />
+    // <div className="flex flex-col justify-center items-center">
+    //   {/* <h1 style={{ textAlign: "center" }}>Excalidraw Example</h1> */}
+    //   <div className="flex items-center justify-center h-screen w-screen">
+    <div
+      className={`flex flex-col items-center ${
+        clickedIcon === "FileText" ? "block" : "hidden"
+      }`}
+    >
+      {" "}
+      <ReactQuill
+        ref={quillRef}
+        theme="snow"
+        value={editorValue}
+        modules={{
+          toolbar: TOOLBAR_OPTIONS,
+        }}
+        onChange={handleTextChange}
+      />
+      //{" "}
+    </div>
+    //   </div>
+    // </div>
   );
 
   // return <ReactQuill  value={value} onChange={setValue} />;

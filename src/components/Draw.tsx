@@ -11,11 +11,8 @@ import useMeetStore from "../store";
 import { SocketContext } from "../Contexts/SocketContext";
 
 // const socket = io("http://localhost:3000");
-interface DrawProps {
-  clickedIcon: string;
-}
 
-function Draw({ clickedIcon }: DrawProps) {
+function Draw({ clickedIcon }: { clickedIcon: string }) {
   const { socket } = useContext(SocketContext);
 
   // const [socket, setSocket] = useState<Socket | null>(null);
