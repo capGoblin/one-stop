@@ -455,6 +455,7 @@ const HomePage: React.FC = () => {
           
         ) : null} */}
 
+        {/* <TextEditor clickedIcon={clickedIcon} /> */}
         <TextEditor clickedIcon={clickedIcon} />
         <Draw clickedIcon={clickedIcon} />
         {/* {clickedIcon === "Draw" ? <Draw /> : null} */}

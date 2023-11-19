@@ -36,18 +36,28 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
   // }, []);
 
   useEffect(() => {
+    if (clickedIcon !== "FileText") {
+      socket?.on("receive-contents", (contents) => {
+        console.log(contents);
+
+        quillRef.current?.getEditor().updateContents(contents);
+        console.log(quillRef.current?.getEditor());
+      });
+    }
     socket?.on("receive-changes", (delta) => {
       console.log(delta);
 
       console.log("delta got in client");
+
       if (quillRef.current) {
         console.log(quillRef.current.getEditor());
+        console.log("safas");
         quillRef.current.getEditor().updateContents(delta);
       }
 
       console.log(quillRef.current!.getEditor());
     });
-  }, [quillRef, socket]);
+  }, [clickedIcon, quillRef, socket]);
 
   // useEffect(() => {
   //   console.log("quillRef:", quillRef.current);
@@ -72,6 +82,9 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
     if (source == "user") {
       setEditorValue(value);
       socket?.emit("send-changes", delta);
+      socket?.emit("send-contents", quillRef.current?.getEditorContents());
+      console.log(quillRef.current?.getEditorContents());
+      console.log(delta);
     }
   }
 

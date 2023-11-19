@@ -77,6 +77,14 @@ io.on("connection", (socket) => {
 
     socket.broadcast.emit("receive-changes", delta);
   });
+  socket.on("send-contents", async (contents) => {
+    console.log("contents is in server");
+
+    // await socket.join(roomId);
+    // setTimeout(() => socket.broadcast.emit("receive-changes", delta), 3000);
+
+    socket.broadcast.emit("receive-contents", contents);
+  });
 
   socket.on("leaveRoom", (roomId) => {
     socket.leave(roomId);

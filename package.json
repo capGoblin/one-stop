@@ -12,6 +12,11 @@
   "dependencies": {
     "@clerk/clerk-react": "^4.27.2",
     "@excalidraw/excalidraw": "^0.16.1",
+    "@hocuspocus/provider": "^2.8.0",
+    "@tiptap/extension-collaboration": "^2.1.12",
+    "@tiptap/pm": "^2.1.12",
+    "@tiptap/react": "^2.1.12",
+    "@tiptap/starter-kit": "^2.1.12",
     "@types/socket.io-client": "^3.0.0",
     "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",
@@ -22,6 +27,9 @@
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.18.0",
     "socket.io-client": "^4.7.2",
+    "y-prosemirror": "^1.2.1",
+    "y-webrtc": "^10.2.6",
+    "yjs": "^13.6.8",
     "zustand": "^4.4.6"
   },
   "devDependencies": {
