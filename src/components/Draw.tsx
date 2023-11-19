@@ -11,8 +11,11 @@ import useMeetStore from "../store";
 import { SocketContext } from "../Contexts/SocketContext";
 
 // const socket = io("http://localhost:3000");
+interface DrawProps {
+  clickedIcon: string;
+}
 
-function Draw() {
+function Draw({ clickedIcon }: DrawProps) {
   const { socket } = useContext(SocketContext);
 
   // const [socket, setSocket] = useState<Socket | null>(null);
@@ -128,7 +131,7 @@ function Draw() {
           // appState: excalidrawData.appState,
         };
         console.log(sceneData);
-        socket.emit("send-data", sceneData);
+        socket?.emit("send-data", sceneData);
         // }
 
         // Update previousElements with the current elements
@@ -151,7 +154,13 @@ function Draw() {
       <div className="flex flex-col justify-center items-center">
         {/* <h1 style={{ textAlign: "center" }}>Excalidraw Example</h1> */}
         <div className="flex items-center justify-center h-screen w-screen">
-          <div style={{ height: "90%", width: "80%" }}>
+          <div
+            style={{
+              height: "90%",
+              width: "80%",
+              display: clickedIcon === "Draw" ? "block" : "none",
+            }}
+          >
             {/* <input type="textbox" onChange={(e) => setName(e.target.value)} /> */}
             {/* <label style={{ fontSize: "16px", fontWeight: "bold" }}> */}
             {/* <input
@@ -179,6 +188,7 @@ function Draw() {
               />
               Show Collaborators
             </label>{" "} */}
+
             <Excalidraw
               // excalidrawRef="excalidrawRef"
               // style
@@ -226,6 +236,71 @@ function Draw() {
               // />
               // )}
             />
+
+            {/* {clickedIcon === "Draw" ? (
+              <Excalidraw
+                // excalidrawRef="excalidrawRef"
+                // style
+                ref={(api) => {
+                  if (!excalidrawAPI) {
+                    setExcalidrawAPI(
+                      api as ExcalidrawImperativeAPI | undefined
+                    );
+                  }
+                }}
+                // onChange={throttle(savaChanges, 3000)}
+                onChange={handleDataChange}
+                // renderTopRightUI={() => (
+                // <LiveCollaborationTrigger
+                //   isCollaborating={isCollaborating}
+                //   onSelect={() => {
+                //     window.alert("You clicked on collab button");
+                //     setIsCollaborating(true);
+                //   }}
+                // />
+                // <LiveCollaborationTrigger
+                //   isCollaborating={isCollaborating}
+                //   onSelect={() => {
+                //     console.log(name);
+                //     if (!isCollaborating) {
+                //       const collaborators = new Map();
+                //       collaborators.set("SAF", {
+                //         username: name,
+                //         avatarUrl: "../../../../img/doremon.png",
+                //       });
+                //       collaborators.set("asfsafas", {
+                //         username: "some name",
+                //         avatarUrl: "../../../../img/doremon.png",
+                //       });
+                //
+                //       excalidrawAPI?.updateScene({
+                //         collaborators: collaborators,
+                //       });
+                //       console.log(collaborators);
+                //     } else {
+                //       excalidrawAPI?.updateScene({
+                //         collaborators: new Map(),
+                //       });
+                //     }
+                //     setIsCollaborating(true);
+                //   }}
+                // />
+                // )}
+              />
+            ) : (
+              <Excalidraw
+                // excalidrawRef="excalidrawRef"
+                // style
+                ref={(api) => {
+                  if (!excalidrawAPI) {
+                    setExcalidrawAPI(
+                      api as ExcalidrawImperativeAPI | undefined
+                    );
+                  }
+                }}
+                // onChange={handleDataChange}
+              />
+            )} */}
           </div>
         </div>
       </div>

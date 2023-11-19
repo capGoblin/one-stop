@@ -11,7 +11,7 @@ interface TextEditorStore {
   editorValue: string;
 }
 interface MeetStore extends ExcalidrawStore, VideoStore, TextEditorStore {
-  setExcalidrawAPI: (api: ExcalidrawImperativeAPI) => void;
+  setExcalidrawAPI: (api: ExcalidrawImperativeAPI | undefined) => void;
   setRtcPeerConnection: (peerConnection: RTCPeerConnection) => void;
   setEditorValue: (editorValue: string) => void;
 }

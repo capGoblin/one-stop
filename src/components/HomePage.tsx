@@ -7,7 +7,6 @@ import TextEditor from "./TextEditor";
 import Draw from "./Draw";
 import useMeetStore from "../store";
 import { SocketContext, useSocket } from "../Contexts/SocketContext";
-// TODO: global socket!
 // TODO: Batch Update the draw and text once comp switched
 // const socket = io("http://localhost:3000");
 
@@ -456,8 +455,9 @@ const HomePage: React.FC = () => {
           
         ) : null} */}
 
-        {clickedIcon === "FileText" ? <TextEditor roomId={roomId} /> : null}
-        {clickedIcon === "Draw" ? <Draw /> : null}
+        <TextEditor clickedIcon={clickedIcon} />
+        <Draw clickedIcon={clickedIcon} />
+        {/* {clickedIcon === "Draw" ? <Draw /> : null} */}
       </div>
     </div>
   );
