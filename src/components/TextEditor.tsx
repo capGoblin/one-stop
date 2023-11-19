@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import ReactQuill, { DeltaStatic, Sources } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import io, { Socket } from "socket.io-client";
 import useMeetStore from "../store";
+import { SocketContext } from "../Contexts/SocketContext";
 
 const TOOLBAR_OPTIONS = [
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -21,20 +22,22 @@ interface Props {
 }
 
 function TextEditor({ roomId }: Props) {
-  const [socket, setSocket] = useState<Socket | null>();
+  const { socket } = useContext(SocketContext);
+
+  // const [socket, setSocket] = useState<Socket | null>();
   const { editorValue, setEditorValue } = useMeetStore();
   // const [quill, setQuill] = useState<>();
   // const [editorValue, setEditorValue] = useState("");
   const quillRef = useRef<ReactQuill>(); // Create a ref for the ReactQuill component
 
-  useEffect(() => {
-    const socket = io("http://localhost:3000");
-    setSocket(socket);
+  // useEffect(() => {
+  //   const socket = io("http://localhost:3000");
+  //   setSocket(socket);
 
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, []);
 
   useEffect(() => {
     socket?.on("receive-changes", (delta) => {

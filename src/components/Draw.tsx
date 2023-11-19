@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 // import reactLogo from "./assets/react.svg";
 // import viteLogo from "/vite.svg";
 // import "./App.css";
@@ -8,10 +8,13 @@ import { ExcalidrawElement } from "@excalidraw/excalidraw/types/element/types";
 import { Excalidraw } from "@excalidraw/excalidraw";
 import debounce from "lodash.debounce";
 import useMeetStore from "../store";
+import { SocketContext } from "../Contexts/SocketContext";
 
-const socket = io("http://localhost:3000");
+// const socket = io("http://localhost:3000");
 
 function Draw() {
+  const { socket } = useContext(SocketContext);
+
   // const [socket, setSocket] = useState<Socket | null>(null);
   // const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI>();
   const { excalidrawAPI, setExcalidrawAPI } = useMeetStore();
@@ -27,7 +30,7 @@ function Draw() {
     } else console.log("excalidrawAPI is not defined.");
   }, 500);
 
-  socket.on("receive-data", (scene: readonly ExcalidrawElement[] | null) => {
+  socket?.on("receive-data", (scene: readonly ExcalidrawElement[] | null) => {
     console.log(scene, "received");
     debouncedUpdateScene(scene);
   });

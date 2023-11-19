@@ -94,7 +94,7 @@ const HomePage: React.FC = () => {
       return;
     } else {
       setRoomId(room);
-      socket.emit("join", room);
+      socket?.emit("join", room);
 
       showVideoConference();
     }
@@ -111,7 +111,7 @@ const HomePage: React.FC = () => {
     //   localStream.getTracks().forEach((track) => track.stop());
     // }
 
-    socket.emit("leaveRoom", roomId);
+    socket?.emit("leaveRoom", roomId);
 
     const remoteVideo = remoteVideoRef.current;
     if (remoteVideo) {
@@ -122,7 +122,7 @@ const HomePage: React.FC = () => {
       localVideo.srcObject = null;
     }
 
-    socket.disconnect();
+    socket?.disconnect();
   };
 
   const showVideoConference = () => {
@@ -179,7 +179,7 @@ const HomePage: React.FC = () => {
       console.log(callerId);
       console.log(sessionDescription);
       await rtcPeerConnection.setLocalDescription(sessionDescription);
-      socket.emit("webrtc_offer", {
+      socket?.emit("webrtc_offer", {
         type: "webrtc_offer",
         sdp: sessionDescription,
         roomId,
@@ -197,7 +197,7 @@ const HomePage: React.FC = () => {
       console.log(callerId);
       console.log(sessionDescription);
       await rtcPeerConnection.setLocalDescription(sessionDescription);
-      socket.emit("webrtc_answer", {
+      socket?.emit("webrtc_answer", {
         type: "webrtc_answer",
         sdp: sessionDescription,
         roomId,
@@ -215,7 +215,7 @@ const HomePage: React.FC = () => {
     if (event.candidate) {
       if (callerId) console.log(callerId);
 
-      socket.emit("webrtc_ice_candidate", {
+      socket?.emit("webrtc_ice_candidate", {
         roomId,
         label: event.candidate.sdpMLineIndex,
         candidate: event.candidate.candidate,

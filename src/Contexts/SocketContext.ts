@@ -6,7 +6,7 @@ interface SocketContextProps {
 }
 
 export const SocketContext = createContext<SocketContextProps>({
-  socket: null,
+  socket: undefined,
 });
 
 export const useSocket = () => {
