@@ -1,9 +1,16 @@
 import express from "express";
 import http from "http";
 import { Server } from "socket.io";
+import mongoose from "mongoose";
+import Document from "./Document";
 
 const app = express();
 const server = http.createServer(app);
+
+mongoose
+  .connect("mongodb://localhost:27017/doc")
+  .then(() => console.log("Connected! to db"));
+
 const io = new Server(server, {
   cors: {
     origin: [
@@ -16,8 +23,24 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   },
 });
-
+console.log("sadgadgas");
 app.use("/", express.static("public"));
+
+let isCreated: boolean = false;
+const defaultValue = "";
+
+let thatOneDoc: string;
+
+const createDoc = async (id: string) => {
+  if (id === null || isCreated) return;
+  const doc = await Document.create({ _id: id, data: defaultValue });
+
+  if (doc) {
+    thatOneDoc = id;
+    isCreated = true;
+  }
+  return doc;
+};
 io.on("connection", (socket) => {
   console.log(`${socket.id} user connected`);
   let thisRoomId;
@@ -69,13 +92,24 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("send-changes", async (delta) => {
-    console.log("text is in server");
+  socket.on("get-doc", async (documentId) => {
+    const document = await createDoc(documentId);
 
-    // await socket.join(roomId);
-    // setTimeout(() => socket.broadcast.emit("receive-changes", delta), 3000);
+    socket.emit("load-doc", document?.data);
+    console.log("doc sent to client");
 
-    socket.broadcast.emit("receive-changes", delta);
+    socket.on("send-changes", async (delta) => {
+      console.log("text is in server");
+
+      // await socket.join(roomId);
+      // setTimeout(() => socket.broadcast.emit("receive-changes", delta), 3000);
+
+      socket.broadcast.emit("receive-changes", delta);
+    });
+
+    socket.on("save-doc", async (data) => {
+      await Document.findByIdAndUpdate(documentId, { data });
+    });
   });
   socket.on("send-contents", async (contents) => {
     console.log("contents is in server");

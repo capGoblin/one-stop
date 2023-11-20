@@ -1,10 +1,136 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+// import React, { useContext, useEffect, useRef, useState } from "react";
+// import ReactQuill, { DeltaStatic, Sources } from "react-quill";
+// import "react-quill/dist/quill.snow.css";
+// import io, { Socket } from "socket.io-client";
+// import useMeetStore from "../store";
+// import { SocketContext } from "../Contexts/SocketContext";
+
+// const TOOLBAR_OPTIONS = [
+//   [{ header: [1, 2, 3, 4, 5, 6, false] }],
+//   [{ font: [] }],
+//   [{ list: "ordered" }, { list: "bullet" }],
+//   ["bold", "italic", "underline"],
+//   [{ color: [] }, { background: [] }],
+//   [{ script: "sub" }, { script: "super" }],
+//   [{ align: [] }],
+//   ["image", "blockquote", "code-block"],
+//   ["clean"],
+// ];
+
+// function TextEditor({ clickedIcon }: { clickedIcon: string }) {
+//   const { socket } = useContext(SocketContext);
+
+//   // const [socket, setSocket] = useState<Socket | null>();
+//   const { editorValue, setEditorValue } = useMeetStore();
+//   // const [quill, setQuill] = useState<>();
+//   // const [editorValue, setEditorValue] = useState("");
+//   const quillRef = useRef<ReactQuill>(); // Create a ref for the ReactQuill component
+
+//   // useEffect(() => {
+//   //   const socket = io("http://localhost:3000");
+//   //   setSocket(socket);
+
+//   //   return () => {
+//   //     socket.disconnect();
+//   //   };
+//   // }, []);
+
+//   useEffect(() => {
+//     // if (clickedIcon !== "FileText") {
+//     //   socket?.on("receive-contents", (contents) => {
+//     //     console.log(contents);
+
+//     //     quillRef.current?.getEditor().updateContents(contents);
+//     //     console.log(quillRef.current?.getEditor());
+//     //   });
+//     // }
+//     socket?.on("receive-changes", (delta) => {
+//       console.log(delta);
+
+//       console.log("delta got in client");
+
+//       if (quillRef.current) {
+//         console.log(quillRef.current.getEditor());
+//         console.log("safas");
+//         quillRef.current.getEditor().updateContents(delta);
+//       }
+
+//       console.log(quillRef.current!.getEditor());
+//     });
+//   }, [clickedIcon, quillRef, socket]);
+
+//   // useEffect(() => {
+//   //   console.log("quillRef:", quillRef.current);
+//   //   console.log("quillRef:", quillRef.current?.getEditor());
+//   //   console.log("quillRefsa:", quillRef.current?.getEditor());
+//   // }, [quillRef]);
+
+//   // useEffect(() => {
+//   //   Quill.on("text-change", function (delta, oldDelta, source) {
+//   //     if (source == "user") {
+//   //       console.log("A user action triggered this change.");
+//   //       socket?.emit("send-changes", delta);
+//   //     }
+//   //   });
+//   // }, []);
+
+//   function handleTextChange(
+//     value: string,
+//     delta: DeltaStatic,
+//     source: Sources
+//   ): void {
+//     if (source == "user") {
+//       setEditorValue(value);
+//       socket?.emit("send-changes", delta);
+//       // socket?.emit("send-contents", quillRef.current?.getEditorContents());
+//       // console.log(quillRef.current?.getEditorContents());
+//       console.log(delta);
+//     }
+//   }
+
+//   return (
+//     // <div className="flex flex-col justify-center items-center">
+//     //   {/* <h1 style={{ textAlign: "center" }}>Excalidraw Example</h1> */}
+//     //   <div className="flex items-center justify-center h-screen w-screen">
+//     <div
+//       className={`flex flex-col items-center ${
+//         clickedIcon === "FileText" ? "block" : "hidden"
+//       }`}
+//     >
+//       {" "}
+//       <ReactQuill
+//         ref={quillRef}
+//         theme="snow"
+//         value={editorValue}
+//         modules={{
+//           toolbar: TOOLBAR_OPTIONS,
+//         }}
+//         onChange={handleTextChange}
+//       />
+//       //{" "}
+//     </div>
+//     //   </div>
+//     // </div>
+//   );
+
+//   // return <ReactQuill  value={value} onChange={setValue} />;
+// }
+
+// export default TextEditor;
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import ReactQuill, { DeltaStatic, Sources } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import io, { Socket } from "socket.io-client";
 import useMeetStore from "../store";
 import { SocketContext } from "../Contexts/SocketContext";
 
+import { useParams } from "react-router-dom";
 const TOOLBAR_OPTIONS = [
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
   [{ font: [] }],
@@ -16,55 +142,66 @@ const TOOLBAR_OPTIONS = [
   ["image", "blockquote", "code-block"],
   ["clean"],
 ];
-
+const SAVE_INTERVAL_MS = 2000;
 function TextEditor({ clickedIcon }: { clickedIcon: string }) {
   const { socket } = useContext(SocketContext);
+
+  const { id: documentId } = useParams();
 
   // const [socket, setSocket] = useState<Socket | null>();
   const { editorValue, setEditorValue } = useMeetStore();
   // const [quill, setQuill] = useState<>();
   // const [editorValue, setEditorValue] = useState("");
   const quillRef = useRef<ReactQuill>(); // Create a ref for the ReactQuill component
-
   // useEffect(() => {
   //   const socket = io("http://localhost:3000");
   //   setSocket(socket);
-
   //   return () => {
   //     socket.disconnect();
   //   };
   // }, []);
-
   useEffect(() => {
-    if (clickedIcon !== "FileText") {
-      socket?.on("receive-contents", (contents) => {
-        console.log(contents);
+    if (socket == null) return;
 
-        quillRef.current?.getEditor().updateContents(contents);
-        console.log(quillRef.current?.getEditor());
-      });
-    }
-    socket?.on("receive-changes", (delta) => {
-      console.log(delta);
+    const interval = setInterval(() => {
+      socket.emit("save-document", quillRef.current?.getEditor().getContents());
+    }, SAVE_INTERVAL_MS);
 
-      console.log("delta got in client");
+    console.log("saved? ");
 
+    return () => {
+      clearInterval(interval);
+    };
+  }, [socket, quillRef]);
+  useEffect(() => {
+    if (socket == null) return;
+    socket.once("load-doc", (doc) => {
       if (quillRef.current) {
         console.log(quillRef.current.getEditor());
-        console.log("safas");
+        quillRef.current.getEditor().setContents(doc);
+      }
+    });
+
+    socket.emit("get-doc", documentId);
+
+    console.log("doc", documentId);
+  }, [documentId, socket]);
+  useEffect(() => {
+    socket?.on("receive-changes", (delta) => {
+      console.log(delta);
+      console.log("delta got in client");
+      if (quillRef.current) {
+        console.log(quillRef.current.getEditor());
         quillRef.current.getEditor().updateContents(delta);
       }
-
       console.log(quillRef.current!.getEditor());
     });
-  }, [clickedIcon, quillRef, socket]);
-
+  }, [quillRef, socket]);
   // useEffect(() => {
   //   console.log("quillRef:", quillRef.current);
   //   console.log("quillRef:", quillRef.current?.getEditor());
   //   console.log("quillRefsa:", quillRef.current?.getEditor());
   // }, [quillRef]);
-
   // useEffect(() => {
   //   Quill.on("text-change", function (delta, oldDelta, source) {
   //     if (source == "user") {
@@ -73,7 +210,6 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
   //     }
   //   });
   // }, []);
-
   function handleTextChange(
     value: string,
     delta: DeltaStatic,
@@ -82,38 +218,34 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
     if (source == "user") {
       setEditorValue(value);
       socket?.emit("send-changes", delta);
-      socket?.emit("send-contents", quillRef.current?.getEditorContents());
-      console.log(quillRef.current?.getEditorContents());
-      console.log(delta);
     }
   }
+
+  const editorStyles = {
+    opacity: clickedIcon !== "FileText" ? 1 : 1,
+    // transition: "opacity 0.3s ease-in-out", // Add a transition for a smooth opacity change
+    // display: "block",
+  };
 
   return (
     // <div className="flex flex-col justify-center items-center">
     //   {/* <h1 style={{ textAlign: "center" }}>Excalidraw Example</h1> */}
     //   <div className="flex items-center justify-center h-screen w-screen">
-    <div
-      className={`flex flex-col items-center ${
-        clickedIcon === "FileText" ? "block" : "hidden"
-      }`}
-    >
-      {" "}
-      <ReactQuill
-        ref={quillRef}
-        theme="snow"
-        value={editorValue}
-        modules={{
-          toolbar: TOOLBAR_OPTIONS,
-        }}
-        onChange={handleTextChange}
-      />
-      //{" "}
-    </div>
+
+    <ReactQuill
+      ref={quillRef}
+      theme="snow"
+      // className={}
+      value={editorValue}
+      modules={{
+        toolbar: TOOLBAR_OPTIONS,
+      }}
+      onChange={handleTextChange}
+      style={editorStyles}
+    />
+    //{" "}
     //   </div>
     // </div>
   );
-
-  // return <ReactQuill  value={value} onChange={setValue} />;
 }
-
 export default TextEditor;

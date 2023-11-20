@@ -13,7 +13,11 @@
     "@clerk/clerk-react": "^4.27.2",
     "@excalidraw/excalidraw": "^0.16.1",
     "@hocuspocus/provider": "^2.8.0",
+    "@liveblocks/client": "^1.7.1",
+    "@liveblocks/react": "^1.7.1",
+    "@liveblocks/yjs": "^1.7.1",
     "@tiptap/extension-collaboration": "^2.1.12",
+    "@tiptap/extension-collaboration-cursor": "^2.1.12",
     "@tiptap/pm": "^2.1.12",
     "@tiptap/react": "^2.1.12",
     "@tiptap/starter-kit": "^2.1.12",
@@ -29,7 +33,7 @@
     "socket.io-client": "^4.7.2",
     "y-prosemirror": "^1.2.1",
     "y-webrtc": "^10.2.6",
-    "yjs": "^13.6.8",
+    "yjs": "^13.6.9",
     "zustand": "^4.4.6"
   },
   "devDependencies": {
@@ -37,6 +41,7 @@
     "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^20.8.10",
     "@types/react": "^18.2.15",
+    "@types/uuid": "^9.0.7",
     "@types/react-dom": "^18.2.7",
     "@types/react-icons": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
