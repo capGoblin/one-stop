@@ -12,7 +12,15 @@ import useMeetStore from "../store";
 
 const socket = io("http://localhost:3000");
 
-function Draw({ clickedIcon }: { clickedIcon: string }) {
+function Draw({
+  clickedIcon,
+  movedRight,
+  roomId,
+}: {
+  clickedIcon: string;
+  movedRight: boolean;
+  roomId: string;
+}) {
   // const { socket } = useContext(SocketContext);
 
   // const [socket, setSocket] = useState<Socket | null>(null);
@@ -148,13 +156,24 @@ function Draw({ clickedIcon }: { clickedIcon: string }) {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center absolute z-0">
+      <div className="flex flex-col justify-center items-center relative z-0">
         {/* <h1 style={{ textAlign: "center" }}>Excalidraw Example</h1> */}
-        <div className="flex items-center justify-center h-screen w-screen">
+        <div
+          className={`${
+            clickedIcon !== "Video" && roomId === ""
+              ? "flex items-center justify-center h-screen w-screen transition-all duration-200 ease-out"
+              : clickedIcon !== "Video" && !movedRight
+              ? "flex justify-end items-start mt-10 h-screen w-full mr-32 transition-all duration-200 ease-out"
+              : clickedIcon !== "Video" && movedRight
+              ? "flex items-center justify-start h-screen w-full ml-72 transition-all duration-200 ease-out"
+              : ""
+          }`}
+        >
           <div
+            className=""
             style={{
               height: "90%",
-              width: "65%",
+              width: "67%",
               display: clickedIcon === "Draw" ? "block" : "none",
             }}
           >

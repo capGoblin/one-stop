@@ -373,7 +373,10 @@ const HomePage: React.FC = () => {
 
   const [clickedIcon, setClickedIcon] = useState<string>("Video");
   const [movedRight, setMovedRight] = useState(false);
-  const handleClick = () => {
+  // const handleClick = () => {
+  //   setMovedRight(!movedRight);
+  // };
+  const handleToggle = () => {
     setMovedRight(!movedRight);
   };
 
@@ -420,27 +423,37 @@ const HomePage: React.FC = () => {
           <div
             className={`${
               clickedIcon !== "Video" && !movedRight
-                ? "fixed flex flex-col z-10 left-24 top-28"
+                ? "fixed flex flex-col items-center justify-center z-10 left-20 top-10 space-y-0"
                 : clickedIcon !== "Video" && movedRight
-                ? "fixed flex flex-col z-10 right-24 top-28"
+                ? "fixed flex flex-col items-center justify-center z-10 right-7 top-10 space-y-0"
                 : ""
             }`}
           >
-            <button
-              className="text-black"
-              disabled={clickedIcon === "Video"}
+            {/* <button
+              className={`${
+                clickedIcon !== "Video" && roomId !== ""
+                  ? "text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold rounded-lg w-min py-2 px-20 grow-0 opacity-75"
+                  : ""
+              }`}
+              disabled={clickedIcon === "Video" || roomId === ""}
               onClick={handleClick}
             >
-              {clickedIcon === "Video" ? "" : "Toggle"}
-            </button>
+              {clickedIcon === "Video" || roomId === "" ? "" : "Toggle"}
+            </button> */}
             <div
               className={`${
                 clickedIcon === "Video" ? "flex justify-center" : ""
               }`}
             >
-              <div>
+              <div onClick={handleToggle}>
                 <Video
-                  className={`${clickedIcon !== "Video" ? "m-10" : ""}`}
+                  className={`${
+                    clickedIcon !== "Video" && !movedRight
+                      ? "m-28 rounded-full cursor-pointer"
+                      : clickedIcon !== "Video" && movedRight
+                      ? "m-10 rounded-full cursor-pointer"
+                      : ""
+                  }`}
                   reff={localVideoRef}
                   muted={true}
                   style={{
@@ -449,9 +462,15 @@ const HomePage: React.FC = () => {
                   }}
                 />
               </div>
-              <div>
+              <div onClick={handleToggle}>
                 <Video
-                  className={`${clickedIcon !== "Video" ? "m-10" : ""}`}
+                  className={`${
+                    clickedIcon !== "Video" && !movedRight
+                      ? "m-28 rounded-full cursor-pointer"
+                      : clickedIcon !== "Video" && movedRight
+                      ? "m-10 rounded-full cursor-pointer"
+                      : ""
+                  }`}
                   reff={remoteVideoRef}
                   muted={false}
                   style={{
@@ -544,7 +563,11 @@ const HomePage: React.FC = () => {
 
         {/* <TextEditor clickedIcon={clickedIcon} /> */}
         <TextEditor clickedIcon={clickedIcon} />
-        <Draw clickedIcon={clickedIcon} />
+        <Draw
+          clickedIcon={clickedIcon}
+          movedRight={movedRight}
+          roomId={roomId}
+        />
         {/* {clickedIcon === "Draw" ? <Draw /> : null} */}
       </div>
     </div>

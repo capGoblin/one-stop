@@ -41,12 +41,12 @@ const Video = ({ reff, muted, className, style }: Props) => {
   //     // if (ref.current) ref.current.srcObject = stream;
   //     if (muted) setIsMuted(muted);
   //   }, [muted]);
-  const defaultClassName = "m-20"; // Add default classes here
+  const defaultClassName = "m-20 object-cover rounded-3xl"; // Add default classes here
 
   const defaultStyle = {
     height: "60vh",
     width: "80vh",
-    border: "1px solid green",
+    // border: "1px solid green",
     // display: clickedIcon === "Video" ? "block" : "none",
     // Add other default styles here
   };
@@ -54,7 +54,7 @@ const Video = ({ reff, muted, className, style }: Props) => {
   return (
     // <Container>
     <video
-      className={`${className} ? ${className} : ${defaultClassName} `}
+      className={`${className} ? ${className}: ${defaultClassName} `}
       ref={reff}
       muted={muted}
       autoPlay

@@ -181,6 +181,8 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
 
   const [documentData, setDocumentData] = useState<DeltaStatic>();
 
+  const [fetchOnce, setFetchOnce] = useState<boolean>(false);
+
   const getLatestDoc = async (roomId: string) => {
     const d = await Document.findById(roomId);
     if (d) return d;
@@ -246,6 +248,7 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
   useEffect(() => {
     if (clickedIcon !== "FileText" || roomId === "") return;
     const fetchDocument = async () => {
+      if (fetchOnce) return;
       try {
         const response = await fetch(`http://localhost:3000/find/${roomId}`);
         if (response.ok) {
@@ -270,6 +273,7 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
     };
     if (clickedIcon === "FileText") {
       fetchDocument();
+      setFetchOnce(true);
     }
   }, [clickedIcon, roomId]);
   /////////////////////
