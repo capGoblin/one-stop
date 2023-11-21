@@ -10,6 +10,7 @@ import GridLayout from "react-grid-layout";
 import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
 
 import Video from "./Video";
+import BottomBar from "./BottomBar";
 // import { SocketContext, useSocket } from "../Contexts/SocketContext";
 // TODO: Batch Update the draw and text once comp switched
 const socket = io("http://localhost:3000");
@@ -28,7 +29,7 @@ const HomePage: React.FC = () => {
 
   // const remoteVideoRefs: Record<string, React.RefObject<HTMLVideoElement>> = {};
 
-  // const [localStream, setLocalStream] = useState<MediaStream>();
+  const [localStream, setLocalStream] = useState<MediaStream>();
   // const [remoteStream, setRemoteStream] = useState<MediaStream>();
 
   // const [rtcPeerConnection, setRtcPeerConnection] =
@@ -149,7 +150,7 @@ const HomePage: React.FC = () => {
       audio: true,
       video: true,
     });
-    // setLocalStream(stream);
+    setLocalStream(stream);
     console.log(stream);
     // setLocalStream(stream);
     // console.log(localStream);
@@ -380,6 +381,40 @@ const HomePage: React.FC = () => {
     setMovedRight(!movedRight);
   };
 
+  const [isMuted, setIsMuted] = useState(false);
+  const [isVideoOn, setIsVideoOn] = useState(false);
+
+  const handleToggleMute = async () => {
+    const audioTracks = localStream?.getAudioTracks();
+
+    audioTracks?.forEach((track) => {
+      if (track.enabled) {
+        track.enabled = false; // Mute the track
+        console.log("muted");
+        setIsMuted(true);
+      } else {
+        track.enabled = true; // Unmute the track
+        setIsMuted(false);
+        console.log("unmuted");
+      }
+    });
+  };
+  const handleToggleVideo = async () => {
+    const videoTracks = localStream?.getVideoTracks();
+
+    videoTracks?.forEach((track) => {
+      if (track.enabled) {
+        track.enabled = false; // turn off the video
+        console.log("turned off");
+        setIsVideoOn(false);
+      } else {
+        track.enabled = true; // turn on the video
+        setIsVideoOn(true);
+        console.log("unmuted");
+      }
+    });
+  };
+
   return (
     // <TextEditor clickedIcon={clickedIcon} />
 
@@ -394,7 +429,7 @@ const HomePage: React.FC = () => {
           placeholder="Type the damn Room Id..."
         />
         <button
-          className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider py-2 px-6 rounded-lg w-min grow-0"
+          className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider py-2 px-6 rounded-lg w-min grow-0 transition-all duration-300 transform hover:translate-y-1 hover:shadow-lg"
           onClick={joinRoom}
         >
           Connect
@@ -545,15 +580,21 @@ const HomePage: React.FC = () => {
             ></video> */}
           {/* </div> */}
           {/* </div> */}
-          <button
+          {/* <button
             className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider rounded-lg w-min py-2 px-6 grow-0 mb-10"
             style={{
               display: clickedIcon === "Video" ? "block" : "none",
             }}
-            onClick={disconnectRoom}
+            onClick={handleToggleVideo}
           >
             Leave
-          </button>
+          </button> */}
+          <BottomBar
+            handleToggleMute={handleToggleMute}
+            disconnectRoom={disconnectRoom}
+            handleToggleVideo={handleToggleVideo}
+            clickedIcon={clickedIcon}
+          />
           {/* </div> */}
         </div>
         {/* {clickedIcon === "Video" ? (
