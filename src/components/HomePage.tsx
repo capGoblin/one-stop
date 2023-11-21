@@ -589,13 +589,22 @@ const HomePage: React.FC = () => {
           >
             Leave
           </button> */}
+
+          {/* </div> */}
+
+          <TextEditor clickedIcon={clickedIcon} />
+          <Draw
+            clickedIcon={clickedIcon}
+            movedRight={movedRight}
+            roomId={roomId}
+          />
+
           <BottomBar
             handleToggleMute={handleToggleMute}
             disconnectRoom={disconnectRoom}
             handleToggleVideo={handleToggleVideo}
             clickedIcon={clickedIcon}
           />
-          {/* </div> */}
         </div>
         {/* {clickedIcon === "Video" ? (
           // <div className="flex flex-col items-center justify-center h-screen space-x-20">
@@ -603,12 +612,7 @@ const HomePage: React.FC = () => {
         ) : null} */}
 
         {/* <TextEditor clickedIcon={clickedIcon} /> */}
-        <TextEditor clickedIcon={clickedIcon} />
-        <Draw
-          clickedIcon={clickedIcon}
-          movedRight={movedRight}
-          roomId={roomId}
-        />
+
         {/* {clickedIcon === "Draw" ? <Draw /> : null} */}
       </div>
     </div>

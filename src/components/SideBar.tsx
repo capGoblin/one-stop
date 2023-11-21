@@ -27,7 +27,7 @@ const SideBar = (props: Props) => {
   const [clickedIcons, setClickedIcons] = useState<ClickedIcons>({
     GoHome: false,
     Draw: false,
-    Video: false,
+    Video: true,
     FileText: false,
     CodeBox: false,
   });
