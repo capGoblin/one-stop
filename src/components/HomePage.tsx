@@ -6,12 +6,12 @@ import SideBar from "./SideBar";
 import TextEditor from "./TextEditor";
 import Draw from "./Draw";
 import useMeetStore from "../store";
-import { SocketContext, useSocket } from "../Contexts/SocketContext";
+// import { SocketContext, useSocket } from "../Contexts/SocketContext";
 // TODO: Batch Update the draw and text once comp switched
-// const socket = io("http://localhost:3000");
+const socket = io("http://localhost:3000");
 
 const HomePage: React.FC = () => {
-  const { socket } = useContext(SocketContext);
+  // const { socket } = useContext(SocketContext);
   // const { socket } = useSocket();
   const { rtcPeerConnection, setRtcPeerConnection } = useMeetStore();
   // TODO: use something from mesh for roomInputRef
@@ -370,6 +370,8 @@ const HomePage: React.FC = () => {
   const [clickedIcon, setClickedIcon] = useState<string>("Video");
 
   return (
+    // <TextEditor clickedIcon={clickedIcon} />
+
     <div>
       <div className="flex space-x-10 mt-10">
         {/* <div className=""> */}
@@ -452,7 +454,7 @@ const HomePage: React.FC = () => {
         </div>
         {/* {clickedIcon === "Video" ? (
           // <div className="flex flex-col items-center justify-center h-screen space-x-20">
-          
+
         ) : null} */}
 
         {/* <TextEditor clickedIcon={clickedIcon} /> */}

@@ -129,7 +129,7 @@ import "react-quill/dist/quill.snow.css";
 import io, { Socket } from "socket.io-client";
 import useMeetStore from "../store";
 import { SocketContext } from "../Contexts/SocketContext";
-
+import Document from "../../server/Document";
 import { useParams } from "react-router-dom";
 const TOOLBAR_OPTIONS = [
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -142,17 +142,35 @@ const TOOLBAR_OPTIONS = [
   ["image", "blockquote", "code-block"],
   ["clean"],
 ];
+
+//  TODO: works when it is live!
+// when one types, save every 2 sec
+// when other user clicks clickedIcon, fetch updated new one
+// const socket = io("http://localhost:3000");
 const SAVE_INTERVAL_MS = 2000;
 function TextEditor({ clickedIcon }: { clickedIcon: string }) {
-  const { socket } = useContext(SocketContext);
+  const [socket, setSocket] = useState<Socket | null>();
+
+  // const { socket } = useContext(SocketContext);
 
   const { id: documentId } = useParams();
 
   // const [socket, setSocket] = useState<Socket | null>();
   const { editorValue, setEditorValue } = useMeetStore();
+
+  useEffect(() => {
+    const socket = io("http://localhost:3000");
+    setSocket(socket);
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
   // const [quill, setQuill] = useState<>();
   // const [editorValue, setEditorValue] = useState("");
-  const quillRef = useRef<ReactQuill>(); // Create a ref for the ReactQuill component
+  const quillRef = useRef<ReactQuill>(null); // Create a ref for the ReactQuill component
+
+  const [roomId, setRoomId] = useState<string>("");
   // useEffect(() => {
   //   const socket = io("http://localhost:3000");
   //   setSocket(socket);
@@ -160,11 +178,144 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
   //     socket.disconnect();
   //   };
   // }, []);
+
+  const [documentData, setDocumentData] = useState<string>("");
+
+  const getLatestDoc = async (roomId: string) => {
+    const d = await Document.findById(roomId);
+    if (d) return d;
+  };
+
+  useEffect(() => {
+    socket?.on("roomId", (roomIdFromServer: string) => {
+      setRoomId(roomIdFromServer);
+      console.log(roomIdFromServer);
+      socket?.emit("getem", roomId);
+    });
+  }, [roomId, socket]);
+
+  // useEffect(() => {
+  //   const fetchDocument = async (roomID: string) => {
+  //     try {
+  //       const response = await fetch(`http://localhost:3000/find/${roomID}`);
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         console.log(data.data);
+
+  //         if (quillRef.current) {
+  //           console.log(quillRef.current.getEditor());
+  //           quillRef.current.getEditor().insertText(0, "data.data");
+  //         }
+  //         setDocumentData(data);
+  //       } else {
+  //         console.error("Failed to fetch document");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching document:", error);
+  //     }
+  //   };
+  //   // socket?.on("room_joined", (roomIdFromServer: string) => {
+  //   //   setRoomId(roomIdFromServer);
+  //   //   console.log(roomIdFromServer);
+  //   //   fetchDocument(roomIdFromServer);
+  //   // });
+
+  //   // Fetch only if roomId is not an empty string
+  // }, [roomId, quillRef]);
+  /////////////////////////////////////
+  // useEffect(() => {
+  //   const fetchDocument = async () => {
+  //     try {
+  //       const response = await fetch(`http://localhost:3000/find/${roomId}`);
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         console.log(data);
+
+  //         setDocumentData(data.data);
+  //       } else {
+  //         console.error("Failed to fetch document");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching document:", error);
+  //     }
+  //   };
+  //   if (roomId !== "") {
+  //     fetchDocument();
+  //   }
+  // }, [roomId, clickedIcon]);
+  useEffect(() => {
+    if (clickedIcon !== "FileText" || roomId === "") return;
+    const fetchDocument = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/find/${roomId}`);
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+
+          if (quillRef.current) {
+            console.log(quillRef.current.getEditor());
+            quillRef.current.getEditor().insertText(0, data.data);
+            console.log(quillRef.current.getEditor().getContents());
+          }
+
+          setDocumentData(data.data);
+        } else {
+          console.error("Failed to fetch document");
+        }
+      } catch (error) {
+        console.error("Error fetching document:", error);
+      }
+    };
+    if (clickedIcon === "FileText") {
+      fetchDocument();
+    }
+  }, [clickedIcon, roomId]);
+  /////////////////////
+  // useEffect(() => {
+  //   const fetchDocument = async () => {
+  //     try {
+  //       const response = await fetch(`http://localhost:3000/find/${roomId}`);
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         console.log(data);
+
+  //         setDocumentData(data.data);
+  //       } else {
+  //         console.error("Failed to fetch document");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching document:", error);
+  //     }
+  //   };
+  //   fetchDocument();
+  // }, []);
+
+  // useEffect(() => {
+  //   if (roomId === undefined) return;
+  //   const doc = getLatestDoc(roomId);
+
+  //   if (quillRef.current) {
+  //     console.log(quillRef.current.getEditor());
+  //     quillRef.current.getEditor().insertText(0, doc);
+  //   }
+  // }, [clickedIcon, roomId]);
   useEffect(() => {
     if (socket == null) return;
 
     const interval = setInterval(() => {
-      socket.emit("save-document", quillRef.current?.getEditor().getContents());
+      const delta = quillRef.current?.getEditor().getContents();
+      if (delta && delta.ops && delta.ops.length > 0) {
+        const firstInsert = delta.ops[0].insert;
+        if (typeof firstInsert === "string" && firstInsert.trim().length > 0) {
+          console.log(firstInsert);
+          const data = {
+            roomId,
+            string: firstInsert,
+          };
+          // socket.emit("save-doc", { roomId, saveDoc: firstInsert });
+          socket.emit("save-doc", data);
+        }
+      }
     }, SAVE_INTERVAL_MS);
 
     console.log("saved? ");
@@ -172,22 +323,35 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
     return () => {
       clearInterval(interval);
     };
-  }, [socket, quillRef]);
-  useEffect(() => {
-    if (socket == null) return;
-    socket.once("load-doc", (doc) => {
-      if (quillRef.current) {
-        console.log(quillRef.current.getEditor());
-        quillRef.current.getEditor().setContents(doc);
-      }
-    });
+  }, [socket, quillRef, roomId]);
+  // useEffect(() => {
+  //   socket?.on("load-doc", (data: string) => {
+  //     if (data === null) return;
+  //     console.log(data);
+  //     const init: string = `${data}`;
+  //     if (quillRef.current) {
+  //       console.log(quillRef.current.getEditor());
+  //       quillRef.current.getEditor().insertText(0, init);
+  //       console.log(quillRef.current.getEditor());
+  //     } else {
+  //       console.log("realyy? ");
+  //     }
+  //   });
 
-    socket.emit("get-doc", documentId);
+  //   socket?.emit("get-doc", roomId);
 
-    console.log("doc", documentId);
-  }, [documentId, socket]);
+  //   console.log("doc", roomId);
+  // }, [roomId, socket, quillRef]);
+
   useEffect(() => {
-    socket?.on("receive-changes", (delta) => {
+    if (quillRef.current) {
+      console.log(quillRef.current.getEditor());
+      quillRef.current.getEditor().insertText(0, documentData);
+      console.log(quillRef.current.getEditor().getContents());
+    }
+  }, [documentData]);
+  useEffect(() => {
+    socket?.on("receive-changes", (delta: DeltaStatic) => {
       console.log(delta);
       console.log("delta got in client");
       if (quillRef.current) {
@@ -221,11 +385,11 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
     }
   }
 
-  const editorStyles = {
-    opacity: clickedIcon !== "FileText" ? 1 : 1,
-    // transition: "opacity 0.3s ease-in-out", // Add a transition for a smooth opacity change
-    // display: "block",
-  };
+  // const editorStyles = {
+  //   opacity: clickedIcon !== "FileText" ? 1 : 1,
+  // transition: "opacity 0.3s ease-in-out", // Add a transition for a smooth opacity change
+  // display: "block",
+  // };
 
   return (
     // <div className="flex flex-col justify-center items-center">
@@ -241,7 +405,7 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
         toolbar: TOOLBAR_OPTIONS,
       }}
       onChange={handleTextChange}
-      style={editorStyles}
+      // style={editorStyles}
     />
     //{" "}
     //   </div>

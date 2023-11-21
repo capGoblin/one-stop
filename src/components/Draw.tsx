@@ -8,12 +8,12 @@ import { ExcalidrawElement } from "@excalidraw/excalidraw/types/element/types";
 import { Excalidraw } from "@excalidraw/excalidraw";
 import debounce from "lodash.debounce";
 import useMeetStore from "../store";
-import { SocketContext } from "../Contexts/SocketContext";
+// import { SocketContext } from "../Contexts/SocketContext";
 
-// const socket = io("http://localhost:3000");
+const socket = io("http://localhost:3000");
 
 function Draw({ clickedIcon }: { clickedIcon: string }) {
-  const { socket } = useContext(SocketContext);
+  // const { socket } = useContext(SocketContext);
 
   // const [socket, setSocket] = useState<Socket | null>(null);
   // const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI>();

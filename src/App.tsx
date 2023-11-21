@@ -35,9 +35,9 @@ function App(props) {
               index
               element={
                 <>
-                  <SocketProvider>
-                    <HomePage />
-                  </SocketProvider>
+                  {/* <SocketProvider> */}
+                  <HomePage />
+                  {/* </SocketProvider> */}
                 </>
               }
             />

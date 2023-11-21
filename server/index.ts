@@ -3,6 +3,7 @@ import http from "http";
 import { Server } from "socket.io";
 import mongoose from "mongoose";
 import Document from "./Document";
+import cors from "cors";
 
 const app = express();
 const server = http.createServer(app);
@@ -24,23 +25,25 @@ const io = new Server(server, {
   },
 });
 console.log("sadgadgas");
+
+app.use(cors());
+
 app.use("/", express.static("public"));
 
-let isCreated: boolean = false;
-const defaultValue = "";
+const defaultValue = "cool?";
 
-let thatOneDoc: string;
+const findOrCreateDoc = async (id: string) => {
+  if (id === null) return;
 
-const createDoc = async (id: string) => {
-  if (id === null || isCreated) return;
-  const doc = await Document.create({ _id: id, data: defaultValue });
+  // find and return
+  const d = await Document.findById(id);
+  if (d) return d;
+  // const doc = await Document.create({ _id: id, data: defaultValue });
 
-  if (doc) {
-    thatOneDoc = id;
-    isCreated = true;
-  }
-  return doc;
+  // else create new and return
+  // return await Document.create({ _id: id, data: defaultValue });
 };
+
 io.on("connection", (socket) => {
   console.log(`${socket.id} user connected`);
   let thisRoomId;
@@ -75,6 +78,7 @@ io.on("connection", (socket) => {
       TotalRooms.get(roomId)?.push(socket.id);
 
       socket.emit("room_joined", roomId);
+      socket.broadcast.emit("roomId", roomId);
       socket.emit("totalRoomsUpdate", TotalRooms, thisRoomId);
     } else if (numberOfClients === 2) {
       console.log(
@@ -92,25 +96,45 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("get-doc", async (documentId) => {
-    const document = await createDoc(documentId);
-
-    socket.emit("load-doc", document?.data);
-    console.log("doc sent to client");
-
-    socket.on("send-changes", async (delta) => {
-      console.log("text is in server");
-
-      // await socket.join(roomId);
-      // setTimeout(() => socket.broadcast.emit("receive-changes", delta), 3000);
-
-      socket.broadcast.emit("receive-changes", delta);
-    });
-
-    socket.on("save-doc", async (data) => {
-      await Document.findByIdAndUpdate(documentId, { data });
-    });
+  socket.on("send-changes", async (as) => {
+    // const document = await findOrCreateDoc("ha");
+    // await socket.join(roomId);
+    // setTimeout(() => socket.broadcast.emit("receive-changes", delta), 3000);
+    // socket.broadcast.emit("receive-changes", document?.data);
   });
+  // socket.on("send-changes", async (delta) => {
+  //   console.log("text is in server", delta);
+
+  //   const document = await findOrCreateDoc("ha");
+
+  //   // await socket.join(roomId);
+  //   // setTimeout(() => socket.broadcast.emit("receive-changes", delta), 3000);
+
+  //   socket.broadcast.emit("receive-changes", document?.data);
+  // });
+
+  // socket.on("get-doc", async (roomIdFromClient) => {
+  //   const document = await findOrCreateDoc(roomIdFromClient);
+  //   if (document) {
+  //     console.log("doc is treu seeeeeeeeeeeeee", document.data);
+  //   }
+  //   socket.emit("load-doc", document?.data);
+  //   console.log("doc sent to client");
+
+  socket.on("send-changes", (delta) => {
+    console.log("text is in server");
+
+    // await socket.join(roomId);
+    // setTimeout(() => socket.broadcast.emit("receive-changes", delta), 3000);
+
+    socket.broadcast.emit("receive-changes", delta);
+  });
+
+  socket.on("save-doc", async (data) => {
+    console.log("asggadsgsdgddsds", data.roomId, data.string);
+    await Document.findByIdAndUpdate(data.roomId, { data: data.string });
+  });
+
   socket.on("send-contents", async (contents) => {
     console.log("contents is in server");
 
@@ -174,6 +198,23 @@ io.on("connection", (socket) => {
       socket.broadcast.to(event.roomId).emit("webrtc_ice_candidate", event);
     }
   );
+});
+
+app.get("/find/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const document = await findOrCreateDoc(id);
+    console.log("heteteasg", document);
+
+    if (document) {
+      res.json({ data: document.data });
+    } else {
+      res.status(404).json({ message: "Document not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 const port = process.env.PORT || 3000;
