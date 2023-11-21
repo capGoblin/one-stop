@@ -405,9 +405,7 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
     <ReactQuill
       ref={quillRef}
       theme="snow"
-      className={`flex flex-col ${
-        clickedIcon !== "FileText" ? "hidden" : "block"
-      }  `}
+      className={`${clickedIcon !== "FileText" ? "hidden" : "block"}`}
       value={editorValue}
       modules={{
         syntax: true,

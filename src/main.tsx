@@ -13,6 +13,9 @@ import {
 import App from "./App.tsx";
 import HomePage from "./Components/HomePage.tsx";
 
+import "react-grid-layout/css/styles.css";
+import "react-resizable/css/styles.css";
+
 if (!import.meta.env.VITE_REACT_APP_CLERK_PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key");
 }

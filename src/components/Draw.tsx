@@ -148,13 +148,13 @@ function Draw({ clickedIcon }: { clickedIcon: string }) {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center">
+      <div className="flex flex-col justify-center items-center absolute z-0">
         {/* <h1 style={{ textAlign: "center" }}>Excalidraw Example</h1> */}
         <div className="flex items-center justify-center h-screen w-screen">
           <div
             style={{
               height: "90%",
-              width: "80%",
+              width: "65%",
               display: clickedIcon === "Draw" ? "block" : "none",
             }}
           >

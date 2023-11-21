@@ -6,6 +6,10 @@ import SideBar from "./SideBar";
 import TextEditor from "./TextEditor";
 import Draw from "./Draw";
 import useMeetStore from "../store";
+import GridLayout from "react-grid-layout";
+import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
+
+import Video from "./Video";
 // import { SocketContext, useSocket } from "../Contexts/SocketContext";
 // TODO: Batch Update the draw and text once comp switched
 const socket = io("http://localhost:3000");
@@ -368,6 +372,10 @@ const HomePage: React.FC = () => {
   // }
 
   const [clickedIcon, setClickedIcon] = useState<string>("Video");
+  const [movedRight, setMovedRight] = useState(false);
+  const handleClick = () => {
+    setMovedRight(!movedRight);
+  };
 
   return (
     // <TextEditor clickedIcon={clickedIcon} />
@@ -404,17 +412,94 @@ const HomePage: React.FC = () => {
       {/* <button onClick={handleSignOutClickEvent}>Sign out</button> */}
       {/* </div> */}
       <div>
-        <div
-          className={`flex flex-col items-center ${
-            clickedIcon === "Video" ? "block" : "none"
-          }`}
-        >
+        <div className={`flex flex-col items-center`}>
           {/* <div className="flex flex-col justify-evenly"> */}
 
           {/* <div className="flex space-x-10"> */}
           {/* <div className="mx-auto"> */}
-          <div className="flex">
-            <video
+          <div
+            className={`${
+              clickedIcon !== "Video" && !movedRight
+                ? "fixed flex flex-col z-10 left-24 top-28"
+                : clickedIcon !== "Video" && movedRight
+                ? "fixed flex flex-col z-10 right-24 top-28"
+                : ""
+            }`}
+          >
+            <button
+              className="text-black"
+              disabled={clickedIcon === "Video"}
+              onClick={handleClick}
+            >
+              {clickedIcon === "Video" ? "" : "Toggle"}
+            </button>
+            <div
+              className={`${
+                clickedIcon === "Video" ? "flex justify-center" : ""
+              }`}
+            >
+              <div>
+                <Video
+                  className={`${clickedIcon !== "Video" ? "m-10" : ""}`}
+                  reff={localVideoRef}
+                  muted={true}
+                  style={{
+                    height: clickedIcon !== "Video" ? "30vh" : "60vh",
+                    width: clickedIcon !== "Video" ? "30vh" : "80vh",
+                  }}
+                />
+              </div>
+              <div>
+                <Video
+                  className={`${clickedIcon !== "Video" ? "m-10" : ""}`}
+                  reff={remoteVideoRef}
+                  muted={false}
+                  style={{
+                    height: clickedIcon !== "Video" ? "30vh" : "60vh",
+                    width: clickedIcon !== "Video" ? "30vh" : "80vh",
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* {clickedIcon !== "Video" ? (
+            <div
+              id="overlap"
+              className="flex flex-col justify-center absolute z-10"
+            >
+              <div>
+                <Video
+                  reff={localVideoRef}
+                  muted={true}
+                  clickedIcon={clickedIcon}
+                  style={{ height: "10vh" }}
+                />
+              </div>
+              <div>
+                <Video
+                  reff={remoteVideoRef}
+                  muted={false}
+                  clickedIcon={clickedIcon}
+                />
+              </div>
+            </div>
+          ) : null} */}
+
+          {/* <div className="flex"> */}
+          {/* <Video
+              name={"smthng"}
+              reff={localVideoRef}
+              muted={true}
+              clickedIcon={clickedIcon}
+            />
+            <Video
+              name={"smthng"}
+              reff={remoteVideoRef}
+              muted={false}
+              clickedIcon={clickedIcon}
+            /> */}
+          {/* <video
               className="m-20"
               ref={localVideoRef}
               autoPlay
@@ -438,8 +523,8 @@ const HomePage: React.FC = () => {
                 border: "1px solid red",
                 display: clickedIcon === "Video" ? "block" : "none",
               }}
-            ></video>
-          </div>
+            ></video> */}
+          {/* </div> */}
           {/* </div> */}
           <button
             className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider rounded-lg w-min py-2 px-6 grow-0 mb-10"
