@@ -179,7 +179,7 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
   //   };
   // }, []);
 
-  const [documentData, setDocumentData] = useState<string>("");
+  const [documentData, setDocumentData] = useState<DeltaStatic>();
 
   const getLatestDoc = async (roomId: string) => {
     const d = await Document.findById(roomId);
@@ -254,7 +254,9 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
 
           if (quillRef.current) {
             console.log(quillRef.current.getEditor());
-            quillRef.current.getEditor().insertText(0, data.data);
+
+            // quillRef.current.getEditor().insertText(0, data.data);
+            quillRef.current.getEditor().updateContents(data.data);
             console.log(quillRef.current.getEditor().getContents());
           }
 
@@ -304,17 +306,18 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
 
     const interval = setInterval(() => {
       const delta = quillRef.current?.getEditor().getContents();
-      if (delta && delta.ops && delta.ops.length > 0) {
-        const firstInsert = delta.ops[0].insert;
-        if (typeof firstInsert === "string" && firstInsert.trim().length > 0) {
-          console.log(firstInsert);
-          const data = {
-            roomId,
-            string: firstInsert,
-          };
-          // socket.emit("save-doc", { roomId, saveDoc: firstInsert });
-          socket.emit("save-doc", data);
-        }
+      console.log(delta);
+      if (delta && delta.ops && delta.ops.length > 1) {
+        // const firstInsert = delta.ops[0].insert;
+        // if (typeof firstInsert === "string") {
+        console.log(delta);
+        const data = {
+          roomId,
+          delta,
+        };
+        // socket.emit("save-doc", { roomId, saveDoc: firstInsert });
+        socket.emit("save-doc", data);
+        // }
       }
     }, SAVE_INTERVAL_MS);
 
@@ -346,7 +349,10 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
   useEffect(() => {
     if (quillRef.current) {
       console.log(quillRef.current.getEditor());
-      quillRef.current.getEditor().insertText(0, documentData);
+
+      quillRef.current.getEditor().updateContents(documentData);
+
+      // quillRef.current.getEditor().insertText(0, documentData);
       console.log(quillRef.current.getEditor().getContents());
     }
   }, [documentData]);

@@ -30,7 +30,7 @@ app.use(cors());
 
 app.use("/", express.static("public"));
 
-const defaultValue = "";
+const defaultValue = "cool?";
 
 const findOrCreateDoc = async (id: string) => {
   if (id === null) return;
@@ -131,8 +131,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("save-doc", async (data) => {
-    console.log("asggadsgsdgddsds", data.roomId, data.string);
-    await Document.findByIdAndUpdate(data.roomId, { data: data.string });
+    console.log("asggadsgsdgddsds", data.roomId, data.delta);
+    await Document.findByIdAndUpdate(data.roomId, { data: data.delta });
   });
 
   socket.on("send-contents", async (contents) => {
