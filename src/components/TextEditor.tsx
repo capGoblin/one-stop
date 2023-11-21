@@ -385,11 +385,11 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
     }
   }
 
-  // const editorStyles = {
-  //   opacity: clickedIcon !== "FileText" ? 1 : 1,
-  // transition: "opacity 0.3s ease-in-out", // Add a transition for a smooth opacity change
-  // display: "block",
-  // };
+  const editorStyles = {
+    opacity: clickedIcon !== "FileText" ? 0 : 1,
+    // transition: "opacity 0.3s ease-in-out", // Add a transition for a smooth opacity change
+    display: "block",
+  };
 
   return (
     // <div className="flex flex-col justify-center items-center">
@@ -405,7 +405,7 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
         toolbar: TOOLBAR_OPTIONS,
       }}
       onChange={handleTextChange}
-      // style={editorStyles}
+      style={editorStyles}
     />
     //{" "}
     //   </div>

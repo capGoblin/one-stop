@@ -30,7 +30,7 @@ app.use(cors());
 
 app.use("/", express.static("public"));
 
-const defaultValue = "cool?";
+const defaultValue = "";
 
 const findOrCreateDoc = async (id: string) => {
   if (id === null) return;
@@ -41,7 +41,7 @@ const findOrCreateDoc = async (id: string) => {
   // const doc = await Document.create({ _id: id, data: defaultValue });
 
   // else create new and return
-  // return await Document.create({ _id: id, data: defaultValue });
+  return await Document.create({ _id: id, data: defaultValue });
 };
 
 io.on("connection", (socket) => {
