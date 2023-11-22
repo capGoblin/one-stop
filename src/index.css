@@ -9,11 +9,11 @@
   }
 }
 
-.excalidraw__canvas-wrapper,
-.excalidraw__canvas.static {
-  /* pointer-events: none; */
-  border-radius: 25px;
-}
+/* .excalidraw__canvas-wrapper, */
+/* .excalidraw__canvas.static { */
+/* pointer-events: none; */
+/* border-radius: 25px; */
+/* } */
 
 /* div .ql-toolbar.ql-snow {
   @apply flex justify-center sticky top-0 z-10 bg-gray-100 border-none shadow-md;

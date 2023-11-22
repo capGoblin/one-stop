@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { IconType } from "react-icons";
 import { AiFillAudio, AiOutlineAudioMuted } from "react-icons/ai";
 import { MdCallEnd } from "react-icons/md";
@@ -10,7 +10,11 @@ interface Props {
   handleToggleVideo: () => void;
   clickedIcon: string;
 }
-
+// TODO: touchup bottombar
+// handle routes and auth
+// TODO: add HomePage (mimic easyCall), remove CONNECT input
+// add codeEditor
+// add Postgres, add Pion
 const BottomBar = ({
   handleToggleMute,
   disconnectRoom,
@@ -60,7 +64,7 @@ const BottomBar = ({
           )}
         </button>
         <button
-          className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold rounded-full w-min py-3 px-36 grow-0 mb-10"
+          className="text-secondary bg-red-600 hover:text-gray-900 hover:bg-red-600 hover:font-bold font-semibold rounded-full w-min py-3 px-36 grow-0 mb-10"
           onClick={disconnectRoom}
         >
           {<MdCallEnd />}

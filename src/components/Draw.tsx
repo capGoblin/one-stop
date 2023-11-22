@@ -155,6 +155,8 @@ function Draw({
   );
 
   return (
+    // full mr-32
+    // full ml-72
     <>
       <div className="flex flex-col justify-center items-center relative z-0">
         {/* <h1 style={{ textAlign: "center" }}>Excalidraw Example</h1> */}
@@ -163,9 +165,9 @@ function Draw({
             clickedIcon !== "Video" && roomId === ""
               ? "flex items-center justify-center h-screen w-screen transition-all duration-200 ease-out"
               : clickedIcon !== "Video" && !movedRight
-              ? "flex justify-end items-start mt-10 h-screen w-full mr-32 transition-all duration-200 ease-out"
+              ? "flex justify-end items-start mt-10 h-screen w-screen transition-all duration-200 ease-out"
               : clickedIcon !== "Video" && movedRight
-              ? "flex items-center justify-start h-screen w-full ml-72 transition-all duration-200 ease-out"
+              ? "flex items-center justify-start h-screen w-screen transition-all duration-200 ease-out"
               : ""
           }`}
         >
