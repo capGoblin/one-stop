@@ -13,42 +13,42 @@ import {
 import { v4 as uuidV4 } from "uuid";
 
 function App(props) {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // function handleSignInClickEvent() {
-  //   navigate("/sign-in/");
-  // }
+  function handleSignInClickEvent() {
+    navigate("/sign-in/");
+  }
 
-  // function handleSignUpClickEvent() {
-  //   navigate("/sign-up/");
-  // }
+  function handleSignUpClickEvent() {
+    navigate("/sign-up/");
+  }
   return (
     <>
-      <Router>
-        <Routes>
-          <Route
-            path="/"
-            element={<Navigate to={`/documents/${uuidV4()}`} />}
-          />
-          <Route path="/documents/:id">
-            <Route
-              index
-              element={
-                <>
-                  {/* <SocketProvider> */}
-                  <HomePage />
-                  {/* </SocketProvider> */}
-                </>
-              }
-            />
-          </Route>
-        </Routes>
-      </Router>
-
-      {/* <button onClick={handleSignInClickEvent}>Sign In</button>
-      <button onClick={handleSignUpClickEvent}>Sign Up</button> */}
+      <button onClick={handleSignInClickEvent}>Sign In</button>
+      <button onClick={handleSignUpClickEvent}>Sign Up</button>
     </>
   );
 }
 
 export default App;
+
+// {<Router>
+// <Routes>
+//   <Route
+//     path="/"
+//     element={<Navigate to={`/documents/${uuidV4()}`} />}
+//   />
+//   <Route path="/documents/:id">
+//     <Route
+//       index
+//       element={
+//         <>
+//           {/* <SocketProvider> */}
+//           <HomePage />
+//           {/* </SocketProvider> */}
+//         </>
+//       }
+//     />
+//   </Route>
+// </Routes>
+// </Router>}

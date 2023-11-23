@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
+import ReactDOM from "react-dom";
 import "./index.css";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import {
@@ -57,14 +57,12 @@ function ClerkProviderWithRoutes() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  // <React.StrictMode>
-  <App />
-  // {/* </React.StrictMode> */}
-);
-
-{
-  /* <BrowserRouter>
+ReactDOM.render(
+  <React.StrictMode>
+    {/* <App /> */}
+    <BrowserRouter>
       <ClerkProviderWithRoutes />
-    </BrowserRouter> */
-}
+    </BrowserRouter>
+  </React.StrictMode>,
+  document.getElementById("root")
+);

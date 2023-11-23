@@ -366,11 +366,11 @@ const HomePage: React.FC = () => {
     }
   }, [roomId, socket, rtcPeerConnection]);
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // function handleSignOutClickEvent() {
-  //   navigate("/sign-out/");
-  // }
+  function handleSignOutClickEvent() {
+    navigate("/sign-out/");
+  }
 
   const [clickedIcon, setClickedIcon] = useState<string>("Video");
   const [movedRight, setMovedRight] = useState(false);
@@ -434,6 +434,8 @@ const HomePage: React.FC = () => {
         >
           Connect
         </button>
+        <UserButton />
+        <button onClick={handleSignOutClickEvent}>Sign out</button>
       </div>
       <SideBar
         clickedIcon={(arg0) => {
@@ -445,9 +447,7 @@ const HomePage: React.FC = () => {
         <label>Room ID: </label>
         <input type="text" ref={roomInputRef} />
         <button onClick={joinRoom}>Connect</button> */}
-      {/* <UserButton /> */}
 
-      {/* <button onClick={handleSignOutClickEvent}>Sign out</button> */}
       {/* </div> */}
       <div>
         <div className={`flex flex-col items-center`}>
