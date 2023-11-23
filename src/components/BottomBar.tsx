@@ -11,7 +11,7 @@ interface Props {
   clickedIcon: string;
 }
 // TODO: touchup bottombar
-// handle routes and auth
+// // handle routes and auth
 // TODO: add HomePage (mimic easyCall), remove CONNECT input
 // add codeEditor
 // add Postgres, add Pion
