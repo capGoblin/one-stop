@@ -10,7 +10,7 @@ interface Props {
   handleToggleVideo: () => void;
   clickedIcon: string;
 }
-// TODO: touchup bottombar
+// // TODO: touchup bottombar
 // // handle routes and auth
 // TODO: add HomePage (mimic easyCall), remove CONNECT input
 // add codeEditor
