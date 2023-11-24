@@ -168,15 +168,17 @@ function Draw({
               ? "flex justify-end items-start mt-10 h-screen w-screen transition-all duration-200 ease-out"
               : clickedIcon !== "Video" && movedRight
               ? "flex items-center justify-start h-screen w-screen transition-all duration-200 ease-out"
-              : ""
+              : clickedIcon === "Draw"
+              ? "block"
+              : "none"
           }`}
         >
           <div
-            className=""
+            className={`${clickedIcon === "Draw" ? "block" : "hidden"}`}
             style={{
               height: "90%",
               width: "67%",
-              display: clickedIcon === "Draw" ? "block" : "none",
+              // display: clickedIcon === "Draw" ? "block" : "hidden",
             }}
           >
             {/* <input type="textbox" onChange={(e) => setName(e.target.value)} /> */}

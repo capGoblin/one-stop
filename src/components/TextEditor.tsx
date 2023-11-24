@@ -166,6 +166,22 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
     };
   }, []);
 
+  useEffect(() => {
+    const body = document.querySelector("body");
+    if (body) {
+      if (clickedIcon === "FileText") {
+        // className={"h-14"}
+        body.style.overflow = "hidden";
+      } else {
+        body.style.overflow = "auto"; // Reset to allow scrolling
+      }
+    }
+
+    return () => {
+      if (body) body.style.overflow = "auto"; // Reset on component unmount
+    };
+  }, [clickedIcon]);
+
   // const [quill, setQuill] = useState<>();
   // const [editorValue, setEditorValue] = useState("");
   const quillRef = useRef<ReactQuill>(null); // Create a ref for the ReactQuill component
@@ -371,6 +387,7 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
       console.log(quillRef.current!.getEditor());
     });
   }, [quillRef, socket]);
+
   // useEffect(() => {
   //   console.log("quillRef:", quillRef.current);
   //   console.log("quillRef:", quillRef.current?.getEditor());

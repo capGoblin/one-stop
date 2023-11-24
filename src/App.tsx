@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import HomePage from "./Components/HomePage";
+import HomePage from "./Components/VideoCall";
 import SocketProvider from "./Contexts";
 
 import {
@@ -24,8 +24,20 @@ function App(props) {
   }
   return (
     <>
-      <button onClick={handleSignInClickEvent}>Sign In</button>
-      <button onClick={handleSignUpClickEvent}>Sign Up</button>
+      <div className="flex h-screen items-center justify-center space-x-44">
+        <button
+          className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold py-4 px-4 rounded-lg w-28"
+          onClick={handleSignInClickEvent}
+        >
+          Sign In
+        </button>
+        <button
+          className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold py-4 px-4 rounded-lg w-28"
+          onClick={handleSignUpClickEvent}
+        >
+          Sign Up
+        </button>
+      </div>
     </>
   );
 }

@@ -64,7 +64,7 @@ const BottomBar = ({
           )}
         </button>
         <button
-          className="text-secondary bg-red-600 hover:text-gray-900 hover:bg-red-600 hover:font-bold font-semibold rounded-full w-min py-3 px-36 grow-0 mb-10"
+          className="bg-red-600 hover:bg-red-600 hover:font-bold font-semibold rounded-full w-min py-3 px-36 grow-0 mb-10"
           onClick={disconnectRoom}
         >
           {<MdCallEnd />}
