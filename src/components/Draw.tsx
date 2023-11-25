@@ -212,6 +212,7 @@ function Draw({
             <Excalidraw
               // excalidrawRef="excalidrawRef"
               // style
+              className={"flex"}
               ref={(api) => {
                 if (!excalidrawAPI) {
                   setExcalidrawAPI(api as ExcalidrawImperativeAPI | undefined);

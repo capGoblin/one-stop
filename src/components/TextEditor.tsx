@@ -171,7 +171,7 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
     if (body) {
       if (clickedIcon === "FileText") {
         // className={"h-14"}
-        body.style.overflow = "hidden";
+        // body.style.overflow = "hidden";
       } else {
         body.style.overflow = "auto"; // Reset to allow scrolling
       }
