@@ -5,6 +5,9 @@ import mongoose from "mongoose";
 import Document from "./Document";
 import cors from "cors";
 
+import DeltaStatic from "react-quill";
+// import { DeltaStatic } from "react-quill";
+
 const app = express();
 const server = http.createServer(app);
 
@@ -130,10 +133,14 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("receive-changes", delta);
   });
 
-  socket.on("save-doc", async (data) => {
-    console.log("asggadsgsdgddsds", data.roomId, data.delta);
-    await Document.findByIdAndUpdate(data.roomId, { data: data.delta });
-  });
+  socket.on(
+    "save-doc",
+    async (data: { roomId: string; delta: DeltaStatic }) => {
+      console.log("hm ? in save? ");
+      console.log("asggadsgsdgddsds", data.roomId, data.delta);
+      await Document.findByIdAndUpdate(data.roomId, { data: data.delta });
+    }
+  );
 
   socket.on("send-contents", async (contents) => {
     console.log("contents is in server");

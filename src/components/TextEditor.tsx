@@ -264,12 +264,37 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
   useEffect(() => {
     if (clickedIcon !== "FileText" || roomId === "") return;
     const fetchDocument = async () => {
-      if (fetchOnce) return;
+      // if (quillRef.current) {
+      //   const delta = quillRef.current.getEditor().getContents();
+      //   console.log(delta);
+      //   if (delta && delta.ops && delta.ops.length > 0) {
+      //     const newlineCount = delta.ops[0].insert.split("\n").length - 1;
+      //     if (newlineCount > 1) {
+      //       return;
+      //     }
+      //   }
+      // }
+      // if (fetchOnce) return;
       try {
         const response = await fetch(`http://localhost:3000/find/${roomId}`);
         if (response.ok) {
           const data = await response.json();
           console.log(data);
+          // if (fetchOnce) return;
+
+          // not to fetch and update empty data(which will be saved else)
+          if (
+            JSON.stringify(data.data) ===
+            JSON.stringify({ ops: [{ insert: "\n" }] })
+          ) {
+            return;
+          }
+
+          // not to fetch and update id data already exists
+          const del = quillRef.current?.getEditor().getContents();
+          if (JSON.stringify(data.data) === JSON.stringify(del)) {
+            return;
+          }
 
           if (quillRef.current) {
             console.log(quillRef.current.getEditor());
@@ -289,9 +314,11 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
     };
     if (clickedIcon === "FileText") {
       fetchDocument();
+
+      // fetchDocument();
       setFetchOnce(true);
     }
-  }, [clickedIcon, roomId]);
+  }, [clickedIcon, fetchOnce, roomId]);
   /////////////////////
   // useEffect(() => {
   //   const fetchDocument = async () => {
@@ -327,7 +354,7 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
     const interval = setInterval(() => {
       const delta = quillRef.current?.getEditor().getContents();
       console.log(delta);
-      if (delta && delta.ops && delta.ops.length > 1) {
+      if (delta && delta.ops && delta.ops.length >= 1) {
         // const firstInsert = delta.ops[0].insert;
         // if (typeof firstInsert === "string") {
         console.log(delta);
@@ -336,7 +363,13 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
           delta,
         };
         // socket.emit("save-doc", { roomId, saveDoc: firstInsert });
+
+        // if (
+        //   JSON.stringify(data.delta) !==
+        //   JSON.stringify({ ops: [{ insert: "\n" }] })
+        // ) {
         socket.emit("save-doc", data);
+        // }
         // }
       }
     }, SAVE_INTERVAL_MS);
