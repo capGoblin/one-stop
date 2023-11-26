@@ -46,7 +46,8 @@ div .ql-container.ql-snow {
 
 div .ql-editor {
   width: 8.5in;
-  min-height: 11in;
+  height: 85vh;
+  /* min-height: 11in; */
   padding: 1in;
   margin: 1rem;
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
@@ -73,6 +74,10 @@ div .ql-editor {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  overflow: hidden;
+}
+body {
+  overflow: hidden;
 }
 
 .ProseMirror {
@@ -81,4 +86,5 @@ div .ql-editor {
   font-size: 1.5rem;
   border-radius: 0.5rem;
   padding: 0.75rem;
+  overflow: hidden;
 }

@@ -39,7 +39,7 @@ function Draw({
   }, 500);
 
   socket?.on("receive-data", (scene: readonly ExcalidrawElement[] | null) => {
-    console.log(scene, "received");
+    // console.log(scene, "received");
     debouncedUpdateScene(scene);
   });
 
