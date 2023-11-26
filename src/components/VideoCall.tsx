@@ -2,16 +2,15 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 import { UserButton } from "@clerk/clerk-react";
-import SideBar from "./SideBar";
-import TextEditor from "./TextEditor";
-import Draw from "./Draw";
 import useMeetStore from "../store";
-import GridLayout from "react-grid-layout";
-import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
-
+import SideBar from "./SideBar";
 import Video from "./Video";
 import BottomBar from "./BottomBar";
+import Draw from "./Draw";
 import HomePage from "./HomePage";
+import TextEditor from "./TextEditor";
+// import GridLayout from "react-grid-layout";
+// import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
 // import { SocketContext, useSocket } from "../Contexts/SocketContext";
 // TODO: Batch Update the draw and text once comp switched
 const socket = io("http://localhost:3000");

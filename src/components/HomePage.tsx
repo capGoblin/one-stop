@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Input } from "../../@/components/input";
 
 const HomePage = ({
   clickedIcon,
@@ -33,35 +34,57 @@ const HomePage = ({
         }
         `}
       >
-        <div className="flex space-x-10 h-24 items-center justify-center">
-          {/* <div className=""> */}
-          {/* <label>Room ID: </label> */}
-          <input
-            className="placeholder:italic placeholder:text-secondary block bg-gray-900  rounded-md py-2 px-5 pl-9 pr-4 shadow-sm  focus:outline-none focus:ring-gray-700 focus:ring-1 sm:text-sm"
-            type="text"
-            ref={roomInputRef}
-            placeholder="Type the damn Room Id..."
-          />
-          <button
-            className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider py-2 px-6 rounded-lg w-min grow-0 transition-all duration-300 transform hover:translate-y-1 hover:shadow-lg"
-            onClick={joinRoom}
-          >
-            Connect
-          </button>
-        </div>
-        <div className={"flex flex-wrap h-full items-center"}>
-          <div className="w-full md:w-2/3 h-1/4 p-4">
-            {" "}
-            {/* Adjusted width */}
-            <div className="bg-gray-700 p-6 rounded-md">Card 1</div>
+        {/* <div className="flex space-x-10 h-24 items-center justify-center"> */}
+        {/* <div className=""> */}
+        {/* <label>Room ID: </label>
+        <input
+          className="placeholder:italic placeholder:text-secondary block bg-gray-900  rounded-md py-2 px-5 pl-9 pr-4 shadow-sm  focus:outline-none focus:ring-gray-700 focus:ring-1 sm:text-sm"
+          type="text"
+          ref={roomInputRef}
+          placeholder="Type the damn Room Id..."
+        />
+        <button
+          className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider py-2 px-6 rounded-lg w-min grow-0 transition-all duration-300 transform hover:translate-y-1 hover:shadow-lg"
+          onClick={joinRoom}
+        >
+          Connect
+        </button> */}
+        {/* </div> */}
+        <div className={"flex flex-wrap h-full items-center justify-between"}>
+          {/* <div className="justify-evenly"> */}
+          <div className="flex flex-col justify-around space-y-4 bg-gray-700 w-full sm:w-5/12 h-2/5 p-8 rounded-2xl">
+            <div className="">Create a Stop</div>
+            <Input
+              type={"text"}
+              className="placeholder:italic placeholder:text-secondary block bg-gray-900  rounded-xl py-2 px-5 pl-9 pr-4 shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring sm:text-sm"
+              placeholder="Stop Name (Optional)"
+              ref={roomInputRef}
+            />
+            <button
+              className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider py-2 px-6 rounded-lg w-min grow-0 transition-all duration-300 transform hover:translate-y-1 hover:shadow-lg"
+              onClick={joinRoom}
+            >
+              Create
+            </button>
           </div>
-          <div className="w-full md:w-1/3 h-1/4 p-4">
-            {" "}
-            {/* Adjusted width */}
-            <div className="bg-gray-700 p-6 rounded-md">Card 2</div>
+          <div className="flex flex-col  justify-around space-y-4 bg-gray-700 w-full sm:w-5/12 h-2/5 p-8 rounded-2xl">
+            <div className="">Join a Stop</div>
+            <Input
+              type={"text"}
+              className="placeholder:italic placeholder:text-secondary block bg-gray-900  rounded-xl py-2 px-5 pl-9 pr-4 shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring sm:text-sm"
+              placeholder="Stop ID (Required)"
+              ref={roomInputRef}
+            />
+            <button
+              className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider py-2 px-6 rounded-lg w-min grow-0 transition-all duration-300 transform hover:translate-y-1 hover:shadow-lg"
+              onClick={joinRoom}
+            >
+              Join
+            </button>
           </div>
-          <div className="w-full p-4 h-1/4 ">
-            <div className="bg-gray-700 p-6 rounded-md">Card 3</div>
+          {/* </div> */}
+          <div className="bg-gray-700 w-full p-8 h-2/5  rounded-2xl">
+            <div className="">Recent Stops</div>
           </div>
         </div>
       </div>
