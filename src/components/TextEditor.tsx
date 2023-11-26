@@ -290,7 +290,7 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
             return;
           }
 
-          // not to fetch and update id data already exists
+          // not to fetch and update, if data already exists
           const del = quillRef.current?.getEditor().getContents();
           if (JSON.stringify(data.data) === JSON.stringify(del)) {
             return;
