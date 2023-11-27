@@ -313,7 +313,14 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
       }
     };
     if (clickedIcon === "FileText") {
+      console.log(quillRef.current?.getEditor().getContents());
+      // if (
+      //   JSON.stringify(quillRef.current?.getEditor().getContents()) ===
+      //   JSON.stringify({ ops: [{ insert: "\n" }] })
+      // ) {
+      // socket.emit("save-doc", data);
       fetchDocument();
+      // }
 
       // fetchDocument();
       setFetchOnce(true);
@@ -364,12 +371,12 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
         };
         // socket.emit("save-doc", { roomId, saveDoc: firstInsert });
 
-        // if (
-        //   JSON.stringify(data.delta) !==
-        //   JSON.stringify({ ops: [{ insert: "\n" }] })
-        // ) {
-        socket.emit("save-doc", data);
-        // }
+        if (
+          JSON.stringify(data.delta) !==
+          JSON.stringify({ ops: [{ insert: "\n" }] })
+        ) {
+          socket.emit("save-doc", data);
+        }
         // }
       }
     }, SAVE_INTERVAL_MS);

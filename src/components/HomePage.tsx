@@ -54,11 +54,11 @@ const HomePage = ({
           {/* <div className="justify-evenly"> */}
           <div className="flex flex-col justify-around space-y-4 bg-gray-700 w-full sm:w-5/12 h-2/5 p-8 rounded-2xl">
             <div className="">Create a Stop</div>
-            <Input
-              type={"text"}
-              className="placeholder:italic placeholder:text-secondary block bg-gray-900  rounded-xl py-2 px-5 pl-9 pr-4 shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring sm:text-sm"
-              placeholder="Stop Name (Optional)"
+            <input
+              className="placeholder:italic placeholder:text-secondary block bg-gray-900  rounded-md py-2 px-5 pl-9 pr-4 shadow-sm  focus:outline-none focus:ring-gray-700 focus:ring-1 sm:text-sm"
+              type="text"
               ref={roomInputRef}
+              placeholder="Type the damn Room Id..."
             />
             <button
               className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider py-2 px-6 rounded-lg w-min grow-0 transition-all duration-300 transform hover:translate-y-1 hover:shadow-lg"
@@ -69,11 +69,11 @@ const HomePage = ({
           </div>
           <div className="flex flex-col  justify-around space-y-4 bg-gray-700 w-full sm:w-5/12 h-2/5 p-8 rounded-2xl">
             <div className="">Join a Stop</div>
-            <Input
-              type={"text"}
-              className="placeholder:italic placeholder:text-secondary block bg-gray-900  rounded-xl py-2 px-5 pl-9 pr-4 shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring sm:text-sm"
-              placeholder="Stop ID (Required)"
-              ref={roomInputRef}
+            <input
+              className="placeholder:italic placeholder:text-secondary block bg-gray-900  rounded-md py-2 px-5 pl-9 pr-4 shadow-sm  focus:outline-none focus:ring-gray-700 focus:ring-1 sm:text-sm"
+              type="text"
+              // ref={roomInputRef}
+              placeholder="Type the damn Room Id..."
             />
             <button
               className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider py-2 px-6 rounded-lg w-min grow-0 transition-all duration-300 transform hover:translate-y-1 hover:shadow-lg"

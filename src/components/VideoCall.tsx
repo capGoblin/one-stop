@@ -28,8 +28,9 @@ const VideoCall: React.FC = () => {
   let callerId: string;
 
   // const remoteVideoRefs: Record<string, React.RefObject<HTMLVideoElement>> = {};
-
   const [localStream, setLocalStream] = useState<MediaStream>();
+
+  // const [localStream, setLocalStream] = useState<MediaStream>();
   // const [remoteStream, setRemoteStream] = useState<MediaStream>();
 
   // const [rtcPeerConnection, setRtcPeerConnection] =
@@ -374,10 +375,10 @@ const VideoCall: React.FC = () => {
 
   const [clickedIcon, setClickedIcon] = useState<string>("Video");
   const [movedRight, setMovedRight] = useState(false);
-  // const handleClick = () => {
-  //   setMovedRight(!movedRight);
-  // };
   const handleToggle = () => {
+    if (clickedIcon === "Draw") {
+      return;
+    }
     setMovedRight(!movedRight);
   };
 
@@ -576,6 +577,23 @@ const VideoCall: React.FC = () => {
 
           {/* </div> */}
 
+          {/* <div className="flex space-x-10 mt-10"> */}
+          {/* <div className=""> */}
+          {/* <label>Room ID: </label> */}
+          {/* <input
+              className="placeholder:italic placeholder:text-secondary block bg-gray-900  rounded-md py-2 px-5 pl-9 pr-4 shadow-sm  focus:outline-none focus:ring-gray-700 focus:ring-1 sm:text-sm"
+              type="text"
+              ref={roomInputRef}
+              placeholder="Type the damn Room Id..."
+            />
+            <button
+              className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider py-2 px-6 rounded-lg w-min grow-0"
+              onClick={joinRoom}
+            >
+              Connect
+            </button> */}
+          {/* </div> */}
+
           <HomePage
             clickedIcon={clickedIcon}
             roomInputRef={roomInputRef}
@@ -583,11 +601,7 @@ const VideoCall: React.FC = () => {
           />
 
           <TextEditor clickedIcon={clickedIcon} />
-          <Draw
-            clickedIcon={clickedIcon}
-            movedRight={movedRight}
-            roomId={roomId}
-          />
+          <Draw clickedIcon={clickedIcon} movedRight={true} roomId={roomId} />
 
           <BottomBar
             handleToggleMute={handleToggleMute}

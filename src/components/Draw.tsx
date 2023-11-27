@@ -162,11 +162,11 @@ function Draw({
         {/* <h1 style={{ textAlign: "center" }}>Excalidraw Example</h1> */}
         <div
           className={`${
-            clickedIcon !== "Video" && roomId === ""
-              ? "flex items-center justify-center h-screen w-screen transition-all duration-200 ease-out"
-              : clickedIcon !== "Video" && !movedRight
-              ? "flex justify-end items-start h-screen w-screen mt-10 mr-28 transition-all duration-200 ease-out"
-              : clickedIcon !== "Video" && movedRight
+            // clickedIcon !== "Video" && roomId === ""
+            //   ? "flex items-center justify-center h-screen w-screen transition-all duration-200 ease-out"
+            // clickedIcon !== "Video" && !movedRight
+            //   ? "flex justify-end items-start h-screen w-screen mt-10 mr-28 transition-all duration-200 ease-out"
+            clickedIcon !== "Video" && movedRight
               ? "flex items-center justify-start h-screen w-screen ml-64 transition-all duration-200 ease-out"
               : clickedIcon === "Draw"
               ? "block"
@@ -212,7 +212,7 @@ function Draw({
             <Excalidraw
               // excalidrawRef="excalidrawRef"
               // style
-              className={"flex"}
+              // className={"flex"}
               ref={(api) => {
                 if (!excalidrawAPI) {
                   setExcalidrawAPI(api as ExcalidrawImperativeAPI | undefined);
