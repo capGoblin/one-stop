@@ -38,6 +38,7 @@ function Draw({
   const debouncedUpdateScene = debounce((scene) => {
     if (excalidrawAPI) {
       excalidrawAPI.updateScene(scene);
+      console.log(scene);
     } else console.log("excalidrawAPI is not defined.");
   }, 500);
 
@@ -71,8 +72,13 @@ function Draw({
           // if (JSON.stringify(data.data) === JSON.stringify(del)) {
           //   return;
           // }
-          if (excalidrawAPI) {
+          if (
+            excalidrawAPI &&
+            Array.isArray(data.elements) &&
+            data.elements.length !== 0
+          ) {
             excalidrawAPI.updateScene(data);
+            console.log("updated? ");
           } else console.log("excalidrawAPI is not updated.");
 
           // if (quillRef.current) {
@@ -104,7 +110,7 @@ function Draw({
       // fetchDocument();
       setFetchOnce(true);
     }
-  }, [clickedIcon, fetchOnce, roomId]);
+  }, [clickedIcon, excalidrawAPI, fetchOnce, roomId]);
 
   // useEffect(() => {
   //   if (socket == null) return;
@@ -218,6 +224,7 @@ function Draw({
 
   const handleDataChange = useCallback(
     (elements: readonly ExcalidrawElement[] | null) => {
+      const d = elements;
       // const handleDataChange = (
       // elements: readonly ExcalidrawElement[] | null
       // state: AppState,
@@ -238,7 +245,7 @@ function Draw({
           roomId,
         };
 
-        if (clickedIcon === "Draw") {
+        if (clickedIcon === "Draw" && Array.isArray(d) && d.length !== 0) {
           socket.emit("save-draw", data);
           console.log(data);
         }
@@ -257,7 +264,7 @@ function Draw({
       // handleDataChange()
       //...
     },
-    [excalidrawAPI]
+    [excalidrawAPI, clickedIcon]
   );
 
   return (
