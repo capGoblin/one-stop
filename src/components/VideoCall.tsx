@@ -99,7 +99,7 @@ const VideoCall: React.FC = () => {
       return;
     } else {
       setRoomId(room);
-      socket?.emit("join", room);
+      socket?.emit("join", { room, name: "saf" });
 
       showVideoConference();
     }

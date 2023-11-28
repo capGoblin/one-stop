@@ -5,6 +5,8 @@ import mongoose from "mongoose";
 import Document from "./Document";
 import cors from "cors";
 
+import { ExcalidrawElement } from "@excalidraw/excalidraw/types/element/types";
+
 import DeltaStatic from "react-quill";
 // import { DeltaStatic } from "react-quill";
 
@@ -14,6 +16,24 @@ const server = http.createServer(app);
 mongoose
   .connect("mongodb://localhost:27017/doc")
   .then(() => console.log("Connected! to db"));
+
+interface Users {
+  id: string;
+  name: string;
+}
+interface UserData {
+  [room: string]: Users[];
+}
+
+interface SocketToRoom {
+  [id: string]: string;
+}
+
+const users: UserData = {};
+
+const socketToRoom: SocketToRoom = {};
+
+const maximum = 3;
 
 const io = new Server(server, {
   cors: {
@@ -44,7 +64,11 @@ const findOrCreateDoc = async (id: string) => {
   // const doc = await Document.create({ _id: id, data: defaultValue });
 
   // else create new and return
-  return await Document.create({ _id: id, data: defaultValue });
+  return await Document.create({
+    _id: id,
+    doc: defaultValue,
+    draw: [],
+  });
 };
 
 io.on("connection", (socket) => {
@@ -54,49 +78,75 @@ io.on("connection", (socket) => {
   const TotalRooms = new Map<string, string[]>();
   socket.emit("totalRoomsUpdate", TotalRooms, thisRoomId);
 
-  socket.on("join", async (roomId: string) => {
-    thisRoomId = roomId;
-    const selectedRoom = io.sockets.adapter.rooms.get(roomId);
-    const numberOfClients = selectedRoom ? selectedRoom.size : 0;
-
-    if (numberOfClients === 0) {
-      console.log(
-        `Creating room ${roomId} and emitting room_created socket event by ${socket.id}`
-      );
-      await socket.join(roomId);
-
-      if (!TotalRooms.has(roomId)) {
-        TotalRooms.set(roomId, []);
+  socket.on("join", async (data) => {
+    if (users[data.room]) {
+      const length = users[data.room].length;
+      if (length === maximum) {
+        socket.to(socket.id).emit("room_full");
+        return;
       }
-      TotalRooms.get(roomId)!.push(socket.id);
-
-      socket.emit("room_created", roomId);
-      socket.emit("totalRoomsUpdate", TotalRooms, thisRoomId);
-    } else if (numberOfClients === 1) {
-      console.log(
-        `Joining room ${roomId} and emitting room_joined socket event by ${socket.id}`
-      );
-      await socket.join(roomId);
-
-      TotalRooms.get(roomId)?.push(socket.id);
-
-      socket.emit("room_joined", roomId);
-      socket.broadcast.emit("roomId", roomId);
-      socket.emit("totalRoomsUpdate", TotalRooms, thisRoomId);
-    } else if (numberOfClients === 2) {
-      console.log(
-        `Joining room ${roomId} and emitting room_joined socket event by ${socket.id}`
-      );
-      await socket.join(roomId);
-
-      TotalRooms.get(roomId)?.push(socket.id);
-
-      socket.emit("room_joined", roomId);
-      socket.emit("total_clients", numberOfClients);
+      users[data.room].push({ id: socket.id, name: data.name });
+      socket.broadcast.emit("roomId", data.room);
     } else {
-      console.log(`Can't join room ${roomId}, emitting full_room socket event`);
-      socket.emit("full_room", roomId);
+      users[data.room] = [{ id: socket.id, name: data.name }];
+      socket.emit("room_created", data.room);
     }
+
+    socketToRoom[socket.id] = data.room;
+
+    socket.join(data.room);
+    console.log(`[${socketToRoom[socket.id]}]: ${socket.id} enter`);
+
+    const usersInThisRoom = users[data.room].filter(
+      (user) => user.id !== socket.id
+    );
+
+    console.log(usersInThisRoom);
+
+    socket.emit("room_joined", data.room);
+
+    // thisRoomId = roomId;
+    // const selectedRoom = io.sockets.adapter.rooms.get(roomId);
+    // const numberOfClients = selectedRoom ? selectedRoom.size : 0;
+
+    // if (numberOfClients === 0) {
+    //   console.log(
+    //     `Creating room ${roomId} and emitting room_created socket event by ${socket.id}`
+    //   );
+    //   await socket.join(roomId);
+
+    //   if (!TotalRooms.has(roomId)) {
+    //     TotalRooms.set(roomId, []);
+    //   }
+    //   TotalRooms.get(roomId)!.push(socket.id);
+
+    //   socket.emit("room_created", roomId);
+    //   // socket.emit("totalRoomsUpdate", TotalRooms, thisRoomId);
+    // } else if (numberOfClients === 1) {
+    //   console.log(
+    //     `Joining room ${roomId} and emitting room_joined socket event by ${socket.id}`
+    //   );
+    //   await socket.join(roomId);
+
+    //   // TotalRooms.get(roomId)?.push(socket.id);
+
+    //   socket.emit("room_joined", roomId);
+    //   // socket.broadcast.emit("roomId", roomId);
+    //   // socket.emit("totalRoomsUpdate", TotalRooms, thisRoomId);
+    // } else if (numberOfClients === 2) {
+    //   console.log(
+    //     `Joining room ${roomId} and emitting room_joined socket event by ${socket.id}`
+    //   );
+    //   await socket.join(roomId);
+
+    //   // TotalRooms.get(roomId)?.push(socket.id);
+
+    //   socket.emit("room_joined", roomId);
+    //   // socket.emit("total_clients", numberOfClients);
+    // } else {
+    //   console.log(`Can't join room ${roomId}, emitting full_room socket event`);
+    //   socket.emit("full_room", roomId);
+    // }
   });
 
   socket.on("send-changes", async (as) => {
@@ -136,11 +186,17 @@ io.on("connection", (socket) => {
   socket.on(
     "save-doc",
     async (data: { roomId: string; delta: DeltaStatic }) => {
-      console.log("hm ? in save? ");
+      console.log("hm ? in save-doc? ");
       console.log("asggadsgsdgddsds", data.roomId, data.delta);
-      await Document.findByIdAndUpdate(data.roomId, { data: data.delta });
+      await Document.findByIdAndUpdate(data.roomId, { doc: data.delta });
     }
   );
+
+  socket.on("save-draw", async (data) => {
+    console.log("hm ? in save-draw? ");
+    console.log("asggadsgsdgddsds", data.elements);
+    await Document.findByIdAndUpdate(data.roomId, { draw: data.elements });
+  });
 
   socket.on("send-contents", async (contents) => {
     console.log("contents is in server");
@@ -215,7 +271,25 @@ app.get("/find/:id", async (req, res) => {
     console.log("heteteasg", document);
 
     if (document) {
-      res.json({ data: document.data });
+      //@ts-ignore
+      res.json({ doc: document.doc });
+    } else {
+      res.status(404).json({ message: "Document not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+app.get("/find_draw/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const document = await findOrCreateDoc(id);
+    console.log("heteteasg", document);
+
+    if (document) {
+      //@ts-ignore
+      res.json({ draw: document.draw });
     } else {
       res.status(404).json({ message: "Document not found" });
     }

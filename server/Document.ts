@@ -3,7 +3,8 @@ import { Schema, model } from "mongoose";
 
 const documentSchema = new Schema({
   _id: String,
-  data: Object,
+  doc: Object,
+  draw: Object,
 });
 
 const Document = model("Document", documentSchema);

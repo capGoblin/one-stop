@@ -284,7 +284,7 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
 
           // not to fetch and update empty data(which will be saved else)
           if (
-            JSON.stringify(data.data) ===
+            JSON.stringify(data.doc) ===
             JSON.stringify({ ops: [{ insert: "\n" }] })
           ) {
             return;
@@ -292,7 +292,7 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
 
           // not to fetch and update, if data already exists
           const del = quillRef.current?.getEditor().getContents();
-          if (JSON.stringify(data.data) === JSON.stringify(del)) {
+          if (JSON.stringify(data.doc) === JSON.stringify(del)) {
             return;
           }
 
@@ -300,11 +300,11 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
             console.log(quillRef.current.getEditor());
 
             // quillRef.current.getEditor().insertText(0, data.data);
-            quillRef.current.getEditor().updateContents(data.data);
+            quillRef.current.getEditor().updateContents(data.doc);
             console.log(quillRef.current.getEditor().getContents());
           }
 
-          setDocumentData(data.data);
+          setDocumentData(data.doc);
         } else {
           console.error("Failed to fetch document");
         }

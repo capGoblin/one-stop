@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 // import reactLogo from "./assets/react.svg";
 // import viteLogo from "/vite.svg";
 // import "./App.css";
@@ -11,6 +11,7 @@ import useMeetStore from "../store";
 // import { SocketContext } from "../Contexts/SocketContext";
 
 const socket = io("http://localhost:3000");
+const SAVE_INTERVAL_MS = 2000;
 
 function Draw({
   clickedIcon,
@@ -26,6 +27,8 @@ function Draw({
   // const [socket, setSocket] = useState<Socket | null>(null);
   // const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI>();
   const { excalidrawAPI, setExcalidrawAPI } = useMeetStore();
+
+  const [fetchOnce, setFetchOnce] = useState<boolean>(false);
 
   // const [pendingUpdates, setPendingUpdates] = useState([]);
   // const update = () => {
@@ -43,6 +46,98 @@ function Draw({
     debouncedUpdateScene(scene);
   });
 
+  useEffect(() => {
+    if (clickedIcon !== "Draw" || roomId === "") return;
+    const fetchDocument = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/find_draw/${roomId}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+          if (fetchOnce) return;
+
+          // not to fetch and update empty data(which will be saved else)
+          // if (
+          //   JSON.stringify(data.data) ===
+          //   JSON.stringify({ ops: [{ insert: "\n" }] })
+          // ) {
+          //   return;
+          // }
+
+          // not to fetch and update, if data already exists
+          // const del = quillRef.current?.getEditor().getContents();
+          // if (JSON.stringify(data.data) === JSON.stringify(del)) {
+          //   return;
+          // }
+          if (excalidrawAPI) {
+            excalidrawAPI.updateScene(data);
+          } else console.log("excalidrawAPI is not updated.");
+
+          // if (quillRef.current) {
+          //   console.log(quillRef.current.getEditor());
+
+          //   // quillRef.current.getEditor().insertText(0, data.data);
+          //   quillRef.current.getEditor().updateContents(data.data);
+          //   console.log(quillRef.current.getEditor().getContents());
+          // }
+
+          // setDocumentData(data.data);
+        } else {
+          console.error("Failed to fetch document");
+        }
+      } catch (error) {
+        console.error("Error fetching document:", error);
+      }
+    };
+    if (clickedIcon === "Draw") {
+      // console.log(quillRef.current?.getEditor().getContents());
+      // if (
+      //   JSON.stringify(quillRef.current?.getEditor().getContents()) ===
+      //   JSON.stringify({ ops: [{ insert: "\n" }] })
+      // ) {
+      // socket.emit("save-doc", data);
+      fetchDocument();
+      // }
+
+      // fetchDocument();
+      setFetchOnce(true);
+    }
+  }, [clickedIcon, fetchOnce, roomId]);
+
+  // useEffect(() => {
+  //   if (socket == null) return;
+
+  //   const interval = setInterval(() => {
+  //     // const delta = quillRef.current?.getEditor().getContents();
+  //     // console.log(delta);
+  //     if (scene !== []) {
+  //       // const firstInsert = delta.ops[0].insert;
+  //       // if (typeof firstInsert === "string") {
+  //       // console.log(delta);
+  //       const data = {
+  //         scene,
+  //         roomId,
+  //       };
+  //       // socket.emit("save-doc", { roomId, saveDoc: firstInsert });
+
+  //       if (
+  //         // JSON.stringify(data.delta) !==
+  //         // JSON.stringify({ ops: [{ insert: "\n" }] })
+  //       ) {
+  //         socket.emit("save-draw", data);
+  //       }
+  //       // }
+  //     }
+  //   }, SAVE_INTERVAL_MS);
+
+  //   console.log("saved? ");
+
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, [socket, quillRef, roomId]);
   // socket.on("receive-data", (data) => {
   //   console.log(data, "received");
 
@@ -137,6 +232,17 @@ function Draw({
         };
         console.log(sceneData);
         socket?.emit("send-data", sceneData);
+
+        const data = {
+          elements,
+          roomId,
+        };
+
+        if (clickedIcon === "Draw") {
+          socket.emit("save-draw", data);
+          console.log(data);
+        }
+
         // }
 
         // Update previousElements with the current elements
