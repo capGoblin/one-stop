@@ -271,7 +271,6 @@ app.get("/find/:id", async (req, res) => {
     console.log("heteteasg", document);
 
     if (document) {
-      //@ts-ignore
       res.json({ doc: document.doc });
     } else {
       res.status(404).json({ message: "Document not found" });
@@ -288,8 +287,7 @@ app.get("/find_draw/:id", async (req, res) => {
     console.log("heteteasg", document);
 
     if (document) {
-      //@ts-ignore
-      res.json({ draw: document.draw });
+      res.json({ elements: document.draw });
     } else {
       res.status(404).json({ message: "Document not found" });
     }
