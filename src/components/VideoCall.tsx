@@ -39,6 +39,8 @@ const VideoCall: React.FC = () => {
 
   const audioBarsRef = useRef<HTMLDivElement[]>([]);
 
+  // const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
+
   // const [localStream, setLocalStream] = useState<MediaStream>();
   // const [remoteStream, setRemoteStream] = useState<MediaStream>();
 
@@ -306,23 +308,18 @@ const VideoCall: React.FC = () => {
 
   useEffect(() => {
     const borderThreshold = 37;
-    let borderThickness = 0;
+    let borderThickness = 0; // Adjust this threshold value
 
-    const setupAudioContext = (
-      stream: MediaStream | undefined,
-      setAudioContext: React.Dispatch<
-        React.SetStateAction<AudioContext | null>
-      >,
-      videoRef: React.RefObject<HTMLVideoElement>
-    ) => {
-      if (!stream || !videoRef.current) return;
+    const setupAudioContext = () => {
+      if (!localStream) return;
 
       const audioContext = new AudioContext();
       const analyser = audioContext.createAnalyser();
-      const source = audioContext.createMediaStreamSource(stream);
+      const source = audioContext.createMediaStreamSource(localStream);
       source.connect(analyser);
-      setAudioContext(audioContext);
+      setLocalAudioContext(audioContext);
 
+      // Visualize audio using border color for the video element
       const updateAudioBorder = () => {
         requestAnimationFrame(updateAudioBorder);
 
@@ -331,6 +328,7 @@ const VideoCall: React.FC = () => {
 
         const avg =
           dataArray.reduce((acc, val) => acc + val, 0) / dataArray.length;
+        // let borderThickness = 0;
 
         if (avg > borderThreshold) {
           borderThickness = Math.min(avg * 0.5, 2); // Adjust the maximum border thickness
@@ -341,17 +339,119 @@ const VideoCall: React.FC = () => {
 
         const borderSize = `${borderThickness}px`;
 
-        if (videoRef.current) {
-          videoRef.current.style.border = `solid secondary ${borderSize}`;
+        if (localVideoRef.current) {
+          localVideoRef.current.style.border = `solid orange ${borderSize}`;
         }
       };
 
       updateAudioBorder();
+
+      // Clean up the audio visualization when component unmounts
+      // return () => {
+      //   cancelAnimationFrame(updateAudioBorder);
+      // };
     };
 
-    setupAudioContext(localStream, setLocalAudioContext, localVideoRef);
-    setupAudioContext(remoteStream, setRemoteAudioContext, remoteVideoRef);
-  }, [localStream, remoteStream]);
+    setupAudioContext();
+  }, [localStream]);
+  useEffect(() => {
+    const borderThreshold = 37;
+    let borderThickness = 0; // Adjust this threshold value
+
+    const setupAudioContext = () => {
+      if (!remoteStream) return;
+
+      const audioContext = new AudioContext();
+      const analyser = audioContext.createAnalyser();
+      const source = audioContext.createMediaStreamSource(remoteStream);
+      source.connect(analyser);
+      setRemoteAudioContext(audioContext);
+
+      // Visualize audio using border color for the video element
+      const updateAudioBorder = () => {
+        requestAnimationFrame(updateAudioBorder);
+
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(dataArray);
+
+        const avg =
+          dataArray.reduce((acc, val) => acc + val, 0) / dataArray.length;
+        // let borderThickness = 0;
+
+        if (avg > borderThreshold) {
+          borderThickness = Math.min(avg * 0.5, 2); // Adjust the maximum border thickness
+        } else {
+          // Apply decay or gradual decrease when below threshold
+          borderThickness = Math.max(0, borderThickness - 1); // Adjust the decay rate
+        }
+
+        const borderSize = `${borderThickness}px`;
+
+        if (remoteVideoRef.current) {
+          remoteVideoRef.current.style.border = `solid orange ${borderSize}`;
+        }
+      };
+
+      updateAudioBorder();
+
+      // Clean up the audio visualization when component unmounts
+      // return () => {
+      //   cancelAnimationFrame(updateAudioBorder);
+      // };
+    };
+
+    setupAudioContext();
+  }, [remoteStream]);
+
+  // useEffect(() => {
+  //   const borderThreshold = 10;
+  //   let borderThickness = 0;
+
+  //   const setupAudioContext = (
+  //     stream: MediaStream | undefined,
+  //     setAudioContext: React.Dispatch<
+  //       React.SetStateAction<AudioContext | null>
+  //     >,
+  //     videoRef: React.RefObject<HTMLVideoElement>
+  //   ) => {
+  //     if (!stream || !videoRef.current) return;
+
+  //     const audioContext = new AudioContext();
+  //     const analyser = audioContext.createAnalyser();
+  //     const source = audioContext.createMediaStreamSource(stream);
+  //     source.connect(analyser);
+  //     setAudioContext(audioContext);
+
+  //     const updateAudioBorder = () => {
+  //       requestAnimationFrame(updateAudioBorder);
+
+  //       const dataArray = new Uint8Array(analyser.frequencyBinCount);
+  //       analyser.getByteFrequencyData(dataArray);
+
+  //       const avg =
+  //         dataArray.reduce((acc, val) => acc + val, 0) / dataArray.length;
+  //       // let borderThickness = 0;
+
+  //       if (avg > borderThreshold) {
+  //         borderThickness = Math.min(avg * 0.5, 20); // Adjust the maximum border thickness
+  //       } else {
+  //         // Apply decay or gradual decrease when below threshold
+  //         borderThickness = Math.max(0, borderThickness - 1); // Adjust the decay rate
+  //       }
+
+  //       const borderSize = `${borderThickness}px`;
+
+  //       if (videoRef.current) {
+  //         videoRef.current.style.border = `solid secondary ${borderSize}`;
+  //       }
+  //     };
+
+  //     updateAudioBorder();
+  //   };
+
+  //   setupAudioContext(localStream, setLocalAudioContext, localVideoRef);
+  //   setupAudioContext(remoteStream, setRemoteAudioContext, remoteVideoRef);
+  // }, [localStream, remoteStream]);
 
   useEffect(() => {
     if (socket) {
