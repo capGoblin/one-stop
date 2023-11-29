@@ -32,7 +32,12 @@ const VideoCall: React.FC = () => {
 
   // const remoteVideoRefs: Record<string, React.RefObject<HTMLVideoElement>> = {};
   const [localStream, setLocalStream] = useState<MediaStream>();
+  const [remoteStream, setRemoteStream] = useState<MediaStream>();
   const [shareId, setShareId] = useState<string>();
+
+  // const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const audioBarsRef = useRef<HTMLDivElement[]>([]);
 
   // const [localStream, setLocalStream] = useState<MediaStream>();
   // const [remoteStream, setRemoteStream] = useState<MediaStream>();
@@ -51,6 +56,12 @@ const VideoCall: React.FC = () => {
   };
 
   const [roomId, setRoomId] = useState<string>("");
+
+  // const [audioContext, setAudioContext] = useState<AudioContext>();
+  const [localAudioContext, setLocalAudioContext] =
+    useState<AudioContext | null>(null);
+  const [remoteAudioContext, setRemoteAudioContext] =
+    useState<AudioContext | null>(null);
 
   const createPeerConnection = async () => {
     const peerConnection = new RTCPeerConnection(iceServers);
@@ -77,6 +88,7 @@ const VideoCall: React.FC = () => {
 
       if (remoteVideoRef.current) {
         remoteVideoRef.current.srcObject = remoteStream;
+        setRemoteStream(remoteStream);
       } else {
         console.log(
           "remoteVideoRef is null. The reference might not be properly set."
@@ -205,7 +217,6 @@ const VideoCall: React.FC = () => {
       remoteVideoRef.current.style.display = "block";
     }
   };
-
   const addLocalTracks = async (rtcPeerConnection: RTCPeerConnection) => {
     console.log(callerId);
 
@@ -213,6 +224,7 @@ const VideoCall: React.FC = () => {
       audio: true,
       video: true,
     });
+
     setLocalStream(stream);
     console.log(stream);
     // setLocalStream(stream);
@@ -291,6 +303,55 @@ const VideoCall: React.FC = () => {
       console.log(callerId);
     }
   };
+
+  useEffect(() => {
+    const borderThreshold = 37;
+    let borderThickness = 0;
+
+    const setupAudioContext = (
+      stream: MediaStream | undefined,
+      setAudioContext: React.Dispatch<
+        React.SetStateAction<AudioContext | null>
+      >,
+      videoRef: React.RefObject<HTMLVideoElement>
+    ) => {
+      if (!stream || !videoRef.current) return;
+
+      const audioContext = new AudioContext();
+      const analyser = audioContext.createAnalyser();
+      const source = audioContext.createMediaStreamSource(stream);
+      source.connect(analyser);
+      setAudioContext(audioContext);
+
+      const updateAudioBorder = () => {
+        requestAnimationFrame(updateAudioBorder);
+
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(dataArray);
+
+        const avg =
+          dataArray.reduce((acc, val) => acc + val, 0) / dataArray.length;
+
+        if (avg > borderThreshold) {
+          borderThickness = Math.min(avg * 0.5, 2); // Adjust the maximum border thickness
+        } else {
+          // Apply decay or gradual decrease when below threshold
+          borderThickness = Math.max(0, borderThickness - 1); // Adjust the decay rate
+        }
+
+        const borderSize = `${borderThickness}px`;
+
+        if (videoRef.current) {
+          videoRef.current.style.border = `solid secondary ${borderSize}`;
+        }
+      };
+
+      updateAudioBorder();
+    };
+
+    setupAudioContext(localStream, setLocalAudioContext, localVideoRef);
+    setupAudioContext(remoteStream, setRemoteAudioContext, remoteVideoRef);
+  }, [localStream, remoteStream]);
 
   useEffect(() => {
     if (socket) {
@@ -478,6 +539,14 @@ const VideoCall: React.FC = () => {
     });
   };
 
+  // const audioBars = Array.from({ length: 100 }, (_, index) => (
+  //   <div
+  //     key={index}
+  //     ref={(el) => (audioBarsRef.current[index] = el as HTMLDivElement)}
+  //     className="bg-blue-500 w-2 h-1 m-1 rounded"
+  //   ></div>
+  // ));
+
   return (
     // <TextEditor clickedIcon={clickedIcon} />
 
@@ -544,9 +613,11 @@ const VideoCall: React.FC = () => {
                   style={{
                     height: clickedIcon !== "Video" ? "30vh" : "60vh",
                     width: clickedIcon !== "Video" ? "30vh" : "80vh",
+                    // border: "solid orange px", // Initialize with no border
                   }}
                 />
               </div>
+              {/* {audioBars} */}
               <div onClick={handleToggle}>
                 <Video
                   className={`${
@@ -561,6 +632,7 @@ const VideoCall: React.FC = () => {
                   style={{
                     height: clickedIcon !== "Video" ? "30vh" : "60vh",
                     width: clickedIcon !== "Video" ? "30vh" : "80vh",
+                    border: "solid orange 0px", // Initialize with no border
                   }}
                 />
               </div>
