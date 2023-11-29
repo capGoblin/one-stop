@@ -264,7 +264,7 @@ function Draw({
       // handleDataChange()
       //...
     },
-    [excalidrawAPI, clickedIcon]
+    [excalidrawAPI, roomId, clickedIcon]
   );
 
   return (
@@ -279,18 +279,18 @@ function Draw({
             //   ? "flex items-center justify-center h-screen w-screen transition-all duration-200 ease-out"
             // clickedIcon !== "Video" && !movedRight
             //   ? "flex justify-end items-start h-screen w-screen mt-10 mr-28 transition-all duration-200 ease-out"
-            clickedIcon !== "Video" && movedRight
-              ? "flex items-center justify-start h-screen w-screen ml-64 transition-all duration-200 ease-out"
-              : clickedIcon === "Draw"
-              ? "block"
+            // clickedIcon !== "Video" && movedRight
+            //   ? "flex items-center justify-start h-screen w-screen ml-64 transition-all duration-200 ease-out"
+            clickedIcon === "Draw"
+              ? "flex items-center justify-center h-screen w-screen ml-9 transition-all duration-200 ease-out"
               : "none"
           }`}
         >
           <div
-            className={`${clickedIcon === "Draw" ? "block" : "hidden"}`}
+            // className={`${clickedIcon === "Draw" ? "block" : "hidden"}`}
             style={{
-              height: "90%",
-              width: "67%",
+              height: "88%",
+              width: "80%",
               // display: clickedIcon === "Draw" ? "block" : "hidden",
             }}
           >

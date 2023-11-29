@@ -715,6 +715,7 @@ const VideoCall: React.FC = () => {
                     width: clickedIcon !== "Video" ? "30vh" : "80vh",
                     // border: "solid orange px", // Initialize with no border
                   }}
+                  clickedIcon={clickedIcon}
                 />
               </div>
               {/* {audioBars} */}
@@ -734,6 +735,7 @@ const VideoCall: React.FC = () => {
                     width: clickedIcon !== "Video" ? "30vh" : "80vh",
                     border: "solid orange 0px", // Initialize with no border
                   }}
+                  clickedIcon={clickedIcon}
                 />
               </div>
             </div>

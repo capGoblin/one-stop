@@ -28,12 +28,12 @@ interface Props {
   //   name: string;
   reff: React.RefObject<HTMLVideoElement>;
   muted?: boolean;
-  //   clickedIcon: string;
+  clickedIcon: string;
   className?: string;
   style?: React.CSSProperties;
 }
 
-const Video = ({ reff, muted, className, style }: Props) => {
+const Video = ({ reff, muted, clickedIcon, className, style }: Props) => {
   //   const ref = useRef<HTMLVideoElement>(null);
   //   const [isMuted, setIsMuted] = useState<boolean>(false);
 
@@ -61,7 +61,7 @@ const Video = ({ reff, muted, className, style }: Props) => {
       style={{
         ...defaultStyle,
         ...style,
-        // display: clickedIcon === "Video" ? "block" : "none",
+        display: clickedIcon === "Draw" ? "none" : "block",
       }}
     >
       {/* Your video content */}
