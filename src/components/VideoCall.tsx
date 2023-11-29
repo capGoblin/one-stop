@@ -1,5 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
+import { v4 as uuidv4 } from "uuid";
+import toast, { Toaster } from "react-hot-toast";
+
 import { useNavigate } from "react-router-dom";
 import { UserButton } from "@clerk/clerk-react";
 import useMeetStore from "../store";
@@ -29,6 +32,7 @@ const VideoCall: React.FC = () => {
 
   // const remoteVideoRefs: Record<string, React.RefObject<HTMLVideoElement>> = {};
   const [localStream, setLocalStream] = useState<MediaStream>();
+  const [shareId, setShareId] = useState<string>();
 
   // const [localStream, setLocalStream] = useState<MediaStream>();
   // const [remoteStream, setRemoteStream] = useState<MediaStream>();
@@ -91,18 +95,76 @@ const VideoCall: React.FC = () => {
     return peerConnection;
   };
 
-  const joinRoom = () => {
-    const room = roomInputRef.current?.value;
+  const createRoom = () => {
+    let room = roomInputRef.current?.value;
 
     if (!room) {
-      alert("Please type a room ID");
+      room = uuidv4();
+      setRoomId(room);
+      socket?.emit("join", { room, name: "saf" });
+
+      navigator.clipboard
+        .writeText(roomId)
+        .then(() => {
+          toast.success("Room ID copied to clipboard!");
+          // Optionally, set a state or trigger a success message
+        })
+        .catch((err) => {
+          toast.error("Unable to copy Room ID:", err);
+          // Optionally, handle errors or show a failure message
+        });
+      // copyRoomId(room);
+      // toast.success("Room ID copied to clipboard!");
+      setShareId(room);
+      // toast w/ copied
+
+      // alert("Please type a room ID");
       return;
     } else {
       setRoomId(room);
+      // room = uuidv4();
+      setShareId(room);
       socket?.emit("join", { room, name: "saf" });
 
       showVideoConference();
     }
+  };
+  const joinRoom = (room: string) => {
+    // let room = roomInputRef.current?.value;
+    if (room) {
+      setRoomId(room);
+      socket?.emit("join", { room, name: "saf" });
+    }
+    // if (!room) {
+    //   room = uuidv4();
+    //   setRoomId(room);
+    //   socket?.emit("join", { room, name: "saf" });
+
+    //   navigator.clipboard
+    //     .writeText(roomId)
+    //     .then(() => {
+    //       toast.success("Room ID copied to clipboard!");
+    //       // Optionally, set a state or trigger a success message
+    //     })
+    //     .catch((err) => {
+    //       toast.error("Unable to copy Room ID:", err);
+    //       // Optionally, handle errors or show a failure message
+    //     });
+    //   // copyRoomId(room);
+    //   // toast.success("Room ID copied to clipboard!");
+    //   setShareId(room);
+    //   // toast w/ copied
+
+    //   // alert("Please type a room ID");
+    //   return;
+    // } else {
+    //   setRoomId(room);
+    //   // room = uuidv4();
+    //   setShareId(room);
+    //   socket?.emit("join", { room, name: "saf" });
+
+    //   showVideoConference();
+    // }
   };
 
   const disconnectRoom = () => {
@@ -420,6 +482,9 @@ const VideoCall: React.FC = () => {
     // <TextEditor clickedIcon={clickedIcon} />
 
     <div>
+      <div>
+        <Toaster />
+      </div>
       <UserButton />
       <button onClick={handleSignOutClickEvent}>Sign out</button>
       <SideBar
@@ -597,6 +662,7 @@ const VideoCall: React.FC = () => {
           <HomePage
             clickedIcon={clickedIcon}
             roomInputRef={roomInputRef}
+            createRoom={createRoom}
             joinRoom={joinRoom}
           />
 

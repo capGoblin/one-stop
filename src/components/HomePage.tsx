@@ -1,14 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "../../@/components/input";
 
 const HomePage = ({
   clickedIcon,
   roomInputRef,
+  createRoom,
   joinRoom,
 }: {
   clickedIcon: string;
   roomInputRef: React.MutableRefObject<HTMLInputElement | null>;
-  joinRoom: () => void;
+  createRoom: () => void;
+  joinRoom: (room: string) => void;
 }) => {
   useEffect(() => {
     const body = document.querySelector("body");
@@ -25,6 +27,17 @@ const HomePage = ({
       if (body) body.style.overflow = "auto"; // Reset on component unmount
     };
   }, [clickedIcon]);
+
+  const [roomId, setRoomId] = useState("");
+
+  // const join = (roomId) => {
+  //   // Logic to join the room with the provided roomId
+  //   console.log('Joining room:', roomId);
+  // };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRoomId(event.target.value);
+  };
 
   return (
     <>
@@ -62,7 +75,7 @@ const HomePage = ({
             />
             <button
               className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider py-2 px-6 rounded-lg w-min grow-0 transition-all duration-300 transform hover:translate-y-1 hover:shadow-lg"
-              onClick={joinRoom}
+              onClick={createRoom}
             >
               Create
             </button>
@@ -74,10 +87,11 @@ const HomePage = ({
               type="text"
               // ref={roomInputRef}
               placeholder="Type the damn Room Id..."
+              onChange={handleInputChange}
             />
             <button
               className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider py-2 px-6 rounded-lg w-min grow-0 transition-all duration-300 transform hover:translate-y-1 hover:shadow-lg"
-              onClick={joinRoom}
+              onClick={() => joinRoom(roomId)}
             >
               Join
             </button>

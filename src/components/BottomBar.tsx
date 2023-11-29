@@ -12,8 +12,10 @@ interface Props {
 }
 // // TODO: touchup bottombar
 // // handle routes and auth
-// TODO: add HomePage (mimic easyCall), remove CONNECT input
-// add nice mode switch (remove hide n seek)
+// // TODO: add HomePage (mimic easyCall), remove CONNECT input
+// // add nice mode switch (remove hide n seek)
+// add join n create functions and add recent stops
+// add cool audio border
 // add codeEditor
 // add Postgres, add Pion
 const BottomBar = ({
