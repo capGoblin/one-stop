@@ -100,11 +100,9 @@ const VideoCall: React.FC = () => {
 
     if (!room) {
       room = uuidv4();
-      setRoomId(room);
-      socket?.emit("join", { room, name: "saf" });
 
       navigator.clipboard
-        .writeText(roomId)
+        .writeText(room)
         .then(() => {
           toast.success("Room ID copied to clipboard!");
           // Optionally, set a state or trigger a success message
@@ -118,10 +116,12 @@ const VideoCall: React.FC = () => {
       setShareId(room);
       // toast w/ copied
 
+      socket?.emit("join", { room, name: "saf" });
+      setRoomId(room);
       // alert("Please type a room ID");
       return;
     } else {
-      setRoomId(room);
+      // setRoomId(room);
       // room = uuidv4();
       setShareId(room);
       socket?.emit("join", { room, name: "saf" });
@@ -132,8 +132,8 @@ const VideoCall: React.FC = () => {
   const joinRoom = (room: string) => {
     // let room = roomInputRef.current?.value;
     if (room) {
-      setRoomId(room);
       socket?.emit("join", { room, name: "saf" });
+      setRoomId(room);
     }
     // if (!room) {
     //   room = uuidv4();
