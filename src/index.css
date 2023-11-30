@@ -9,11 +9,11 @@
   }
 }
 
-/* .excalidraw__canvas-wrapper, */
-/* .excalidraw__canvas.static { */
-/* pointer-events: none; */
-/* border-radius: 25px; */
-/* } */
+.excalidraw__canvas-wrapper,
+.excalidraw__canvas.static {
+  pointer-events: none;
+  border-radius: 20px;
+}
 
 /* div .ql-toolbar.ql-snow {
   @apply flex justify-center sticky top-0 z-10 bg-gray-100 border-none shadow-md;
@@ -21,6 +21,14 @@
 div .ql-container.ql-snow {
   @apply flex rounded-xl justify-center;
 }*/
+
+/* div .cl-rootBox cl-signIn-root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  background-color: red;
+} */
 div .quill.block {
   display: flex;
   flex-direction: column;
@@ -31,7 +39,8 @@ div .ql-toolbar.ql-snow {
   display: flex;
   justify-content: center;
   position: sticky;
-  top: 0;
+  top: 1;
+  margin-top: 20px;
   z-index: 1;
   background-color: #f1e0dd;
   border: none;
@@ -46,7 +55,7 @@ div .ql-container.ql-snow {
 
 div .ql-editor {
   width: 8.5in;
-  height: 85vh;
+  height: 88vh;
   /* min-height: 11in; */
   padding: 1in;
   margin: 1rem;
@@ -78,6 +87,7 @@ div .ql-editor {
 }
 body {
   overflow: hidden;
+  background-color: #1c1919;
 }
 
 .ProseMirror {

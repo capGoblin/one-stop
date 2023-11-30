@@ -79,6 +79,7 @@ import {
   SignIn,
   SignUp,
 } from "@clerk/clerk-react";
+import { dark } from "@clerk/themes";
 import App from "./App.tsx";
 import HomePage from "./Components/VideoCall.tsx";
 
@@ -91,12 +92,28 @@ function ClerkProviderWithRoutes() {
   const navigate = useNavigate();
 
   return (
-    <ClerkProvider publishableKey={clerkPubKey} navigate={(to) => navigate(to)}>
+    <ClerkProvider
+      publishableKey={clerkPubKey}
+      appearance={{
+        baseTheme: dark,
+      }}
+      navigate={(to) => navigate(to)}
+    >
       <Routes>
         <Route path="/" element={<App />} />
         <Route
           path="/sign-in/*"
-          element={<SignIn redirectUrl="/homepage" path="/sign-in" />}
+          element={
+            <SignIn
+              redirectUrl="/homepage"
+              path="/sign-in"
+              appearance={{
+                elements: {
+                  rootBox: "flex h-screen w-screen justify-center items-center",
+                },
+              }}
+            />
+          }
         />
         <Route
           path="/sign-up/*"
