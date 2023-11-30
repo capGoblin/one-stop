@@ -5,8 +5,6 @@ import mongoose from "mongoose";
 import Document from "./Document";
 import cors from "cors";
 
-import { ExcalidrawElement } from "@excalidraw/excalidraw/types/element/types";
-
 import DeltaStatic from "react-quill";
 // import { DeltaStatic } from "react-quill";
 
@@ -149,12 +147,12 @@ io.on("connection", (socket) => {
     // }
   });
 
-  socket.on("send-changes", async (as) => {
-    // const document = await findOrCreateDoc("ha");
-    // await socket.join(roomId);
-    // setTimeout(() => socket.broadcast.emit("receive-changes", delta), 3000);
-    // socket.broadcast.emit("receive-changes", document?.data);
-  });
+  // socket.on("send-changes", async (as) => {
+  // const document = await findOrCreateDoc("ha");
+  // await socket.join(roomId);
+  // setTimeout(() => socket.broadcast.emit("receive-changes", delta), 3000);
+  // socket.broadcast.emit("receive-changes", document?.data);
+  // });
   // socket.on("send-changes", async (delta) => {
   //   console.log("text is in server", delta);
 

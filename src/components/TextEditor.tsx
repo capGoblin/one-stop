@@ -117,20 +117,15 @@
 // }
 
 // export default TextEditor;
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import ReactQuill, { DeltaStatic, Sources } from "react-quill";
+import { useEffect, useRef, useState } from "react";
+import ReactQuill from "react-quill";
+// import { DeltaStatic, Sources } from "react-quill";
+// import Source from "react-quill";
 import "react-quill/dist/quill.snow.css";
+// import { useParams } from "react-router-dom";
 import io, { Socket } from "socket.io-client";
+// import Document from "../../server/Document";
 import useMeetStore from "../store";
-import { SocketContext } from "../Contexts/SocketContext";
-import Document from "../../server/Document";
-import { useParams } from "react-router-dom";
 const TOOLBAR_OPTIONS = [
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
   [{ font: [] }],
@@ -153,7 +148,7 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
 
   // const { socket } = useContext(SocketContext);
 
-  const { id: documentId } = useParams();
+  // const { id: documentId } = useParams();
 
   // const [socket, setSocket] = useState<Socket | null>();
   const { editorValue, setEditorValue } = useMeetStore();
@@ -194,15 +189,15 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
   //     socket.disconnect();
   //   };
   // }, []);
-
+  // @ts-ignore
   const [documentData, setDocumentData] = useState<DeltaStatic>();
 
   const [fetchOnce, setFetchOnce] = useState<boolean>(false);
 
-  const getLatestDoc = async (roomId: string) => {
-    const d = await Document.findById(roomId);
-    if (d) return d;
-  };
+  // const getLatestDoc = async (roomId: string) => {
+  //   const d = await Document.findById(roomId);
+  //   if (d) return d;
+  // };
 
   useEffect(() => {
     socket?.on("roomId", (roomIdFromServer: string) => {
@@ -417,6 +412,7 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
     }
   }, [documentData]);
   useEffect(() => {
+    // @ts-ignore
     socket?.on("receive-changes", (delta: DeltaStatic) => {
       console.log(delta);
       console.log("delta got in client");
@@ -442,8 +438,8 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
   //   });
   // }, []);
   function handleTextChange(
-    value: string,
-    delta: DeltaStatic,
+    value: string, // @ts-ignore
+    delta: DeltaStatic, // @ts-ignore
     source: Sources
   ): void {
     if (source == "user") {

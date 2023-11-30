@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { IconType } from "react-icons";
 import { AiFillAudio, AiOutlineAudioMuted } from "react-icons/ai";
-import { MdCallEnd } from "react-icons/md";
 import { FaVideo, FaVideoSlash } from "react-icons/fa6";
+import { MdCallEnd } from "react-icons/md";
 
 interface Props {
   handleToggleMute: () => void;
@@ -16,6 +16,9 @@ interface Props {
 // // add nice mode switch (remove hide n seek)
 // // add join n create functions and add recent stops
 // // add cool audio border
+// draw lag
+// write duplicate
+// redirect to video and hide home
 // add codeEditor
 // add Postgres, add Pion
 const BottomBar = ({

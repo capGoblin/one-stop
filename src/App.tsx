@@ -1,20 +1,7 @@
-import React from "react";
-import { Navigate, redirect, useNavigate } from "react-router-dom";
-import { v4 as uuidV4 } from "uuid";
-import HomePage from "./Components/VideoCall";
-import SocketProvider from "./Contexts";
-import { ReactComponent as Logo } from "./assets/logo.svg";
-import { svgCode } from "../src/assets/logo";
+import { useNavigate } from "react-router-dom";
 import logo from "./assets/logo.png";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Routes,
-  Redirect,
-} from "react-router-dom";
 
-function App(props) {
+function App() {
   const navigate = useNavigate();
 
   function handleSignInClickEvent() {

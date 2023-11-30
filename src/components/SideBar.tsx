@@ -1,10 +1,9 @@
 import React, { useState } from "react";
+import { BsPencilFill } from "react-icons/bs";
 import { FaVideo } from "react-icons/fa";
 import { GoHome } from "react-icons/go";
-import { BsPencilFill } from "react-icons/bs";
 import { PiFileTextBold } from "react-icons/pi";
 import { RiCodeBoxFill } from "react-icons/ri";
-import { IconType } from "react-icons";
 // import { IoSettingsSharp } from "react-icons/io";
 // import IconType from "react-icons";
 

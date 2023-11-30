@@ -1,17 +1,17 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
-import toast, { Toaster } from "react-hot-toast";
 
-import { useNavigate } from "react-router-dom";
 import { UserButton } from "@clerk/clerk-react";
+// import { useNavigate } from "react-router-dom";
 import useMeetStore from "../store";
-import SideBar from "./SideBar";
-import Video from "./Video";
 import BottomBar from "./BottomBar";
 import Draw from "./Draw";
 import HomePage from "./HomePage";
+import SideBar from "./SideBar";
 import TextEditor from "./TextEditor";
+import Video from "./Video";
 // import GridLayout from "react-grid-layout";
 // import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
 // import { SocketContext, useSocket } from "../Contexts/SocketContext";
@@ -33,11 +33,11 @@ const VideoCall: React.FC = () => {
   // const remoteVideoRefs: Record<string, React.RefObject<HTMLVideoElement>> = {};
   const [localStream, setLocalStream] = useState<MediaStream>();
   const [remoteStream, setRemoteStream] = useState<MediaStream>();
-  const [shareId, setShareId] = useState<string>();
+  // const [shareId, setShareId] = useState<string>();
 
   // const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const audioBarsRef = useRef<HTMLDivElement[]>([]);
+  // const audioBarsRef = useRef<HTMLDivElement[]>([]);
 
   // const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
 
@@ -60,10 +60,10 @@ const VideoCall: React.FC = () => {
   const [roomId, setRoomId] = useState<string>("");
 
   // const [audioContext, setAudioContext] = useState<AudioContext>();
-  const [localAudioContext, setLocalAudioContext] =
-    useState<AudioContext | null>(null);
-  const [remoteAudioContext, setRemoteAudioContext] =
-    useState<AudioContext | null>(null);
+  // const [localAudioContext, setLocalAudioContext] =
+  //   useState<AudioContext | null>(null);
+  // const [remoteAudioContext, setRemoteAudioContext] =
+  //   useState<AudioContext | null>(null);
 
   const createPeerConnection = async () => {
     const peerConnection = new RTCPeerConnection(iceServers);
@@ -127,7 +127,7 @@ const VideoCall: React.FC = () => {
         });
       // copyRoomId(room);
       // toast.success("Room ID copied to clipboard!");
-      setShareId(room);
+      // setShareId(room);
       // toast w/ copied
 
       socket?.emit("join", { room, name: "saf" });
@@ -137,7 +137,7 @@ const VideoCall: React.FC = () => {
     } else {
       // setRoomId(room);
       // room = uuidv4();
-      setShareId(room);
+      // setShareId(room);
       socket?.emit("join", { room, name: "saf" });
 
       showVideoConference();
@@ -317,7 +317,7 @@ const VideoCall: React.FC = () => {
       const analyser = audioContext.createAnalyser();
       const source = audioContext.createMediaStreamSource(localStream);
       source.connect(analyser);
-      setLocalAudioContext(audioContext);
+      // setLocalAudioContext(audioContext);
 
       // Visualize audio using border color for the video element
       const updateAudioBorder = () => {
@@ -365,7 +365,7 @@ const VideoCall: React.FC = () => {
       const analyser = audioContext.createAnalyser();
       const source = audioContext.createMediaStreamSource(remoteStream);
       source.connect(analyser);
-      setRemoteAudioContext(audioContext);
+      // setRemoteAudioContext(audioContext);
 
       // Visualize audio using border color for the video element
       const updateAudioBorder = () => {
@@ -590,11 +590,11 @@ const VideoCall: React.FC = () => {
     }
   }, [roomId, socket, rtcPeerConnection]);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  function handleSignOutClickEvent() {
-    navigate("/sign-out/");
-  }
+  // function handleSignOutClickEvent() {
+  //   navigate("/sign-out/");
+  // }
 
   const [clickedIcon, setClickedIcon] = useState<string>("Video");
   const [movedRight, setMovedRight] = useState(false);
@@ -605,8 +605,8 @@ const VideoCall: React.FC = () => {
     setMovedRight(!movedRight);
   };
 
-  const [isMuted, setIsMuted] = useState(false);
-  const [isVideoOn, setIsVideoOn] = useState(false);
+  // const [isMuted, setIsMuted] = useState(false);
+  // const [isVideoOn, setIsVideoOn] = useState(false);
 
   const handleToggleMute = async () => {
     const audioTracks = localStream?.getAudioTracks();
@@ -615,10 +615,10 @@ const VideoCall: React.FC = () => {
       if (track.enabled) {
         track.enabled = false; // Mute the track
         console.log("muted");
-        setIsMuted(true);
+        // setIsMuted(true);
       } else {
         track.enabled = true; // Unmute the track
-        setIsMuted(false);
+        // setIsMuted(false);
         console.log("unmuted");
       }
     });
@@ -630,10 +630,10 @@ const VideoCall: React.FC = () => {
       if (track.enabled) {
         track.enabled = false; // turn off the video
         console.log("turned off");
-        setIsVideoOn(false);
+        // setIsVideoOn(false);
       } else {
         track.enabled = true; // turn on the video
-        setIsVideoOn(true);
+        // setIsVideoOn(true);
         console.log("unmuted");
       }
     });

@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import React from "react";
 
 // const Container = styled.div`
 //   position: relative;

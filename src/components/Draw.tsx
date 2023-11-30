@@ -1,21 +1,21 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 // import reactLogo from "./assets/react.svg";
 // import viteLogo from "/vite.svg";
 // import "./App.css";
-import { io } from "socket.io-client";
-import { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types/types";
-import { ExcalidrawElement } from "@excalidraw/excalidraw/types/element/types";
 import { Excalidraw } from "@excalidraw/excalidraw";
+import { ExcalidrawElement } from "@excalidraw/excalidraw/types/element/types";
+import { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types/types";
 import debounce from "lodash.debounce";
+import { io } from "socket.io-client";
 import useMeetStore from "../store";
 // import { SocketContext } from "../Contexts/SocketContext";
 
 const socket = io("http://localhost:3000");
-const SAVE_INTERVAL_MS = 2000;
+// const SAVE_INTERVAL_MS = 2000;
 
 function Draw({
   clickedIcon,
-  movedRight,
+  // movedRight,
   roomId,
 }: {
   clickedIcon: string;
