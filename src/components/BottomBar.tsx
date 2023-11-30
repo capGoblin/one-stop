@@ -19,6 +19,7 @@ interface Props {
 // draw lag
 // write duplicate
 // redirect to video and hide home
+// default to home
 // add codeEditor
 // add Postgres, add Pion
 const BottomBar = ({
