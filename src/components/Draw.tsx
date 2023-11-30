@@ -290,7 +290,8 @@ function Draw({
             // className={`${clickedIcon === "Draw" ? "block" : "hidden"}`}
             style={{
               height: "88%",
-              width: "80%",
+              width: "85%",
+              marginLeft: "40px",
               // display: clickedIcon === "Draw" ? "block" : "hidden",
             }}
           >
