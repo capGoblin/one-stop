@@ -81,7 +81,7 @@ import {
 } from "@clerk/clerk-react";
 import { dark } from "@clerk/themes";
 import App from "./App.tsx";
-import HomePage from "./Components/HomePage.tsx";
+import HomePage from "../src/Components/VideoCall.tsx";
 
 if (!import.meta.env.VITE_REACT_APP_CLERK_PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key");
