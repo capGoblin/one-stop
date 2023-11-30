@@ -650,12 +650,21 @@ const VideoCall: React.FC = () => {
   return (
     // <TextEditor clickedIcon={clickedIcon} />
 
-    <div>
+    <div className="h-screen">
       <div>
         <Toaster />
       </div>
-      <UserButton />
-      <button onClick={handleSignOutClickEvent}>Sign out</button>
+      <div className="flex absolute w-auto h-12 m-6 items-center justify-end rounded-full">
+        {/* Your avatar or content */}
+        <UserButton
+          appearance={{
+            elements: {
+              avatarBox: "h-12 w-12 ",
+            },
+          }}
+        />
+      </div>
+      {/* <button onClick={handleSignOutClickEvent}>Sign out</button> */}
       <SideBar
         clickedIcon={(arg0) => {
           setClickedIcon(arg0);
