@@ -89,6 +89,32 @@ function Code({ clickedIcon }: { clickedIcon: string }) {
   //   onChange={handleEditorChange}
   //   // onMount={handleEditorDidMount}
   // />
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleClick = () => {
+    setIsOpen(false);
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -96,9 +122,56 @@ function Code({ clickedIcon }: { clickedIcon: string }) {
 
       <section
         className={`editor-container ${
-          clickedIcon === "CodeBox" ? "block" : "hidden"
+          clickedIcon === "CodeBox" ? "block flex-col" : "hidden"
         }`}
       >
+        <div
+          className="lang flex h-10 z-10 absolute justify-end mt-2"
+          ref={dropdownRef}
+        >
+          <button
+            onClick={toggleDropdown}
+            type="button"
+            className="w-28 text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold px-4 py-2 rounded-xl transition-all duration-300 transform hover:translate-y-1 hover:shadow-lg opacity-80"
+          >
+            Language
+          </button>
+          {isOpen && (
+            <div className="absolute z-10 mt-2 w-56 rounded-xl bg-gray-900 shadow-lg origin-top-left ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <div
+                className="py-1"
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="options-menu"
+              >
+                <a
+                  href="#"
+                  className="block px-4 py-2 rounded-xl text-sm bg-gray-900 hover:text-gray-900 hover:bg-secondary"
+                  role="menuitem"
+                  onClick={handleClick}
+                >
+                  Action
+                </a>
+                <a
+                  href="#"
+                  className="block px-4 py-2 rounded-xl text-sm bg-gray-900 hover:text-gray-900 hover:bg-secondary"
+                  role="menuitem"
+                  onClick={handleClick}
+                >
+                  Another action
+                </a>
+                <a
+                  href="#"
+                  className="block px-4 py-2 rounded-xl text-sm bg-gray-900 hover:text-gray-900 hover:bg-secondary"
+                  role="menuitem"
+                  onClick={handleClick}
+                >
+                  Something else here
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
         {/* The background div for creating the illusion of rounded corners */}
         <div className="rounded-background">
           {/* The Monaco Editor */}
