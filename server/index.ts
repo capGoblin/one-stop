@@ -165,12 +165,18 @@ io.on("connection", (socket) => {
   // });
 
   // socket.on("get-doc", async (roomIdFromClient) => {
-  //   const document = await findOrCreateDoc(roomIdFromClient);
+  //   const documsnt = await findOrCreateDoc(roomIdFromClient);
   //   if (document) {
   //     console.log("doc is treu seeeeeeeeeeeeee", document.data);
   //   }
   //   socket.emit("load-doc", document?.data);
   //   console.log("doc sent to client");
+
+  socket.on("send-code", (text: string) => {
+    console.log(text);
+
+    socket.broadcast.emit("receive-code", text);
+  });
 
   socket.on("send-changes", (delta) => {
     console.log("text is in server");
