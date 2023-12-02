@@ -94,7 +94,11 @@ function Code({ clickedIcon }: { clickedIcon: string }) {
     <>
       {/* {clickedIcon && ( */}
 
-      <section className="editor-container">
+      <section
+        className={`editor-container ${
+          clickedIcon === "CodeBox" ? "block" : "hidden"
+        }`}
+      >
         {/* The background div for creating the illusion of rounded corners */}
         <div className="rounded-background">
           {/* The Monaco Editor */}
@@ -102,11 +106,7 @@ function Code({ clickedIcon }: { clickedIcon: string }) {
             height="88vh"
             width="90vw"
             defaultLanguage="yaml"
-            className={`${
-              clickedIcon === "CodeBox"
-                ? "block mt-10 ml-10 rounded-full"
-                : "hidden"
-            }`}
+            className="block mt-10 ml-10 rounded-full"
             defaultValue={`a: 2
           b: a + 30`}
             theme="vs-dark"
