@@ -16,6 +16,7 @@ interface Props {
 // // add nice mode switch (remove hide n seek)
 // // add join n create functions and add recent stops
 // // add cool audio border
+// fix clerk sign up dialog
 // draw lag
 // write duplicate
 // redirect to video and hide home

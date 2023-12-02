@@ -12,6 +12,7 @@ import HomePage from "./HomePage";
 import SideBar from "./SideBar";
 import TextEditor from "./TextEditor";
 import Video from "./Video";
+import Code from "./Code";
 // import GridLayout from "react-grid-layout";
 // import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
 // import { SocketContext, useSocket } from "../Contexts/SocketContext";
@@ -402,6 +403,22 @@ const VideoCall: React.FC = () => {
 
     setupAudioContext();
   }, [remoteStream]);
+
+  useEffect(() => {
+    const body = document.querySelector("body");
+    if (body) {
+      // if (true) {
+      // className={"h-14"}
+      body.style.overflow = "hidden";
+      // } else {
+      // body.style.overflow = "auto"; // Reset to allow scrolling
+      // }
+    }
+
+    return () => {
+      if (body) body.style.overflow = "auto"; // Reset on component unmount
+    };
+  }, []);
 
   // useEffect(() => {
   //   const borderThreshold = 10;
@@ -858,6 +875,8 @@ const VideoCall: React.FC = () => {
             handleToggleVideo={handleToggleVideo}
             clickedIcon={clickedIcon}
           />
+
+          <Code clickedIcon={clickedIcon} />
         </div>
         {/* {clickedIcon === "Video" ? (
           // <div className="flex flex-col items-center justify-center h-screen space-x-20">

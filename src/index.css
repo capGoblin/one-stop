@@ -15,6 +15,25 @@
   border-radius: 20px;
 }
 
+/* Style for the editor container */
+.editor-container {
+  /* display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh; */
+}
+
+/* Style for the pseudo-rounded background */
+.rounded-background {
+  background-color: #1e1e1e;
+  border-radius: 34px;
+  margin-top: 3rem;
+  margin-left: 5rem;
+  height: 90vh;
+}
+
+/* Style for the textarea (or any editor element) */
+
 /* div .ql-toolbar.ql-snow {
   @apply flex justify-center sticky top-0 z-10 bg-gray-100 border-none shadow-md;
 }
