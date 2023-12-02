@@ -32,6 +32,15 @@
   height: 90vh;
 }
 
+.lang {
+  width: 93vw;
+  /* background-color: #1e1e1e; */
+}
+
+.langbtn {
+  background-color: #1e1e1e;
+}
+
 /* Style for the textarea (or any editor element) */
 
 /* div .ql-toolbar.ql-snow {
@@ -48,6 +57,9 @@ div .ql-container.ql-snow {
   height: 100px;
   background-color: red;
 } */
+
+/* Dropdown button styles */
+
 div .quill.block {
   display: flex;
   flex-direction: column;
