@@ -4,25 +4,16 @@ import { FaVideo } from "react-icons/fa";
 import { GoHome } from "react-icons/go";
 import { PiFileTextBold } from "react-icons/pi";
 import { RiCodeBoxFill } from "react-icons/ri";
-// import { IoSettingsSharp } from "react-icons/io";
-// import IconType from "react-icons";
 
 interface Props {
   clickedIcon: (arg0: string) => void;
 }
-// interface ClickedIcons {
-//   GoHome: boolean;
-//   Draw: boolean;
-//   Video: boolean;
-//   FileText: boolean;
-//   CodeBox: boolean;
-// }
+
 interface ClickedIcons {
   [key: string]: boolean;
 }
 const SideBar = (props: Props) => {
   const initial = "Video";
-  // const [initial, setInitial] = useState<string>("Video");
   const [clickedIcons, setClickedIcons] = useState<ClickedIcons>({
     GoHome: false,
     Draw: false,
@@ -31,9 +22,6 @@ const SideBar = (props: Props) => {
     CodeBox: false,
   });
   function handleIconClick(arg0: string) {
-    // console.log(arg0);
-    // setInitial(arg0);
-    // console.log(initial);
     props.clickedIcon(arg0 === undefined ? initial : arg0);
 
     const clickedIconKey = arg0 as keyof ClickedIcons;

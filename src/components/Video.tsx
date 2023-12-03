@@ -1,30 +1,6 @@
 import React from "react";
 
-// const Container = styled.div`
-//   position: relative;
-//   display: inline-block;
-//   width: 240px;
-//   height: 270px;
-//   margin: 5px;
-// `;
-
-// interface VideoContainerProps {
-//   clickedIcon: string;
-// }
-
-// const VideoContainer = styled.div<VideoContainerProps>`
-//   display: ${(props) => (props.clickedIcon === "Video" ? "block" : "none")};
-// `;
-
-// const UserLabel = styled.p`
-//   display: inline-block;
-//   position: absolute;
-//   top: 230px;
-//   left: 0px;
-// `;
-
 interface Props {
-  //   name: string;
   reff: React.RefObject<HTMLVideoElement>;
   muted?: boolean;
   clickedIcon: string;
@@ -33,25 +9,14 @@ interface Props {
 }
 
 const Video = ({ reff, muted, clickedIcon, className, style }: Props) => {
-  //   const ref = useRef<HTMLVideoElement>(null);
-  //   const [isMuted, setIsMuted] = useState<boolean>(false);
-
-  //   useEffect(() => {
-  //     // if (ref.current) ref.current.srcObject = stream;
-  //     if (muted) setIsMuted(muted);
-  //   }, [muted]);
   const defaultClassName = "m-20 object-cover rounded-3xl"; // Add default classes here
 
   const defaultStyle = {
     height: "60vh",
     width: "80vh",
-    // border: "1px solid green",
-    // display: clickedIcon === "Video" ? "block" : "none",
-    // Add other default styles here
   };
 
   return (
-    // <Container>
     <video
       className={`${className} ? ${className}: ${defaultClassName} `}
       ref={reff}
@@ -62,11 +27,7 @@ const Video = ({ reff, muted, clickedIcon, className, style }: Props) => {
         ...style,
         display: clickedIcon === "Draw" ? "none" : "block",
       }}
-    >
-      {/* Your video content */}
-    </video>
-    //   <UserLabel>{name}</UserLabel>
-    // </Container>
+    ></video>
   );
 };
 

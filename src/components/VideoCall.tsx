@@ -411,68 +411,13 @@ const VideoCall: React.FC = () => {
   useEffect(() => {
     const body = document.querySelector("body");
     if (body) {
-      // if (true) {
-      // className={"h-14"}
       body.style.overflow = "hidden";
-      // } else {
-      // body.style.overflow = "auto"; // Reset to allow scrolling
-      // }
     }
 
     return () => {
       if (body) body.style.overflow = "auto"; // Reset on component unmount
     };
   }, []);
-
-  // useEffect(() => {
-  //   const borderThreshold = 10;
-  //   let borderThickness = 0;
-
-  //   const setupAudioContext = (
-  //     stream: MediaStream | undefined,
-  //     setAudioContext: React.Dispatch<
-  //       React.SetStateAction<AudioContext | null>
-  //     >,
-  //     videoRef: React.RefObject<HTMLVideoElement>
-  //   ) => {
-  //     if (!stream || !videoRef.current) return;
-
-  //     const audioContext = new AudioContext();
-  //     const analyser = audioContext.createAnalyser();
-  //     const source = audioContext.createMediaStreamSource(stream);
-  //     source.connect(analyser);
-  //     setAudioContext(audioContext);
-
-  //     const updateAudioBorder = () => {
-  //       requestAnimationFrame(updateAudioBorder);
-
-  //       const dataArray = new Uint8Array(analyser.frequencyBinCount);
-  //       analyser.getByteFrequencyData(dataArray);
-
-  //       const avg =
-  //         dataArray.reduce((acc, val) => acc + val, 0) / dataArray.length;
-  //       // let borderThickness = 0;
-
-  //       if (avg > borderThreshold) {
-  //         borderThickness = Math.min(avg * 0.5, 20); // Adjust the maximum border thickness
-  //       } else {
-  //         // Apply decay or gradual decrease when below threshold
-  //         borderThickness = Math.max(0, borderThickness - 1); // Adjust the decay rate
-  //       }
-
-  //       const borderSize = `${borderThickness}px`;
-
-  //       if (videoRef.current) {
-  //         videoRef.current.style.border = `solid secondary ${borderSize}`;
-  //       }
-  //     };
-
-  //     updateAudioBorder();
-  //   };
-
-  //   setupAudioContext(localStream, setLocalAudioContext, localVideoRef);
-  //   setupAudioContext(remoteStream, setRemoteAudioContext, remoteVideoRef);
-  // }, [localStream, remoteStream]);
 
   useEffect(() => {
     if (socket) {
@@ -483,7 +428,6 @@ const VideoCall: React.FC = () => {
         callerIdRef.current = socket.id;
         console.log(callerIdRef.current);
         callerId = callerIdRef.current;
-        // setIsCaller(socket.id);
         console.log(callerId);
       });
 
@@ -611,12 +555,6 @@ const VideoCall: React.FC = () => {
     }
   }, [roomId, socket, rtcPeerConnection]);
 
-  // const navigate = useNavigate();
-
-  // function handleSignOutClickEvent() {
-  //   navigate("/sign-out/");
-  // }
-
   const [clickedIcon, setClickedIcon] = useState<string>("Video");
   const [movedRight, setMovedRight] = useState(false);
   const handleToggle = () => {
@@ -626,9 +564,6 @@ const VideoCall: React.FC = () => {
     setMovedRight(!movedRight);
   };
 
-  // const [isMuted, setIsMuted] = useState(false);
-  // const [isVideoOn, setIsVideoOn] = useState(false);
-
   const handleToggleMute = async () => {
     const audioTracks = localStream?.getAudioTracks();
 
@@ -636,10 +571,8 @@ const VideoCall: React.FC = () => {
       if (track.enabled) {
         track.enabled = false; // Mute the track
         console.log("muted");
-        // setIsMuted(true);
       } else {
         track.enabled = true; // Unmute the track
-        // setIsMuted(false);
         console.log("unmuted");
       }
     });
@@ -651,32 +584,19 @@ const VideoCall: React.FC = () => {
       if (track.enabled) {
         track.enabled = false; // turn off the video
         console.log("turned off");
-        // setIsVideoOn(false);
       } else {
         track.enabled = true; // turn on the video
-        // setIsVideoOn(true);
         console.log("unmuted");
       }
     });
   };
 
-  // const audioBars = Array.from({ length: 100 }, (_, index) => (
-  //   <div
-  //     key={index}
-  //     ref={(el) => (audioBarsRef.current[index] = el as HTMLDivElement)}
-  //     className="bg-blue-500 w-2 h-1 m-1 rounded"
-  //   ></div>
-  // ));
-
   return (
-    // <TextEditor clickedIcon={clickedIcon} />
-
     <div className="h-screen">
       <div>
         <Toaster />
       </div>
       <div className="flex absolute w-auto h-12 m-6 items-center justify-end rounded-full">
-        {/* Your avatar or content */}
         <UserButton
           appearance={{
             elements: {
@@ -685,25 +605,14 @@ const VideoCall: React.FC = () => {
           }}
         />
       </div>
-      {/* <button onClick={handleSignOutClickEvent}>Sign out</button> */}
       <SideBar
         clickedIcon={(arg0) => {
           setClickedIcon(arg0);
           // console.log(arg0);
         }}
       />
-      {/* <div>
-        <label>Room ID: </label>
-        <input type="text" ref={roomInputRef} />
-        <button onClick={joinRoom}>Connect</button> */}
-
-      {/* </div> */}
       <div>
         <div className={`flex flex-col items-center`}>
-          {/* <div className="flex flex-col justify-evenly"> */}
-
-          {/* <div className="flex space-x-10"> */}
-          {/* <div className="mx-auto"> */}
           <div
             className={`${
               clickedIcon !== "Video" && !movedRight
@@ -713,17 +622,6 @@ const VideoCall: React.FC = () => {
                 : ""
             }`}
           >
-            {/* <button
-              className={`${
-                clickedIcon !== "Video" && roomId !== ""
-                  ? "text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold rounded-lg w-min py-2 px-20 grow-0 opacity-75"
-                  : ""
-              }`}
-              disabled={clickedIcon === "Video" || roomId === ""}
-              onClick={handleClick}
-            >
-              {clickedIcon === "Video" || roomId === "" ? "" : "Toggle"}
-            </button> */}
             <div
               className={`${
                 clickedIcon === "Video" ? "flex justify-center" : ""
@@ -748,7 +646,6 @@ const VideoCall: React.FC = () => {
                   clickedIcon={clickedIcon}
                 />
               </div>
-              {/* {audioBars} */}
               <div onClick={handleToggle}>
                 <Video
                   className={`${
@@ -770,99 +667,6 @@ const VideoCall: React.FC = () => {
               </div>
             </div>
           </div>
-
-          {/* {clickedIcon !== "Video" ? (
-            <div
-              id="overlap"
-              className="flex flex-col justify-center absolute z-10"
-            >
-              <div>
-                <Video
-                  reff={localVideoRef}
-                  muted={true}
-                  clickedIcon={clickedIcon}
-                  style={{ height: "10vh" }}
-                />
-              </div>
-              <div>
-                <Video
-                  reff={remoteVideoRef}
-                  muted={false}
-                  clickedIcon={clickedIcon}
-                />
-              </div>
-            </div>
-          ) : null} */}
-
-          {/* <div className="flex"> */}
-          {/* <Video
-              name={"smthng"}
-              reff={localVideoRef}
-              muted={true}
-              clickedIcon={clickedIcon}
-            />
-            <Video
-              name={"smthng"}
-              reff={remoteVideoRef}
-              muted={false}
-              clickedIcon={clickedIcon}
-            /> */}
-          {/* <video
-              className="m-20"
-              ref={localVideoRef}
-              autoPlay
-              playsInline
-              muted
-              style={{
-                height: "250px",
-                width: "60%",
-                border: "1px solid green",
-                display: clickedIcon === "Video" ? "block" : "none",
-              }}
-            ></video>
-            <video
-              className="m-20"
-              ref={remoteVideoRef}
-              autoPlay
-              playsInline
-              style={{
-                height: "250px",
-                width: "60%",
-                border: "1px solid red",
-                display: clickedIcon === "Video" ? "block" : "none",
-              }}
-            ></video> */}
-          {/* </div> */}
-          {/* </div> */}
-          {/* <button
-            className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider rounded-lg w-min py-2 px-6 grow-0 mb-10"
-            style={{
-              display: clickedIcon === "Video" ? "block" : "none",
-            }}
-            onClick={handleToggleVideo}
-          >
-            Leave
-          </button> */}
-
-          {/* </div> */}
-
-          {/* <div className="flex space-x-10 mt-10"> */}
-          {/* <div className=""> */}
-          {/* <label>Room ID: </label> */}
-          {/* <input
-              className="placeholder:italic placeholder:text-secondary block bg-gray-900  rounded-md py-2 px-5 pl-9 pr-4 shadow-sm  focus:outline-none focus:ring-gray-700 focus:ring-1 sm:text-sm"
-              type="text"
-              ref={roomInputRef}
-              placeholder="Type the damn Room Id..."
-            />
-            <button
-              className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider py-2 px-6 rounded-lg w-min grow-0"
-              onClick={joinRoom}
-            >
-              Connect
-            </button> */}
-          {/* </div> */}
-
           <HomePage
             clickedIcon={clickedIcon}
             roomInputRef={roomInputRef}
@@ -883,14 +687,6 @@ const VideoCall: React.FC = () => {
 
           <Code clickedIcon={clickedIcon} />
         </div>
-        {/* {clickedIcon === "Video" ? (
-          // <div className="flex flex-col items-center justify-center h-screen space-x-20">
-
-        ) : null} */}
-
-        {/* <TextEditor clickedIcon={clickedIcon} /> */}
-
-        {/* {clickedIcon === "Draw" ? <Draw /> : null} */}
       </div>
     </div>
   );

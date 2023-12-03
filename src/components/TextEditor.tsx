@@ -1,130 +1,7 @@
-// import React, { useContext, useEffect, useRef, useState } from "react";
-// import ReactQuill, { DeltaStatic, Sources } from "react-quill";
-// import "react-quill/dist/quill.snow.css";
-// import io, { Socket } from "socket.io-client";
-// import useMeetStore from "../store";
-// import { SocketContext } from "../Contexts/SocketContext";
-
-// const TOOLBAR_OPTIONS = [
-//   [{ header: [1, 2, 3, 4, 5, 6, false] }],
-//   [{ font: [] }],
-//   [{ list: "ordered" }, { list: "bullet" }],
-//   ["bold", "italic", "underline"],
-//   [{ color: [] }, { background: [] }],
-//   [{ script: "sub" }, { script: "super" }],
-//   [{ align: [] }],
-//   ["image", "blockquote", "code-block"],
-//   ["clean"],
-// ];
-
-// function TextEditor({ clickedIcon }: { clickedIcon: string }) {
-//   const { socket } = useContext(SocketContext);
-
-//   // const [socket, setSocket] = useState<Socket | null>();
-//   const { editorValue, setEditorValue } = useMeetStore();
-//   // const [quill, setQuill] = useState<>();
-//   // const [editorValue, setEditorValue] = useState("");
-//   const quillRef = useRef<ReactQuill>(); // Create a ref for the ReactQuill component
-
-//   // useEffect(() => {
-//   //   const socket = io("http://localhost:3000");
-//   //   setSocket(socket);
-
-//   //   return () => {
-//   //     socket.disconnect();
-//   //   };
-//   // }, []);
-
-//   useEffect(() => {
-//     // if (clickedIcon !== "FileText") {
-//     //   socket?.on("receive-contents", (contents) => {
-//     //     console.log(contents);
-
-//     //     quillRef.current?.getEditor().updateContents(contents);
-//     //     console.log(quillRef.current?.getEditor());
-//     //   });
-//     // }
-//     socket?.on("receive-changes", (delta) => {
-//       console.log(delta);
-
-//       console.log("delta got in client");
-
-//       if (quillRef.current) {
-//         console.log(quillRef.current.getEditor());
-//         console.log("safas");
-//         quillRef.current.getEditor().updateContents(delta);
-//       }
-
-//       console.log(quillRef.current!.getEditor());
-//     });
-//   }, [clickedIcon, quillRef, socket]);
-
-//   // useEffect(() => {
-//   //   console.log("quillRef:", quillRef.current);
-//   //   console.log("quillRef:", quillRef.current?.getEditor());
-//   //   console.log("quillRefsa:", quillRef.current?.getEditor());
-//   // }, [quillRef]);
-
-//   // useEffect(() => {
-//   //   Quill.on("text-change", function (delta, oldDelta, source) {
-//   //     if (source == "user") {
-//   //       console.log("A user action triggered this change.");
-//   //       socket?.emit("send-changes", delta);
-//   //     }
-//   //   });
-//   // }, []);
-
-//   function handleTextChange(
-//     value: string,
-//     delta: DeltaStatic,
-//     source: Sources
-//   ): void {
-//     if (source == "user") {
-//       setEditorValue(value);
-//       socket?.emit("send-changes", delta);
-//       // socket?.emit("send-contents", quillRef.current?.getEditorContents());
-//       // console.log(quillRef.current?.getEditorContents());
-//       console.log(delta);
-//     }
-//   }
-
-//   return (
-//     // <div className="flex flex-col justify-center items-center">
-//     //   {/* <h1 style={{ textAlign: "center" }}>Excalidraw Example</h1> */}
-//     //   <div className="flex items-center justify-center h-screen w-screen">
-//     <div
-//       className={`flex flex-col items-center ${
-//         clickedIcon === "FileText" ? "block" : "hidden"
-//       }`}
-//     >
-//       {" "}
-//       <ReactQuill
-//         ref={quillRef}
-//         theme="snow"
-//         value={editorValue}
-//         modules={{
-//           toolbar: TOOLBAR_OPTIONS,
-//         }}
-//         onChange={handleTextChange}
-//       />
-//       //{" "}
-//     </div>
-//     //   </div>
-//     // </div>
-//   );
-
-//   // return <ReactQuill  value={value} onChange={setValue} />;
-// }
-
-// export default TextEditor;
 import { useEffect, useRef, useState } from "react";
 import ReactQuill from "react-quill";
-// import { DeltaStatic, Sources } from "react-quill";
-// import Source from "react-quill";
 import "react-quill/dist/quill.snow.css";
-// import { useParams } from "react-router-dom";
 import io, { Socket } from "socket.io-client";
-// import Document from "../../server/Document";
 import useMeetStore from "../store";
 const TOOLBAR_OPTIONS = [
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -177,27 +54,13 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
     };
   }, [clickedIcon]);
 
-  // const [quill, setQuill] = useState<>();
-  // const [editorValue, setEditorValue] = useState("");
   const quillRef = useRef<ReactQuill>(null); // Create a ref for the ReactQuill component
 
   const [roomId, setRoomId] = useState<string>("");
-  // useEffect(() => {
-  //   const socket = io("http://localhost:3000");
-  //   setSocket(socket);
-  //   return () => {
-  //     socket.disconnect();
-  //   };
-  // }, []);
   // @ts-ignore
   const [documentData, setDocumentData] = useState<DeltaStatic>();
 
   const [fetchOnce, setFetchOnce] = useState<boolean>(false);
-
-  // const getLatestDoc = async (roomId: string) => {
-  //   const d = await Document.findById(roomId);
-  //   if (d) return d;
-  // };
 
   useEffect(() => {
     socket?.on("roomId", (roomIdFromServer: string) => {
@@ -206,69 +69,9 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
     });
   }, [roomId, socket]);
 
-  // useEffect(() => {
-  //   const fetchDocument = async (roomID: string) => {
-  //     try {
-  //       const response = await fetch(`http://localhost:3000/find/${roomID}`);
-  //       if (response.ok) {
-  //         const data = await response.json();
-  //         console.log(data.data);
-
-  //         if (quillRef.current) {
-  //           console.log(quillRef.current.getEditor());
-  //           quillRef.current.getEditor().insertText(0, "data.data");
-  //         }
-  //         setDocumentData(data);
-  //       } else {
-  //         console.error("Failed to fetch document");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching document:", error);
-  //     }
-  //   };
-  //   // socket?.on("room_joined", (roomIdFromServer: string) => {
-  //   //   setRoomId(roomIdFromServer);
-  //   //   console.log(roomIdFromServer);
-  //   //   fetchDocument(roomIdFromServer);
-  //   // });
-
-  //   // Fetch only if roomId is not an empty string
-  // }, [roomId, quillRef]);
-  /////////////////////////////////////
-  // useEffect(() => {
-  //   const fetchDocument = async () => {
-  //     try {
-  //       const response = await fetch(`http://localhost:3000/find/${roomId}`);
-  //       if (response.ok) {
-  //         const data = await response.json();
-  //         console.log(data);
-
-  //         setDocumentData(data.data);
-  //       } else {
-  //         console.error("Failed to fetch document");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching document:", error);
-  //     }
-  //   };
-  //   if (roomId !== "") {
-  //     fetchDocument();
-  //   }
-  // }, [roomId, clickedIcon]);
   useEffect(() => {
     if (clickedIcon !== "FileText" || roomId === "") return;
     const fetchDocument = async () => {
-      // if (quillRef.current) {
-      //   const delta = quillRef.current.getEditor().getContents();
-      //   console.log(delta);
-      //   if (delta && delta.ops && delta.ops.length > 0) {
-      //     const newlineCount = delta.ops[0].insert.split("\n").length - 1;
-      //     if (newlineCount > 1) {
-      //       return;
-      //     }
-      //   }
-      // }
-      // if (fetchOnce) return;
       try {
         const response = await fetch(`http://localhost:3000/find/${roomId}`);
         if (response.ok) {
@@ -293,7 +96,6 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
           if (quillRef.current) {
             console.log(quillRef.current.getEditor());
 
-            // quillRef.current.getEditor().insertText(0, data.data);
             quillRef.current.getEditor().updateContents(data.doc);
             console.log(quillRef.current.getEditor().getContents());
           }
@@ -308,47 +110,11 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
     };
     if (clickedIcon === "FileText") {
       console.log(quillRef.current?.getEditor().getContents());
-      // if (
-      //   JSON.stringify(quillRef.current?.getEditor().getContents()) ===
-      //   JSON.stringify({ ops: [{ insert: "\n" }] })
-      // ) {
-      // socket.emit("save-doc", data);
       fetchDocument();
-      // }
-
-      // fetchDocument();
       setFetchOnce(true);
     }
   }, [clickedIcon, fetchOnce, roomId]);
-  /////////////////////
-  // useEffect(() => {
-  //   const fetchDocument = async () => {
-  //     try {
-  //       const response = await fetch(`http://localhost:3000/find/${roomId}`);
-  //       if (response.ok) {
-  //         const data = await response.json();
-  //         console.log(data);
 
-  //         setDocumentData(data.data);
-  //       } else {
-  //         console.error("Failed to fetch document");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching document:", error);
-  //     }
-  //   };
-  //   fetchDocument();
-  // }, []);
-
-  // useEffect(() => {
-  //   if (roomId === undefined) return;
-  //   const doc = getLatestDoc(roomId);
-
-  //   if (quillRef.current) {
-  //     console.log(quillRef.current.getEditor());
-  //     quillRef.current.getEditor().insertText(0, doc);
-  //   }
-  // }, [clickedIcon, roomId]);
   useEffect(() => {
     if (socket == null) return;
 
@@ -356,14 +122,11 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
       const delta = quillRef.current?.getEditor().getContents();
       console.log(delta);
       if (delta && delta.ops && delta.ops.length >= 1) {
-        // const firstInsert = delta.ops[0].insert;
-        // if (typeof firstInsert === "string") {
         console.log(delta);
         const data = {
           roomId,
           delta,
         };
-        // socket.emit("save-doc", { roomId, saveDoc: firstInsert });
 
         if (
           JSON.stringify(data.delta) !==
@@ -371,7 +134,6 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
         ) {
           socket.emit("save-doc", data);
         }
-        // }
       }
     }, SAVE_INTERVAL_MS);
 
@@ -381,24 +143,6 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
       clearInterval(interval);
     };
   }, [socket, quillRef, roomId]);
-  // useEffect(() => {
-  //   socket?.on("load-doc", (data: string) => {
-  //     if (data === null) return;
-  //     console.log(data);
-  //     const init: string = `${data}`;
-  //     if (quillRef.current) {
-  //       console.log(quillRef.current.getEditor());
-  //       quillRef.current.getEditor().insertText(0, init);
-  //       console.log(quillRef.current.getEditor());
-  //     } else {
-  //       console.log("realyy? ");
-  //     }
-  //   });
-
-  //   socket?.emit("get-doc", roomId);
-
-  //   console.log("doc", roomId);
-  // }, [roomId, socket, quillRef]);
 
   useEffect(() => {
     if (quillRef.current) {
@@ -406,7 +150,6 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
 
       quillRef.current.getEditor().updateContents(documentData);
 
-      // quillRef.current.getEditor().insertText(0, documentData);
       console.log(quillRef.current.getEditor().getContents());
     }
   }, [documentData]);
@@ -423,19 +166,6 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
     });
   }, [quillRef, socket]);
 
-  // useEffect(() => {
-  //   console.log("quillRef:", quillRef.current);
-  //   console.log("quillRef:", quillRef.current?.getEditor());
-  //   console.log("quillRefsa:", quillRef.current?.getEditor());
-  // }, [quillRef]);
-  // useEffect(() => {
-  //   Quill.on("text-change", function (delta, oldDelta, source) {
-  //     if (source == "user") {
-  //       console.log("A user action triggered this change.");
-  //       socket?.emit("send-changes", delta);
-  //     }
-  //   });
-  // }, []);
   function handleTextChange(
     value: string, // @ts-ignore
     delta: DeltaStatic, // @ts-ignore
@@ -447,17 +177,7 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
     }
   }
 
-  // const editorStyles = {
-  //   opacity: clickedIcon !== "FileText" ? 0 : 1,
-  //   // transition: "opacity 0.3s ease-in-out", // Add a transition for a smooth opacity change
-  //   display: "block",
-  // };
-
   return (
-    // <div className="flex flex-col justify-center items-center">
-    //   {/* <h1 style={{ textAlign: "center" }}>Excalidraw Example</h1> */}
-    //   <div className="flex items-center justify-center h-screen w-screen">
-
     <ReactQuill
       ref={quillRef}
       theme="snow"
@@ -468,11 +188,7 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
         toolbar: TOOLBAR_OPTIONS,
       }}
       onChange={handleTextChange}
-      // style={editorStyles}
     />
-    //{" "}
-    //   </div>
-    // </div>
   );
 }
 export default TextEditor;

@@ -46,9 +46,6 @@ const BottomBar = ({
     );
   };
   return (
-    // transition-all duration-300 transform translate-y-3 opacity-0 hover:opacity-100 hover:translate-y-0
-    // transition-all duration-300 transform translate-y-6 opacity-100 hover:translate-y-0
-
     <>
       <div
         className={`fixed bottom-0 left-1/2 transform -translate-x-1/2 z-60 flex justify-center space-x-20 ${
@@ -64,7 +61,6 @@ const BottomBar = ({
             toggleMuteIcon();
           }}
         >
-          {/* {<AiFillAudio />} */}
           {muteIcon === AiFillAudio ? (
             <AiOutlineAudioMuted className={"h-6 w-6"} />
           ) : (

@@ -1,10 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import reactLogo from "./assets/react.svg";
-import Editor, { EditorDidMount, Monaco } from "@monaco-editor/react";
+import Editor from "@monaco-editor/react";
 import { editor } from "monaco-editor";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
-import { MonacoBinding } from "y-monaco";
 import { Socket, io } from "socket.io-client";
 
 const ydocument = new Y.Doc();
@@ -72,32 +70,7 @@ function Code({ clickedIcon }: { clickedIcon: string }) {
           const data = await response.json();
           console.log(data);
           if (fetchOnce) return;
-
-          // not to fetch and update empty data(which will be saved else)
-          // if (
-          //   JSON.stringify(data.doc) ===
-          //   JSON.stringify({ ops: [{ insert: "\n" }] })
-          // ) {
-          //   return;
-          // }
-
-          // not to fetch and update, if data already exists
-          // const del = quillRef.current?.getEditor().getContents();
-          // if (JSON.stringify(data.doc) === JSON.stringify(del)) {
-          //   return;
-          // }
-
-          // if (quillRef.current) {
-          //   console.log(quillRef.current.getEditor());
-
-          //   // quillRef.current.getEditor().insertText(0, data.data);
-          //   quillRef.current.getEditor().updateContents(data.doc);
-          //   console.log(quillRef.current.getEditor().getContents());
-          // }
-
           setEditorContent(data.editorContent);
-
-          // setDocumentData(data.doc);
         } else {
           console.error("Failed to fetch document");
         }
@@ -106,16 +79,7 @@ function Code({ clickedIcon }: { clickedIcon: string }) {
       }
     };
     if (clickedIcon === "CodeBox") {
-      // console.log(quillRef.current?.getEditor().getContents());
-      // if (
-      //   JSON.stringify(quillRef.current?.getEditor().getContents()) ===
-      //   JSON.stringify({ ops: [{ insert: "\n" }] })
-      // ) {
-      // socket.emit("save-doc", data);
       fetchDocument();
-      // }
-
-      // fetchDocument();
       setFetchOnce(true);
     }
   }, [clickedIcon, fetchOnce, roomId]);
@@ -125,25 +89,12 @@ function Code({ clickedIcon }: { clickedIcon: string }) {
 
     const interval = setInterval(() => {
       console.log(editorContent);
-      // const delta = quillRef.current?.getEditor().getContents();
-      // console.log(delta);
       if (editorContent) {
-        // const firstInsert = delta.ops[0].insert;
-        // if (typeof firstInsert === "string") {
-        // console.log(delta);
         const data = {
           roomId,
           editorContent,
         };
-        // socket.emit("save-doc", { roomId, saveDoc: firstInsert });
-
-        // if (
-        // JSON.stringify(data.delta) !==
-        // JSON.stringify({ ops: [{ insert: "\n" }] })
-        // ) {
         socket.emit("save-code", data);
-        // }
-        // }
       }
     }, SAVE_INTERVAL_MS);
 
@@ -163,37 +114,6 @@ function Code({ clickedIcon }: { clickedIcon: string }) {
     setEditorContent(value);
   };
 
-  //   useEffect(() => {
-  //     socket.on("receive-code", (text) => {});
-  //   }, []);
-  //   const handleEditorDidMount: EditorDidMount = (
-  //     editor: editor.IStandaloneCodeEditor,
-  //     monaco: Monaco
-  //   ) => {
-  //     // here is the editor instance
-  //     // you can store it in `useRef` for further usage
-  //     editorRef.current = editor;
-  //     const monacoBinding = new MonacoBinding(
-  //       type,
-  //       editor.getModel()!,
-  //       new Set([editor]),
-  //       provider.awareness
-  //     );
-  //   };
-
-  //   // className={`${clickedIcon !== "CodeBox" ? "hidden" : "block"}`}
-  //   <Editor
-  //   height="88%"
-  //   width="85%"
-  //   // className={`${clickedIcon !== "CodeBox" ? "hidden" : "block"}`}
-  //   defaultLanguage="yaml"
-  //   defaultValue={`a: 2
-  // b: a + 30`}
-  //   theme="vs-dark"
-  //   value={editorContent}
-  //   onChange={handleEditorChange}
-  //   // onMount={handleEditorDidMount}
-  // />
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -223,8 +143,6 @@ function Code({ clickedIcon }: { clickedIcon: string }) {
 
   return (
     <>
-      {/* {clickedIcon && ( */}
-
       <section
         className={`editor-container ${
           clickedIcon === "CodeBox" ? "block flex-col" : "hidden"
@@ -277,9 +195,7 @@ function Code({ clickedIcon }: { clickedIcon: string }) {
             </div>
           )}
         </div>
-        {/* The background div for creating the illusion of rounded corners */}
         <div className="rounded-background">
-          {/* The Monaco Editor */}
           <Editor
             height="88vh"
             width="90vw"
@@ -290,12 +206,9 @@ function Code({ clickedIcon }: { clickedIcon: string }) {
             theme="vs-dark"
             value={editorContent}
             onChange={handleEditorChange}
-            // onMount={handleEditorDidMount}
           />{" "}
         </div>
       </section>
-
-      {/* )} */}
     </>
   );
 }
