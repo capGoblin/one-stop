@@ -203,7 +203,6 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
     socket?.on("roomId", (roomIdFromServer: string) => {
       setRoomId(roomIdFromServer);
       console.log(roomIdFromServer);
-      socket?.emit("getem", roomId);
     });
   }, [roomId, socket]);
 

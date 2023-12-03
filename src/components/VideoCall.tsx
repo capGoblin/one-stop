@@ -25,6 +25,7 @@ const VideoCall: React.FC = () => {
   const { rtcPeerConnection, setRtcPeerConnection } = useMeetStore();
   // TODO: use something from mesh for roomInputRef
   const roomInputRef = useRef<HTMLInputElement | null>(null);
+  const joinRoomInputRef = useRef<HTMLInputElement | null>(null);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
   // TODO: room&user management to global
@@ -59,6 +60,7 @@ const VideoCall: React.FC = () => {
   };
 
   const [roomId, setRoomId] = useState<string>("");
+  const [socketId, setSocketId] = useState<string>("");
 
   // const [audioContext, setAudioContext] = useState<AudioContext>();
   // const [localAudioContext, setLocalAudioContext] =
@@ -144,9 +146,11 @@ const VideoCall: React.FC = () => {
       showVideoConference();
     }
   };
-  const joinRoom = (room: string) => {
-    // let room = roomInputRef.current?.value;
+  const joinRoom = () => {
+    const room = joinRoomInputRef.current?.value;
+    console.log(room);
     if (room) {
+      console.log(room);
       socket?.emit("join", { room, name: "saf" });
       setRoomId(room);
     }
@@ -862,6 +866,7 @@ const VideoCall: React.FC = () => {
           <HomePage
             clickedIcon={clickedIcon}
             roomInputRef={roomInputRef}
+            joinRoomInputRef={joinRoomInputRef}
             createRoom={createRoom}
             joinRoom={joinRoom}
           />

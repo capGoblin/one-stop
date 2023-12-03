@@ -3,13 +3,15 @@ import React, { useEffect, useState } from "react";
 const HomePage = ({
   clickedIcon,
   roomInputRef,
+  joinRoomInputRef,
   createRoom,
   joinRoom,
 }: {
   clickedIcon: string;
   roomInputRef: React.MutableRefObject<HTMLInputElement | null>;
+  joinRoomInputRef: React.MutableRefObject<HTMLInputElement | null>;
   createRoom: () => void;
-  joinRoom: (room: string) => void;
+  joinRoom: () => void;
 }) => {
   useEffect(() => {
     const body = document.querySelector("body");
@@ -84,13 +86,13 @@ const HomePage = ({
             <input
               className="placeholder:italic placeholder:text-secondary block bg-gray-900  rounded-md py-2 px-5 pl-9 pr-4 shadow-sm  focus:outline-none focus:ring-gray-700 focus:ring-1 sm:text-sm"
               type="text"
-              // ref={roomInputRef}
+              ref={joinRoomInputRef}
               placeholder="Type the damn Room Id..."
               onChange={handleInputChange}
             />
             <button
               className="text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider py-2 px-6 rounded-lg w-min grow-0 transition-all duration-300 transform hover:translate-y-1 hover:shadow-lg"
-              onClick={() => joinRoom(roomId)}
+              onClick={joinRoom}
             >
               Join
             </button>
