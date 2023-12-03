@@ -31,7 +31,7 @@ const users: UserData = {};
 
 const socketToRoom: SocketToRoom = {};
 
-const maximum = 3;
+const maximum = 10;
 
 const io = new Server(server, {
   cors: {
@@ -66,6 +66,7 @@ const findOrCreateDoc = async (id: string) => {
     _id: id,
     doc: defaultValue,
     draw: [],
+    code: "",
   });
 };
 
@@ -80,14 +81,17 @@ io.on("connection", (socket) => {
     if (users[data.room]) {
       const length = users[data.room].length;
       if (length === maximum) {
+        console.log("emmited max users? room full?");
         socket.to(socket.id).emit("room_full");
         return;
       }
       users[data.room].push({ id: socket.id, name: data.name });
       socket.broadcast.emit("roomId", data.room);
+      socket.to(socket.id).emit("socket_id", socket.id);
     } else {
       users[data.room] = [{ id: socket.id, name: data.name }];
       socket.emit("room_created", data.room);
+      socket.to(socket.id).emit("socket_id", socket.id);
     }
 
     socketToRoom[socket.id] = data.room;
@@ -195,6 +199,16 @@ io.on("connection", (socket) => {
       await Document.findByIdAndUpdate(data.roomId, { doc: data.delta });
     }
   );
+  socket.on(
+    "save-code",
+    async (data: { roomId: string; editorContent: string }) => {
+      console.log("hm ? in save-code? ", data);
+      // console.log("asggadsgsdgddsds", data.roomId, data.delta);
+      await Document.findByIdAndUpdate(data.roomId, {
+        code: data.editorContent,
+      });
+    }
+  );
 
   socket.on("save-draw", async (data) => {
     console.log("hm ? in save-draw? ");
@@ -211,12 +225,13 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("receive-contents", contents);
   });
 
-  socket.on("leaveRoom", (roomId) => {
-    socket.leave(roomId);
-
-    const array = TotalRooms.get(roomId);
-    const index = array?.indexOf(socket.id);
-    if (index !== -1) array?.splice(index as number, 1);
+  socket.on("leaveRoom", (userId, roomId) => {
+    socket.leave(userId);
+    console.log("left ? ", userId);
+    if (users[userId]) {
+      const updatedUsers = users[userId].filter((user) => user.id !== userId);
+      users[userId] = updatedUsers;
+    }
 
     // Broadcast to others in the same room that this user left
     socket.to(roomId).emit("userLeft", socket.id);
@@ -292,6 +307,22 @@ app.get("/find_draw/:id", async (req, res) => {
 
     if (document) {
       res.json({ elements: document.draw });
+    } else {
+      res.status(404).json({ message: "Document not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+app.get("/find_code/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const document = await findOrCreateDoc(id);
+    console.log("heteteasg", document);
+
+    if (document) {
+      res.json({ editorContent: document.code });
     } else {
       res.status(404).json({ message: "Document not found" });
     }

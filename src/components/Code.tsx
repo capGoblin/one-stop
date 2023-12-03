@@ -10,12 +10,17 @@ import { Socket, io } from "socket.io-client";
 const ydocument = new Y.Doc();
 const provider = new WebrtcProvider("monaco", ydocument);
 const type = ydocument.getText("monaco");
+const SAVE_INTERVAL_MS = 2000;
 
 function Code({ clickedIcon }: { clickedIcon: string }) {
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
   const [socket, setSocket] = useState<Socket>();
   const [editorContent, setEditorContent] = useState<string | undefined>("");
+
+  const [roomId, setRoomId] = useState<string>("");
+
+  const [fetchOnce, setFetchOnce] = useState<boolean>(false);
 
   useEffect(() => {
     // Connect to the socket server
@@ -48,6 +53,106 @@ function Code({ clickedIcon }: { clickedIcon: string }) {
       }
     };
   }, []);
+
+  useEffect(() => {
+    socket?.on("roomId", (roomIdFromServer: string) => {
+      setRoomId(roomIdFromServer);
+      console.log(roomIdFromServer);
+    });
+  }, [roomId, socket]);
+
+  useEffect(() => {
+    if (clickedIcon !== "CodeBox" || roomId === "") return;
+    const fetchDocument = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/find_code/${roomId}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+          if (fetchOnce) return;
+
+          // not to fetch and update empty data(which will be saved else)
+          // if (
+          //   JSON.stringify(data.doc) ===
+          //   JSON.stringify({ ops: [{ insert: "\n" }] })
+          // ) {
+          //   return;
+          // }
+
+          // not to fetch and update, if data already exists
+          // const del = quillRef.current?.getEditor().getContents();
+          // if (JSON.stringify(data.doc) === JSON.stringify(del)) {
+          //   return;
+          // }
+
+          // if (quillRef.current) {
+          //   console.log(quillRef.current.getEditor());
+
+          //   // quillRef.current.getEditor().insertText(0, data.data);
+          //   quillRef.current.getEditor().updateContents(data.doc);
+          //   console.log(quillRef.current.getEditor().getContents());
+          // }
+
+          setEditorContent(data.editorContent);
+
+          // setDocumentData(data.doc);
+        } else {
+          console.error("Failed to fetch document");
+        }
+      } catch (error) {
+        console.error("Error fetching document:", error);
+      }
+    };
+    if (clickedIcon === "CodeBox") {
+      // console.log(quillRef.current?.getEditor().getContents());
+      // if (
+      //   JSON.stringify(quillRef.current?.getEditor().getContents()) ===
+      //   JSON.stringify({ ops: [{ insert: "\n" }] })
+      // ) {
+      // socket.emit("save-doc", data);
+      fetchDocument();
+      // }
+
+      // fetchDocument();
+      setFetchOnce(true);
+    }
+  }, [clickedIcon, fetchOnce, roomId]);
+
+  useEffect(() => {
+    if (socket == null) return;
+
+    const interval = setInterval(() => {
+      console.log(editorContent);
+      // const delta = quillRef.current?.getEditor().getContents();
+      // console.log(delta);
+      if (editorContent) {
+        // const firstInsert = delta.ops[0].insert;
+        // if (typeof firstInsert === "string") {
+        // console.log(delta);
+        const data = {
+          roomId,
+          editorContent,
+        };
+        // socket.emit("save-doc", { roomId, saveDoc: firstInsert });
+
+        // if (
+        // JSON.stringify(data.delta) !==
+        // JSON.stringify({ ops: [{ insert: "\n" }] })
+        // ) {
+        socket.emit("save-code", data);
+        // }
+        // }
+      }
+    }, SAVE_INTERVAL_MS);
+
+    console.log("saved? ");
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [socket, roomId, editorContent]);
 
   const handleEditorChange = (value: string | undefined, event) => {
     console.log("Text before send", value);
