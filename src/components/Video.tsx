@@ -25,7 +25,10 @@ const Video = ({ reff, muted, clickedIcon, className, style }: Props) => {
       style={{
         ...defaultStyle,
         ...style,
-        display: clickedIcon === "Draw" ? "none" : "block",
+        display:
+          clickedIcon === "Draw" || clickedIcon === "CodeBox"
+            ? "none"
+            : "block",
       }}
     ></video>
   );
