@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import { editor } from "monaco-editor";
+import * as monaco from "monaco-editor";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { Socket, io } from "socket.io-client";
@@ -10,15 +11,74 @@ const provider = new WebrtcProvider("monaco", ydocument);
 const type = ydocument.getText("monaco");
 const SAVE_INTERVAL_MS = 2000;
 
+type File = {
+  name: string;
+  language: string;
+  value: string;
+};
+
+type Files = {
+  [key: string]: File;
+};
+
+const files: Files = {
+  Javascript: {
+    name: "javascript",
+    language: "javascript",
+    value: "console.log('Hello, world!');",
+  },
+  Typescript: {
+    name: "typescript",
+    language: "typescript",
+    value: "console.log('Hello, from Typescript');",
+  },
+  Python: {
+    name: "python",
+    language: "python",
+    value: "print('Hello, world!')",
+  },
+  Java: {
+    name: "java",
+    language: "java",
+    value: `public class HelloWorld {\n\tpublic static void main(String[] args) {\n\t\tSystem.out.println("Hello, world!");\n\t}\n}`,
+  },
+  Rust: {
+    name: "rust",
+    language: "rust",
+    value: `fn main() {
+    print!("Hello, World!");
+}`,
+  },
+};
+
 function Code({ clickedIcon }: { clickedIcon: string }) {
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
   const [socket, setSocket] = useState<Socket>();
+  // const [defaultLanguage, setDefaultLanguage] = useState<string>();
+  const [fileName, setFileName] = useState<string>("Javascript");
+
+  const file = files[fileName];
+
   const [editorContent, setEditorContent] = useState<string | undefined>("");
 
   const [roomId, setRoomId] = useState<string>("");
 
   const [fetchOnce, setFetchOnce] = useState<boolean>(false);
+
+  // useEffect(() => {
+  //   if (editorRef.current) {
+  //     const editor = monaco.editor.create(editorRef.current, {
+  //       value: code,
+  //       language: language,
+  //       theme: "vs-dark", // Adjust theme as needed
+  //     });
+
+  //     return () => {
+  //       editor.dispose();
+  //     };
+  //   }
+  // }, [language, code]);
 
   useEffect(() => {
     // Connect to the socket server
@@ -121,8 +181,28 @@ function Code({ clickedIcon }: { clickedIcon: string }) {
     setIsOpen(!isOpen);
   };
 
-  const handleClick = () => {
+  const handleClick = (clickedLang: string) => {
+    console.log("handleClick called", clickedLang);
     setIsOpen(false);
+
+    // let editorContent = "";
+
+    // // Check the clicked language and set editor content accordingly
+    // if (clickedLang === "script.js") {
+    //   editorContent = "console.log('Hello, world!');";
+    // } else if (clickedLang === "script.py") {
+    //   editorContent = "print('Hello, world!')";
+    // }
+
+    // else if (clickedLang === "Java") {
+    //   editorContent =
+    //     'public class HelloWorld {\n\tpublic static void main(String[] args) {\n\t\tSystem.out.println("Hello, world!");\n\t}\n}';
+    // }
+
+    setFileName(clickedLang);
+    // setEditorContent(editorContent);
+    // setDefaultLanguage(clickedLang);
+    // console.log(defaultLanguage);
   };
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -171,25 +251,41 @@ function Code({ clickedIcon }: { clickedIcon: string }) {
                   href="#"
                   className="block px-4 py-2 rounded-xl text-sm bg-gray-900 hover:text-gray-900 hover:bg-secondary"
                   role="menuitem"
-                  onClick={handleClick}
+                  onClick={(e) => handleClick(e.currentTarget.innerHTML)}
                 >
-                  Action
+                  Javascript
                 </a>
                 <a
                   href="#"
                   className="block px-4 py-2 rounded-xl text-sm bg-gray-900 hover:text-gray-900 hover:bg-secondary"
                   role="menuitem"
-                  onClick={handleClick}
+                  onClick={(e) => handleClick(e.currentTarget.innerHTML)}
                 >
-                  Another action
+                  Typescript
                 </a>
                 <a
                   href="#"
                   className="block px-4 py-2 rounded-xl text-sm bg-gray-900 hover:text-gray-900 hover:bg-secondary"
                   role="menuitem"
-                  onClick={handleClick}
+                  onClick={(e) => handleClick(e.currentTarget.innerHTML)}
                 >
-                  Something else here
+                  Python
+                </a>
+                <a
+                  href="#"
+                  className="block px-4 py-2 rounded-xl text-sm bg-gray-900 hover:text-gray-900 hover:bg-secondary"
+                  role="menuitem"
+                  onClick={(e) => handleClick(e.currentTarget.innerHTML)}
+                >
+                  Java
+                </a>
+                <a
+                  href="#"
+                  className="block px-4 py-2 rounded-xl text-sm bg-gray-900 hover:text-gray-900 hover:bg-secondary"
+                  role="menuitem"
+                  onClick={(e) => handleClick(e.currentTarget.innerHTML)}
+                >
+                  Rust
                 </a>
               </div>
             </div>
@@ -199,12 +295,12 @@ function Code({ clickedIcon }: { clickedIcon: string }) {
           <Editor
             height="88vh"
             width="90vw"
-            defaultLanguage="yaml"
+            defaultLanguage={file.language}
             className="block mt-10 ml-10 rounded-full"
-            defaultValue={`a: 2
-          b: a + 30`}
+            defaultValue={`fsbfsdfsd`}
             theme="vs-dark"
-            value={editorContent}
+            path={file.name}
+            value={file.value}
             onChange={handleEditorChange}
           />{" "}
         </div>
