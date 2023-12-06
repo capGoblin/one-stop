@@ -555,8 +555,8 @@ const VideoCall: React.FC = () => {
     }
   }, [roomId, socket, rtcPeerConnection]);
 
-  const [clickedIcon, setClickedIcon] = useState<string>("Video");
-  const [movedRight, setMovedRight] = useState(false);
+  const [clickedIcon, setClickedIcon] = useState<string>("GoHome");
+  const [movedRight, setMovedRight] = useState(true);
   const handleToggle = () => {
     if (clickedIcon === "Draw") {
       return;
