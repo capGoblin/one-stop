@@ -13,11 +13,11 @@ interface ClickedIcons {
   [key: string]: boolean;
 }
 const SideBar = (props: Props) => {
-  const initial = "Video";
+  const initial = "GoHome";
   const [clickedIcons, setClickedIcons] = useState<ClickedIcons>({
-    GoHome: false,
+    GoHome: true,
     Draw: false,
-    Video: true,
+    Video: false,
     FileText: false,
     CodeBox: false,
   });
