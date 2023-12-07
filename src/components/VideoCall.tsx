@@ -4,7 +4,6 @@ import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
 
 import { UserButton } from "@clerk/clerk-react";
-// import { useNavigate } from "react-router-dom";
 import useMeetStore from "../store";
 import BottomBar from "./BottomBar";
 import Draw from "./Draw";
@@ -13,41 +12,20 @@ import SideBar from "./SideBar";
 import TextEditor from "./TextEditor";
 import Video from "./Video";
 import Code from "./Code";
-// import GridLayout from "react-grid-layout";
-// import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
-// import { SocketContext, useSocket } from "../Contexts/SocketContext";
-// TODO: Batch Update the draw and text once comp switched
+
 const socket = io("http://localhost:3000");
 
 const VideoCall: React.FC = () => {
-  // const { socket } = useContext(SocketContext);
-  // const { socket } = useSocket();
   const { rtcPeerConnection, setRtcPeerConnection } = useMeetStore();
-  // TODO: use something from mesh for roomInputRef
   const roomInputRef = useRef<HTMLInputElement | null>(null);
   const joinRoomInputRef = useRef<HTMLInputElement | null>(null);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
-  // TODO: room&user management to global
   const callerIdRef = useRef<string>("");
   let callerId: string;
 
-  // const remoteVideoRefs: Record<string, React.RefObject<HTMLVideoElement>> = {};
   const [localStream, setLocalStream] = useState<MediaStream>();
   const [remoteStream, setRemoteStream] = useState<MediaStream>();
-  // const [shareId, setShareId] = useState<string>();
-
-  // const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  // const audioBarsRef = useRef<HTMLDivElement[]>([]);
-
-  // const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-
-  // const [localStream, setLocalStream] = useState<MediaStream>();
-  // const [remoteStream, setRemoteStream] = useState<MediaStream>();
-
-  // const [rtcPeerConnection, setRtcPeerConnection] =
-  //   useState<RTCPeerConnection>();
 
   const iceServers = {
     iceServers: [
@@ -62,18 +40,11 @@ const VideoCall: React.FC = () => {
   const [roomId, setRoomId] = useState<string>("");
   const [socketId, setSocketId] = useState<string>("");
 
-  // const [audioContext, setAudioContext] = useState<AudioContext>();
-  // const [localAudioContext, setLocalAudioContext] =
-  //   useState<AudioContext | null>(null);
-  // const [remoteAudioContext, setRemoteAudioContext] =
-  //   useState<AudioContext | null>(null);
-
   const createPeerConnection = async () => {
     const peerConnection = new RTCPeerConnection(iceServers);
 
     const remoteStream = new MediaStream();
 
-    // setRemoteStream(remoteStream);
     console.log(callerId);
     console.log(remoteStream);
     if (remoteVideoRef.current) {
@@ -122,25 +93,15 @@ const VideoCall: React.FC = () => {
         .writeText(room)
         .then(() => {
           toast.success("Room ID copied to clipboard!");
-          // Optionally, set a state or trigger a success message
         })
         .catch((err) => {
           toast.error("Unable to copy Room ID:", err);
-          // Optionally, handle errors or show a failure message
         });
-      // copyRoomId(room);
-      // toast.success("Room ID copied to clipboard!");
-      // setShareId(room);
-      // toast w/ copied
 
       socket?.emit("join", { room, name: "saf" });
       setRoomId(room);
-      // alert("Please type a room ID");
       return;
     } else {
-      // setRoomId(room);
-      // room = uuidv4();
-      // setShareId(room);
       socket?.emit("join", { room, name: "saf" });
 
       showVideoConference();
@@ -154,36 +115,6 @@ const VideoCall: React.FC = () => {
       socket?.emit("join", { room, name: "saf" });
       setRoomId(room);
     }
-    // if (!room) {
-    //   room = uuidv4();
-    //   setRoomId(room);
-    //   socket?.emit("join", { room, name: "saf" });
-
-    //   navigator.clipboard
-    //     .writeText(roomId)
-    //     .then(() => {
-    //       toast.success("Room ID copied to clipboard!");
-    //       // Optionally, set a state or trigger a success message
-    //     })
-    //     .catch((err) => {
-    //       toast.error("Unable to copy Room ID:", err);
-    //       // Optionally, handle errors or show a failure message
-    //     });
-    //   // copyRoomId(room);
-    //   // toast.success("Room ID copied to clipboard!");
-    //   setShareId(room);
-    //   // toast w/ copied
-
-    //   // alert("Please type a room ID");
-    //   return;
-    // } else {
-    //   setRoomId(room);
-    //   // room = uuidv4();
-    //   setShareId(room);
-    //   socket?.emit("join", { room, name: "saf" });
-
-    //   showVideoConference();
-    // }
   };
 
   const disconnectRoom = () => {
@@ -192,10 +123,6 @@ const VideoCall: React.FC = () => {
     if (rtcPeerConnection) {
       rtcPeerConnection.close();
     }
-
-    // if (localStream) {
-    //   localStream.getTracks().forEach((track) => track.stop());
-    // }
 
     socket?.emit("leaveRoom", roomId);
 
@@ -234,8 +161,6 @@ const VideoCall: React.FC = () => {
 
     setLocalStream(stream);
     console.log(stream);
-    // setLocalStream(stream);
-    // console.log(localStream);
     if (localVideoRef.current) {
       localVideoRef.current.srcObject = stream;
     }
@@ -350,11 +275,6 @@ const VideoCall: React.FC = () => {
       };
 
       updateAudioBorder();
-
-      // Clean up the audio visualization when component unmounts
-      // return () => {
-      //   cancelAnimationFrame(updateAudioBorder);
-      // };
     };
 
     setupAudioContext();
@@ -370,7 +290,6 @@ const VideoCall: React.FC = () => {
       const analyser = audioContext.createAnalyser();
       const source = audioContext.createMediaStreamSource(remoteStream);
       source.connect(analyser);
-      // setRemoteAudioContext(audioContext);
 
       // Visualize audio using border color for the video element
       const updateAudioBorder = () => {
@@ -381,7 +300,6 @@ const VideoCall: React.FC = () => {
 
         const avg =
           dataArray.reduce((acc, val) => acc + val, 0) / dataArray.length;
-        // let borderThickness = 0;
 
         if (avg > borderThreshold) {
           borderThickness = Math.min(avg * 0.5, 2); // Adjust the maximum border thickness
@@ -398,11 +316,6 @@ const VideoCall: React.FC = () => {
       };
 
       updateAudioBorder();
-
-      // Clean up the audio visualization when component unmounts
-      // return () => {
-      //   cancelAnimationFrame(updateAudioBorder);
-      // };
     };
 
     setupAudioContext();
@@ -608,7 +521,6 @@ const VideoCall: React.FC = () => {
       <SideBar
         clickedIcon={(arg0) => {
           setClickedIcon(arg0);
-          // console.log(arg0);
         }}
       />
       <div>

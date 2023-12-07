@@ -15,19 +15,9 @@ const TOOLBAR_OPTIONS = [
   ["clean"],
 ];
 
-//  TODO: works when it is live!
-// when one types, save every 2 sec
-// when other user clicks clickedIcon, fetch updated new one
-// const socket = io("http://localhost:3000");
 const SAVE_INTERVAL_MS = 2000;
 function TextEditor({ clickedIcon }: { clickedIcon: string }) {
   const [socket, setSocket] = useState<Socket | null>();
-
-  // const { socket } = useContext(SocketContext);
-
-  // const { id: documentId } = useParams();
-
-  // const [socket, setSocket] = useState<Socket | null>();
   const { editorValue, setEditorValue } = useMeetStore();
 
   useEffect(() => {
