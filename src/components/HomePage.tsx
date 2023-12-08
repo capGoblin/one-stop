@@ -34,7 +34,7 @@ const HomePage = ({
     };
   }, [clickedIcon]);
   useEffect(() => {
-    if (clickedIcon !== "GoHome" || roomId !== "") return;
+    if (clickedIcon !== "GoHome") return;
     const fetchDocument = async () => {
       console.log(user);
       try {
@@ -105,10 +105,10 @@ const HomePage = ({
           <div className="flex flex-col justify-around space-y-4 bg-gray-700 w-full sm:w-5/12 h-2/5 p-6 rounded-2xl">
             <div className="pl-3 font-semibold">Create a Stop</div>
             <input
-              className="ml-3 placeholder:italic placeholder:text-secondary block bg-gray-900  rounded-md py-2 px-5 pl-9 pr-4 shadow-sm  focus:outline-none focus:ring-gray-700 focus:ring-1 sm:text-sm"
+              className="ml-3 placeholder:italic placeholder:text-secondary block bg-gray-900  rounded-md py-2 px-5 pl-5 pr-4 shadow-sm  focus:outline-none focus:ring-gray-700 focus:ring-1 sm:text-sm"
               type="text"
               ref={roomInputRef}
-              placeholder="Type the damn Room Id..."
+              placeholder="Stop Name (Optional)"
             />
             <button
               className="ml-3 text-secondary bg-gray-900 hover:text-gray-900 hover:bg-secondary hover:font-bold font-semibold tracking-wider py-2 px-6 rounded-lg w-min grow-0 transition-all duration-300 transform hover:translate-y-1 hover:shadow-lg"
@@ -120,10 +120,10 @@ const HomePage = ({
           <div className="flex flex-col justify-around space-y-4 bg-gray-700 w-full sm:w-5/12 h-2/5 p-6 rounded-2xl">
             <div className="pl-3 font-semibold">Join a Stop</div>
             <input
-              className="ml-3 placeholder:italic placeholder:text-secondary block bg-gray-900  rounded-md py-2 px-5 pl-9 pr-4 shadow-sm  focus:outline-none focus:ring-gray-700 focus:ring-1 sm:text-sm"
+              className="ml-3 placeholder:italic placeholder:text-secondary block bg-gray-900  rounded-md py-2 px-5 pl-5 pr-4 shadow-sm  focus:outline-none focus:ring-gray-700 focus:ring-1 sm:text-sm"
               type="text"
               ref={joinRoomInputRef}
-              placeholder="Type the damn Room Id..."
+              placeholder="Stop Id (Required)"
               onChange={handleInputChange}
             />
             <button
