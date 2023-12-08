@@ -138,7 +138,7 @@ const HomePage = ({
 
             {docIds.map((docId, index) => (
               <div
-                className="bg-slate-800 rounded-2xl p-2 m-4 pl-8"
+                className="bg-slate-800 rounded-2xl p-2 m-4 pl-8 cursor-pointer"
                 key={index}
                 onClick={() => joinRoom(docId)}
               >
