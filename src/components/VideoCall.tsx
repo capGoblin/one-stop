@@ -41,6 +41,7 @@ const VideoCall: React.FC = () => {
 
   const [roomId, setRoomId] = useState<string>("");
   const [socketId, setSocketId] = useState<string>("");
+  const [toastOnce, setToastOnce] = useState<boolean>(true);
 
   const createPeerConnection = async () => {
     const peerConnection = new RTCPeerConnection(iceServers);
@@ -385,6 +386,23 @@ const VideoCall: React.FC = () => {
 
     setupAudioContext();
   }, [remoteStream]);
+
+  useEffect(() => {
+    socket.on("roomId", (name: string) => {
+      if (toastOnce) {
+        // toast.success(`${name} has joined the Stop!`);
+        toast(`${name} has joined the Stop!`, {
+          // icon: "👏",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+      }
+      setToastOnce(false);
+    });
+  }, []);
 
   useEffect(() => {
     const body = document.querySelector("body");
