@@ -135,7 +135,7 @@ io.on("connection", (socket) => {
         return;
       }
       users[data.room].push({ id: socket.id, name: data.name });
-      socket.broadcast.emit("roomId", data.name);
+      socket.to(data.room).emit("roomId", data.name);
       socket.to(socket.id).emit("socket_id", socket.id);
     } else {
       users[data.room] = [{ id: socket.id, name: data.name }];
