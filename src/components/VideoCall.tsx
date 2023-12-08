@@ -3,7 +3,7 @@ import toast, { Toaster } from "react-hot-toast";
 import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
 
-import { UserButton } from "@clerk/clerk-react";
+import { UserButton, useUser } from "@clerk/clerk-react";
 import useMeetStore from "../store";
 import BottomBar from "./BottomBar";
 import Draw from "./Draw";
@@ -21,6 +21,7 @@ const VideoCall: React.FC = () => {
   const joinRoomInputRef = useRef<HTMLInputElement | null>(null);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
+  const { isSignedIn, user, isLoaded } = useUser();
   const callerIdRef = useRef<string>("");
   let callerId: string;
 
@@ -101,21 +102,22 @@ const VideoCall: React.FC = () => {
           toast.error("Unable to copy Room ID:", err);
         });
 
-      socket?.emit("join", { room, name: "saf" });
+      socket?.emit("join", { room, name: user?.fullName });
       setRoomId(room);
       return;
     } else {
-      socket?.emit("join", { room, name: "saf" });
+      socket?.emit("join", { room, name: user?.fullName });
 
       showVideoConference();
     }
   };
-  const joinRoom = () => {
-    const room = joinRoomInputRef.current?.value;
+  const joinRoom = (id: string) => {
+    // const room = joinRoomInputRef.current?.value;
+    const room = id;
     console.log(room);
     if (room) {
       console.log(room);
-      socket?.emit("join", { room, name: "saf" });
+      socket?.emit("join", { room, name: user?.fullName });
       setRoomId(room);
     }
 
@@ -596,11 +598,17 @@ const VideoCall: React.FC = () => {
               joinRoomInputRef={joinRoomInputRef}
               createRoom={createRoom}
               joinRoom={joinRoom}
+              user={user?.fullName}
             />
           )}
 
-          <TextEditor clickedIcon={clickedIcon} />
-          <Draw clickedIcon={clickedIcon} movedRight={true} roomId={roomId} />
+          <TextEditor clickedIcon={clickedIcon} user={user?.fullName} />
+          <Draw
+            clickedIcon={clickedIcon}
+            movedRight={true}
+            roomId={roomId}
+            user={user?.fullName}
+          />
 
           <BottomBar
             handleToggleMute={handleToggleMute}
@@ -609,7 +617,7 @@ const VideoCall: React.FC = () => {
             clickedIcon={clickedIcon}
           />
 
-          <Code clickedIcon={clickedIcon} />
+          <Code clickedIcon={clickedIcon} user={user?.fullName} />
         </div>
       </div>
     </div>

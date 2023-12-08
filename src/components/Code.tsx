@@ -51,7 +51,13 @@ const files: Files = {
   },
 };
 
-function Code({ clickedIcon }: { clickedIcon: string }) {
+function Code({
+  clickedIcon,
+  user,
+}: {
+  clickedIcon: string;
+  user: string | null | undefined;
+}) {
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
   const [socket, setSocket] = useState<Socket>();
@@ -124,7 +130,7 @@ function Code({ clickedIcon }: { clickedIcon: string }) {
     const fetchDocument = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/find_code/${roomId}`
+          `http://localhost:3000/find_code/${roomId}/${user}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -142,7 +148,7 @@ function Code({ clickedIcon }: { clickedIcon: string }) {
       fetchDocument();
       setFetchOnce(true);
     }
-  }, [clickedIcon, fetchOnce, roomId]);
+  }, [clickedIcon, fetchOnce, roomId, user]);
 
   useEffect(() => {
     if (socket == null) return;

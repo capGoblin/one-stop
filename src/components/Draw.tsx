@@ -11,10 +11,12 @@ const socket = io("http://localhost:3000");
 function Draw({
   clickedIcon,
   roomId,
+  user,
 }: {
   clickedIcon: string;
   movedRight: boolean;
   roomId: string;
+  user: string | null | undefined;
 }) {
   const { excalidrawAPI, setExcalidrawAPI } = useMeetStore();
 
@@ -36,7 +38,7 @@ function Draw({
     const fetchDocument = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/find_draw/${roomId}`
+          `http://localhost:3000/find_draw/${roomId}/${user}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -62,7 +64,7 @@ function Draw({
 
       setFetchOnce(true);
     }
-  }, [clickedIcon, excalidrawAPI, fetchOnce, roomId]);
+  }, [clickedIcon, excalidrawAPI, fetchOnce, roomId, user]);
 
   const handleDataChange = useCallback(
     (elements: readonly ExcalidrawElement[] | null) => {

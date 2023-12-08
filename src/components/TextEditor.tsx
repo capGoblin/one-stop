@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import io, { Socket } from "socket.io-client";
+
 import useMeetStore from "../store";
 const TOOLBAR_OPTIONS = [
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -16,7 +17,13 @@ const TOOLBAR_OPTIONS = [
 ];
 
 const SAVE_INTERVAL_MS = 2000;
-function TextEditor({ clickedIcon }: { clickedIcon: string }) {
+function TextEditor({
+  clickedIcon,
+  user,
+}: {
+  clickedIcon: string;
+  user: string | null | undefined;
+}) {
   const [socket, setSocket] = useState<Socket | null>();
   const { editorValue, setEditorValue } = useMeetStore();
 
@@ -63,7 +70,9 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
     if (clickedIcon !== "FileText" || roomId === "") return;
     const fetchDocument = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/find/${roomId}`);
+        const response = await fetch(
+          `http://localhost:3000/find/${roomId}/${user}`
+        );
         if (response.ok) {
           const data = await response.json();
           console.log(data);
@@ -103,7 +112,7 @@ function TextEditor({ clickedIcon }: { clickedIcon: string }) {
       fetchDocument();
       setFetchOnce(true);
     }
-  }, [clickedIcon, fetchOnce, roomId]);
+  }, [clickedIcon, fetchOnce, roomId, user]);
 
   useEffect(() => {
     if (socket == null) return;

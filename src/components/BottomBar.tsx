@@ -16,13 +16,13 @@ interface Props {
 // // add nice mode switch (remove hide n seek)
 // // add join n create functions and add recent stops
 // // add cool audio border
-// fix clerk sign up dialog
-// draw lag
+// //fix clerk sign up dialog
+// //draw lag
 // write duplicate
 // /// redirect to video
 // // and hide home
-// add langs to db
-// and recent stops functionality by the username from clerk and roomID matches then load recent stops and all stops
+// //add langs to db
+// // and recent stops functionality by the username from clerk and roomID matches then load recent stops and all stops
 // // default to home
 // // add codeEditor
 // add Postgres, add Pion
