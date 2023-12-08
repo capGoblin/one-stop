@@ -129,6 +129,29 @@ body {
   padding: 0.75rem;
   overflow: hidden;
 }
+
+.bg-gray-700 {
+  scrollbar-width: thin; /* Make the scrollbar thinner */
+  scrollbar-color: rgba(155, 155, 155, 0.5) rgba(255, 255, 255, 0.1); /* Change scrollbar colors */
+}
+
+.bg-gray-700::-webkit-scrollbar {
+  width: 8px; /* Set the width of the scrollbar */
+}
+
+.bg-gray-700::-webkit-scrollbar-thumb {
+  background-color: rgba(155, 155, 155, 0.5); /* Thumb color */
+  border-radius: 4px; /* Rounded corners for the thumb */
+}
+
+.bg-gray-700::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(155, 155, 155, 0.8); /* Thumb color on hover */
+}
+
+.bg-gray-700::-webkit-scrollbar-track {
+  background-color: rgba(255, 255, 255, 0.1); /* Track color */
+  border-radius: 8px; /* Rounded corners for the track */
+}
 /* 
 @layer base {
   :root {

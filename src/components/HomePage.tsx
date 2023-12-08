@@ -133,7 +133,7 @@ const HomePage = ({
               Join
             </button>
           </div>
-          <div className="bg-gray-700 w-full p-4 h-2/5  rounded-2xl">
+          <div className="bg-gray-700 w-full p-4 h-2/5 rounded-2xl overflow-y-auto">
             <div className="pl-3 font-semibold">Recent Stops</div>
 
             {docIds.map((docId, index) => (
