@@ -144,6 +144,8 @@ const VideoCall: React.FC = () => {
     }
 
     socket?.disconnect();
+    setClickedIcon("GoHome");
+    setInHome(true);
   };
 
   const showVideoConference = () => {
@@ -279,6 +281,9 @@ const VideoCall: React.FC = () => {
 
         if (localVideoRef.current) {
           localVideoRef.current.style.border = `solid orange ${borderSize}`;
+        }
+        if (inHome && localVideoRef.current) {
+          localVideoRef.current.style.border = "";
         }
       };
 
