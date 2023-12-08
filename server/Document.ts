@@ -6,6 +6,7 @@ const documentSchema = new Schema({
   doc: Object,
   draw: Object,
   code: String,
+  users: Object,
 });
 
 const Document = model("Document", documentSchema);

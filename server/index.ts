@@ -52,21 +52,71 @@ app.use("/", express.static("public"));
 
 const defaultValue = "cool?";
 
-const findOrCreateDoc = async (id: string) => {
-  if (id === null) return;
+// const findOrCreateDoc = async (id: string, name: string) => {
+//   if (id === null || name === null) return;
 
-  // find and return
-  const d = await Document.findById(id);
-  if (d) return d;
-  // const doc = await Document.create({ _id: id, data: defaultValue });
+//   // find and return
+//   const existingDoc = await Document.findById(id);
 
-  // else create new and return
-  return await Document.create({
-    _id: id,
-    doc: defaultValue,
-    draw: [],
-    code: "",
-  });
+//   if (existingDoc) {
+//     console.log("existingDoc", existingDoc);
+//     // Check if the name is already in the users array
+//     if (!existingDoc.users.includes(name)) {
+//       console.log("name", name);
+//       existingDoc.users.push(name);
+//       await existingDoc.save();
+//       console.log("save", existingDoc);
+//     }
+//     return existingDoc;
+//   }
+//   // const doc = await Document.create({ _id: id, data: defaultValue });
+
+//   // else create new and return
+//   return await Document.create({
+//     _id: id,
+//     doc: defaultValue,
+//     draw: [],
+//     code: "",
+//     users: [name],
+//   });
+// };
+
+const findOrCreateDoc = async (id: string, name: string) => {
+  if (id === null || name === null) return;
+
+  const filter = { _id: id }; // Assuming _id is the unique identifier in your Document model
+  const update = {
+    $addToSet: { users: name }, // Ensure uniqueness in the users array
+    $setOnInsert: { doc: defaultValue, draw: [], code: "" }, // Set default values on insert
+  };
+
+  const options = {
+    new: true, // Return the modified document rather than the original
+    upsert: true, // Create a new document if it doesn't exist
+  };
+
+  const updatedDoc = await Document.findOneAndUpdate(filter, update, options);
+
+  return updatedDoc;
+};
+
+const getAllDocIdsForUser = async (userName: string) => {
+  if (userName === null) return [];
+
+  try {
+    const docs = await Document.find({ users: userName }, "_id");
+    console.log("docs", docs);
+    const docIds = docs
+      .map((doc) => (doc._id ? doc._id.toString() : null))
+      .filter((id) => id !== null);
+    // Convert ObjectId to string directly
+    console.log("docIds", docIds);
+    return docIds;
+  } catch (error) {
+    // Handle any errors that occur during the query
+    console.error("Error fetching document IDs:", error);
+    return [];
+  }
 };
 
 io.on("connection", (socket) => {
@@ -202,11 +252,11 @@ io.on("connection", (socket) => {
   );
 });
 
-app.get("/find/:id", async (req, res) => {
-  const { id } = req.params;
+app.get("/find/:id/:name", async (req, res) => {
+  const { id, name } = req.params;
 
   try {
-    const document = await findOrCreateDoc(id);
+    const document = await findOrCreateDoc(id, name);
     console.log("heteteasg", document);
 
     if (document) {
@@ -218,11 +268,11 @@ app.get("/find/:id", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-app.get("/find_draw/:id", async (req, res) => {
-  const { id } = req.params;
+app.get("/find_draw/:id/:name", async (req, res) => {
+  const { id, name } = req.params;
 
   try {
-    const document = await findOrCreateDoc(id);
+    const document = await findOrCreateDoc(id, name);
     console.log("heteteasg", document);
 
     if (document) {
@@ -234,15 +284,31 @@ app.get("/find_draw/:id", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-app.get("/find_code/:id", async (req, res) => {
-  const { id } = req.params;
+app.get("/find_code/:id/:name", async (req, res) => {
+  const { id, name } = req.params;
 
   try {
-    const document = await findOrCreateDoc(id);
+    const document = await findOrCreateDoc(id, name);
     console.log("heteteasg", document);
 
     if (document) {
       res.json({ editorContent: document.code });
+    } else {
+      res.status(404).json({ message: "Document not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+app.get("/find_recent_stops/:name", async (req, res) => {
+  const { name } = req.params;
+
+  try {
+    const docIds = await getAllDocIdsForUser(name);
+    // console.log("heteteasg", document);
+
+    if (docIds) {
+      res.json({ docIds });
     } else {
       res.status(404).json({ message: "Document not found" });
     }
