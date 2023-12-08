@@ -13,11 +13,11 @@ interface ClickedIcons {
   [key: string]: boolean;
 }
 const SideBar = (props: Props) => {
-  const initial = "GoHome";
+  const initial = "Video";
   const [clickedIcons, setClickedIcons] = useState<ClickedIcons>({
-    GoHome: true,
+    // GoHome: true,
     Draw: false,
-    Video: false,
+    Video: true,
     FileText: false,
     CodeBox: false,
   });
@@ -43,13 +43,13 @@ const SideBar = (props: Props) => {
 
   return (
     <div className="fixed w-20 z-50 top-1/2 left-2 rounded-2xl transform -translate-y-1/2 flex flex-col items-center bg-gray-950 text-white shadow hover:shadow-2xl">
-      <SideBarIcon
+      {/* <SideBarIcon
         icon={<GoHome />}
         onClick={() => {
           handleIconClick("GoHome");
         }}
         isClicked={clickedIcons["GoHome"]}
-      />
+      /> */}
       <SideBarIcon
         icon={<BsPencilFill />}
         onClick={() => {
