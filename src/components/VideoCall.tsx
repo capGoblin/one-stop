@@ -291,7 +291,7 @@ const VideoCall: React.FC = () => {
     };
 
     setupAudioContext();
-  }, [localStream]);
+  }, [inHome, localStream]);
   useEffect(() => {
     const borderThreshold = 37;
     let borderThickness = 0; // Adjust this threshold value
