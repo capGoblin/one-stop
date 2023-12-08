@@ -26,6 +26,7 @@ const VideoCall: React.FC = () => {
 
   const [localStream, setLocalStream] = useState<MediaStream>();
   const [remoteStream, setRemoteStream] = useState<MediaStream>();
+  const [inHome, setInHome] = useState<boolean>(true);
 
   const iceServers = {
     iceServers: [
@@ -85,6 +86,8 @@ const VideoCall: React.FC = () => {
 
   const createRoom = () => {
     let room = roomInputRef.current?.value;
+    setInHome(false);
+    setClickedIcon("Video");
 
     if (!room) {
       room = uuidv4();
@@ -115,6 +118,9 @@ const VideoCall: React.FC = () => {
       socket?.emit("join", { room, name: "saf" });
       setRoomId(room);
     }
+
+    setInHome(false);
+    setClickedIcon("Video");
   };
 
   const disconnectRoom = () => {
@@ -518,11 +524,15 @@ const VideoCall: React.FC = () => {
           }}
         />
       </div>
-      <SideBar
-        clickedIcon={(arg0) => {
-          setClickedIcon(arg0);
-        }}
-      />
+
+      {!inHome ? (
+        <SideBar
+          clickedIcon={(arg0) => {
+            setClickedIcon(arg0);
+          }}
+        />
+      ) : null}
+
       <div>
         <div className={`flex flex-col items-center`}>
           <div
@@ -579,13 +589,15 @@ const VideoCall: React.FC = () => {
               </div>
             </div>
           </div>
-          <HomePage
-            clickedIcon={clickedIcon}
-            roomInputRef={roomInputRef}
-            joinRoomInputRef={joinRoomInputRef}
-            createRoom={createRoom}
-            joinRoom={joinRoom}
-          />
+          {inHome && (
+            <HomePage
+              clickedIcon={clickedIcon}
+              roomInputRef={roomInputRef}
+              joinRoomInputRef={joinRoomInputRef}
+              createRoom={createRoom}
+              joinRoom={joinRoom}
+            />
+          )}
 
           <TextEditor clickedIcon={clickedIcon} />
           <Draw clickedIcon={clickedIcon} movedRight={true} roomId={roomId} />

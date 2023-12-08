@@ -20,7 +20,7 @@ interface Props {
 // draw lag
 // write duplicate
 // /// redirect to video
-// and hide home
+// // and hide home
 // add langs to db
 // and recent stops functionality by the username from clerk and roomID matches then load recent stops and all stops
 // // default to home
