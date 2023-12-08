@@ -316,6 +316,22 @@ app.get("/find_recent_stops/:name", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+app.get("/create_doc/:id/:name", async (req, res) => {
+  const { id, name } = req.params;
+
+  try {
+    const document = await findOrCreateDoc(id, name);
+    // console.log("heteteasg", document);
+
+    if (document) {
+      res.sendStatus(200);
+    } else {
+      res.status(404).json({ message: "Document not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 const port = process.env.PORT || 3000;
 

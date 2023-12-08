@@ -247,6 +247,29 @@ const VideoCall: React.FC = () => {
   };
 
   useEffect(() => {
+    if (user?.fullName && roomId) {
+      const fetchDocument = async () => {
+        // console.log(user);
+        const name = user?.fullName;
+        try {
+          const response = await fetch(
+            `http://localhost:3000/create_doc/${roomId}/${name}`
+          );
+          if (response.ok) {
+            console.log("doc created successfully");
+          } else {
+            console.error("Failed to fetch document");
+          }
+        } catch (error) {
+          console.error("Error fetching document:", error);
+        }
+      };
+
+      fetchDocument();
+    }
+  });
+
+  useEffect(() => {
     const borderThreshold = 37;
     let borderThickness = 0; // Adjust this threshold value
 
