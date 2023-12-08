@@ -125,25 +125,54 @@ const VideoCall: React.FC = () => {
     setClickedIcon("Video");
   };
 
-  const disconnectRoom = () => {
-    console.log(rtcPeerConnection);
-    // console.log(localStream);
+  const disconnectRoom = async () => {
     if (rtcPeerConnection) {
+      // Stop tracks in the streams
+      rtcPeerConnection.getSenders().forEach((sender) => {
+        if (sender.track) {
+          sender.track.stop();
+        }
+      });
       rtcPeerConnection.close();
     }
 
-    socket?.emit("leaveRoom", roomId);
-
     const remoteVideo = remoteVideoRef.current;
     if (remoteVideo) {
+      const stream = remoteVideo.srcObject;
+      if (stream instanceof MediaStream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
       remoteVideo.srcObject = null;
     }
+
     const localVideo = localVideoRef.current;
     if (localVideo) {
+      const stream = localVideo.srcObject;
+      if (stream instanceof MediaStream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
       localVideo.srcObject = null;
     }
 
+    // console.log(rtcPeerConnection);
+    // // console.log(localStream);
+    // if (rtcPeerConnection) {
+    //   rtcPeerConnection.close();
+    // }
+
+    socket?.emit("leaveRoom", roomId);
+
+    // const remoteVideo = remoteVideoRef.current;
+    // if (remoteVideo) {
+    //   remoteVideo.srcObject = null;
+    // }
+    // const localVideo = localVideoRef.current;
+    // if (localVideo) {
+    //   localVideo.srcObject = null;
+    // }
+
     socket?.disconnect();
+
     setClickedIcon("GoHome");
     setInHome(true);
   };
