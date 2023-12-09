@@ -72,6 +72,7 @@ function Code({
 
   const [fetchOnce, setFetchOnce] = useState<boolean>(false);
 
+  const [langClicked, setLangClicked] = useState<boolean>(true);
   // useEffect(() => {
   //   if (editorRef.current) {
   //     const editor = monaco.editor.create(editorRef.current, {
@@ -206,6 +207,7 @@ function Code({
     // }
 
     setFileName(clickedLang);
+    if (clickedLang) setLangClicked(false);
     // setEditorContent(editorContent);
     // setDefaultLanguage(clickedLang);
     // console.log(defaultLanguage);
@@ -303,10 +305,10 @@ function Code({
             width="90vw"
             defaultLanguage={file.language}
             className="block mt-10 ml-10 rounded-full"
-            defaultValue={`fsbfsdfsd`}
+            defaultValue={`Only support one language per socket`}
             theme="vs-dark"
             path={file.name}
-            value={file.value}
+            value={editorContent !== "" ? editorContent : file.value}
             onChange={handleEditorChange}
           />{" "}
         </div>
