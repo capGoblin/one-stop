@@ -118,7 +118,16 @@ function ClerkProviderWithRoutes() {
         <Route
           path="/sign-up/*"
           element={
-            <SignUp redirectUrl="/homepage" routing="path" path="/sign-up" />
+            <SignUp
+              redirectUrl="/homepage"
+              routing="path"
+              path="/sign-up"
+              appearance={{
+                elements: {
+                  rootBox: "flex h-screen w-screen justify-center items-center",
+                },
+              }}
+            />
           }
         />
         <Route
