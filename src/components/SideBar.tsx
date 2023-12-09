@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { BsPencilFill } from "react-icons/bs";
 import { FaVideo } from "react-icons/fa";
-import { GoHome } from "react-icons/go";
+// import { GoHome } from "react-icons/go";
 import { PiFileTextBold } from "react-icons/pi";
 import { RiCodeBoxFill } from "react-icons/ri";
 

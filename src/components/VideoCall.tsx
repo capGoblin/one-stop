@@ -21,7 +21,7 @@ const VideoCall: React.FC = () => {
   const joinRoomInputRef = useRef<HTMLInputElement | null>(null);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
-  const { isSignedIn, user, isLoaded } = useUser();
+  const { user } = useUser();
   const callerIdRef = useRef<string>("");
   let callerId: string;
 
@@ -40,7 +40,7 @@ const VideoCall: React.FC = () => {
   };
 
   const [roomId, setRoomId] = useState<string>("");
-  const [socketId, setSocketId] = useState<string>("");
+  // const [socketId, setSocketId] = useState<string>("");
   const [toastOnce, setToastOnce] = useState<boolean>(true);
 
   const createPeerConnection = async () => {

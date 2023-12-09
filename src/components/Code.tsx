@@ -1,14 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import Editor from "@monaco-editor/react";
-import { editor } from "monaco-editor";
-import * as monaco from "monaco-editor";
-import * as Y from "yjs";
-import { WebrtcProvider } from "y-webrtc";
+// import { editor } from "monaco-editor";
+// import * as monaco from "monaco-editor";
+// import * as Y from "yjs";
+// import { WebrtcProvider } from "y-webrtc";
 import { Socket, io } from "socket.io-client";
 
-const ydocument = new Y.Doc();
-const provider = new WebrtcProvider("monaco", ydocument);
-const type = ydocument.getText("monaco");
+// const ydocument = new Y.Doc();
+// const provider = new WebrtcProvider("monaco", ydocument);
+// const type = ydocument.getText("monaco");
 const SAVE_INTERVAL_MS = 2000;
 
 type File = {
@@ -58,7 +58,7 @@ function Code({
   clickedIcon: string;
   user: string | null | undefined;
 }) {
-  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
+  // const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
   const [socket, setSocket] = useState<Socket>();
   // const [defaultLanguage, setDefaultLanguage] = useState<string>();
@@ -72,7 +72,7 @@ function Code({
 
   const [fetchOnce, setFetchOnce] = useState<boolean>(false);
 
-  const [langClicked, setLangClicked] = useState<boolean>(true);
+  // const [langClicked, setLangClicked] = useState<boolean>(true);
   // useEffect(() => {
   //   if (editorRef.current) {
   //     const editor = monaco.editor.create(editorRef.current, {
@@ -172,7 +172,7 @@ function Code({
     };
   }, [socket, roomId, editorContent]);
 
-  const handleEditorChange = (value: string | undefined, event) => {
+  const handleEditorChange = (value: string | undefined) => {
     console.log("Text before send", value);
     // You can emit changes back to the server if needed
     socket?.emit("send-code", value);
@@ -207,7 +207,7 @@ function Code({
     // }
 
     setFileName(clickedLang);
-    if (clickedLang) setLangClicked(false);
+    // if (clickedLang) setLangClicked(false);
     // setEditorContent(editorContent);
     // setDefaultLanguage(clickedLang);
     // console.log(defaultLanguage);
