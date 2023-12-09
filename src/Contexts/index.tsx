@@ -7,10 +7,16 @@ import { io } from "socket.io-client";
 
 const SocketProvider = () => {
   // const [socket, setSocket] = useState<Socket | undefined>();
+  const server_URL = process.env.SERVER_URL;
 
   useEffect(() => {
+    if (!server_URL) {
+      throw new Error(
+        "SERVER_URL is not defined in the environment variables."
+      );
+    }
     // Initialize the socket when the component mounts
-    const newSocket = io("http://localhost:3000");
+    const newSocket = io(server_URL);
     console.log("connetced ? ftopm socketProveider");
     // setSocket(newSocket);
 

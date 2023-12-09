@@ -17,6 +17,9 @@ const TOOLBAR_OPTIONS = [
 ];
 
 const SAVE_INTERVAL_MS = 2000;
+
+const server_URL = process.env.SERVER_URL;
+
 function TextEditor({
   clickedIcon,
   user,
@@ -28,7 +31,13 @@ function TextEditor({
   const { editorValue, setEditorValue } = useMeetStore();
 
   useEffect(() => {
-    const socket = io("http://localhost:3000");
+    if (!server_URL) {
+      throw new Error(
+        "SERVER_URL is not defined in the environment variables."
+      );
+    }
+    const socket = io(server_URL);
+
     setSocket(socket);
     return () => {
       socket.disconnect();
@@ -70,9 +79,7 @@ function TextEditor({
     if (clickedIcon !== "FileText" || roomId === "") return;
     const fetchDocument = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:3000/find/${roomId}/${user}`
-        );
+        const response = await fetch(`${server_URL}/find/${roomId}/${user}`);
         if (response.ok) {
           const data = await response.json();
           console.log(data);

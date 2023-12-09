@@ -10,6 +10,7 @@ import { Socket, io } from "socket.io-client";
 // const provider = new WebrtcProvider("monaco", ydocument);
 // const type = ydocument.getText("monaco");
 const SAVE_INTERVAL_MS = 2000;
+const server_URL = process.env.SERVER_URL;
 
 type File = {
   name: string;
@@ -89,7 +90,13 @@ function Code({
 
   useEffect(() => {
     // Connect to the socket server
-    const socket = io("http://localhost:3000");
+    if (!server_URL) {
+      throw new Error(
+        "SERVER_URL is not defined in the environment variables."
+      );
+    }
+
+    const socket = io(server_URL);
 
     setSocket(socket);
 
@@ -131,7 +138,7 @@ function Code({
     const fetchDocument = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/find_code/${roomId}/${user}`
+          `${server_URL}/find_code/${roomId}/${user}`
         );
         if (response.ok) {
           const data = await response.json();

@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
-
 import { UserButton, useUser } from "@clerk/clerk-react";
+import { config } from "dotenv";
 import useMeetStore from "../store";
 import BottomBar from "./BottomBar";
 import Draw from "./Draw";
@@ -12,8 +12,13 @@ import SideBar from "./SideBar";
 import TextEditor from "./TextEditor";
 import Video from "./Video";
 import Code from "./Code";
+config();
+const server_URL = process.env.SERVER_URL;
 
-const socket = io("http://localhost:3000");
+if (!server_URL) {
+  throw new Error("SERVER_URL is not defined in the environment variables.");
+}
+const socket = io(server_URL);
 
 const VideoCall: React.FC = () => {
   const { rtcPeerConnection, setRtcPeerConnection } = useMeetStore();
@@ -283,7 +288,7 @@ const VideoCall: React.FC = () => {
         const name = user?.fullName;
         try {
           const response = await fetch(
-            `http://localhost:3000/create_doc/${roomId}/${name}`
+            `${server_URL}/create_doc/${roomId}/${name}`
           );
           if (response.ok) {
             console.log("doc created successfully");

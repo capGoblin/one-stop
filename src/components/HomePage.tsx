@@ -15,6 +15,11 @@ const HomePage = ({
   joinRoom: (id: string) => void;
   user: string | null | undefined;
 }) => {
+  const server_URL = process.env.SERVER_URL;
+
+  if (!server_URL) {
+    throw new Error("SERVER_URL is not defined in the environment variables.");
+  }
   const [roomId, setRoomId] = useState("");
   const [docIds, setDocIds] = useState<string[]>([]);
 
@@ -38,9 +43,7 @@ const HomePage = ({
     const fetchDocument = async () => {
       console.log(user);
       try {
-        const response = await fetch(
-          `http://localhost:3000/find_recent_stops/${user}`
-        );
+        const response = await fetch(`${server_URL}/find_recent_stops/${user}`);
         if (response.ok) {
           const data = await response.json();
           console.log(data);

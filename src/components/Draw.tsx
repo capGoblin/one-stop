@@ -6,7 +6,13 @@ import debounce from "lodash.debounce";
 import { io } from "socket.io-client";
 import useMeetStore from "../store";
 
-const socket = io("http://localhost:3000");
+const server_URL = process.env.SERVER_URL;
+
+if (!server_URL) {
+  throw new Error("SERVER_URL is not defined in the environment variables.");
+}
+
+const socket = io(server_URL);
 
 function Draw({
   clickedIcon,
@@ -38,7 +44,7 @@ function Draw({
     const fetchDocument = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/find_draw/${roomId}/${user}`
+          `${server_URL}/find_draw/${roomId}/${user}`
         );
         if (response.ok) {
           const data = await response.json();
