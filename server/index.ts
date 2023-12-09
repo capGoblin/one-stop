@@ -10,9 +10,9 @@ import DeltaStatic from "react-quill";
 const app = express();
 const server = http.createServer(app);
 
-mongoose
-  .connect("mongodb://localhost:27017/doc")
-  .then(() => console.log("Connected! to db"));
+// mongoose
+//   .connect("mongodb://localhost:27017/doc")
+//   .then(() => console.log("Connected! to db"));
 
 interface Users {
   id: string;
