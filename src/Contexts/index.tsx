@@ -7,16 +7,18 @@ import { io } from "socket.io-client";
 
 const SocketProvider = () => {
   // const [socket, setSocket] = useState<Socket | undefined>();
-  const server_URL = process.env.SERVER_URL;
+  // const server_URL = process.env.SERVER_URL;
 
   useEffect(() => {
-    if (!server_URL) {
-      throw new Error(
-        "SERVER_URL is not defined in the environment variables."
-      );
-    }
+    // if (!server_URL) {
+    //   throw new Error(
+    //     "SERVER_URL is not defined in the environment variables."
+    //   );
+    // }
     // Initialize the socket when the component mounts
-    const newSocket = io(server_URL);
+    const newSocket = io(
+      "https://video-call-app-production-d4a0.up.railway.app"
+    );
     console.log("connetced ? ftopm socketProveider");
     // setSocket(newSocket);
 

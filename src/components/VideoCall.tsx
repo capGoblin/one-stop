@@ -13,12 +13,12 @@ import TextEditor from "./TextEditor";
 import Video from "./Video";
 import Code from "./Code";
 config();
-const server_URL = process.env.SERVER_URL;
+// const server_URL = process.env.SERVER_URL;
 
-if (!server_URL) {
-  throw new Error("SERVER_URL is not defined in the environment variables.");
-}
-const socket = io(server_URL);
+// if (!server_URL) {
+//   throw new Error("SERVER_URL is not defined in the environment variables.");
+// }
+const socket = io("https://video-call-app-production-d4a0.up.railway.app");
 
 const VideoCall: React.FC = () => {
   const { rtcPeerConnection, setRtcPeerConnection } = useMeetStore();
@@ -288,7 +288,7 @@ const VideoCall: React.FC = () => {
         const name = user?.fullName;
         try {
           const response = await fetch(
-            `${server_URL}/create_doc/${roomId}/${name}`
+            `https://video-call-app-production-d4a0.up.railway.app/create_doc/${roomId}/${name}`
           );
           if (response.ok) {
             console.log("doc created successfully");

@@ -15,11 +15,11 @@ const HomePage = ({
   joinRoom: (id: string) => void;
   user: string | null | undefined;
 }) => {
-  const server_URL = process.env.SERVER_URL;
+  // const server_URL = process.env.SERVER_URL;
 
-  if (!server_URL) {
-    throw new Error("SERVER_URL is not defined in the environment variables.");
-  }
+  // if (!server_URL) {
+  //   throw new Error("SERVER_URL is not defined in the environment variables.");
+  // }
   const [roomId, setRoomId] = useState("");
   const [docIds, setDocIds] = useState<string[]>([]);
 
@@ -43,7 +43,9 @@ const HomePage = ({
     const fetchDocument = async () => {
       console.log(user);
       try {
-        const response = await fetch(`${server_URL}/find_recent_stops/${user}`);
+        const response = await fetch(
+          `https://video-call-app-production-d4a0.up.railway.app/find_recent_stops/${user}`
+        );
         if (response.ok) {
           const data = await response.json();
           console.log(data);
