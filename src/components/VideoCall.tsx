@@ -388,7 +388,7 @@ const VideoCall: React.FC = () => {
   }, [remoteStream]);
 
   useEffect(() => {
-    socket.on("roomId", (name: string) => {
+    socket.on("name_joined", (name: string) => {
       if (toastOnce) {
         // toast.success(`${name} has joined the Stop!`);
         toast(`${name} has joined the Stop!`, {

@@ -4,15 +4,18 @@ import { Server } from "socket.io";
 import mongoose from "mongoose";
 import Document from "./Document";
 import cors from "cors";
-
+import { config } from "dotenv";
+config();
 import DeltaStatic from "react-quill";
 
 const app = express();
 const server = http.createServer(app);
+const mongoURI = process.env.MONGODB_URI;
 
-// mongoose
-//   .connect("mongodb://localhost:27017/doc")
-//   .then(() => console.log("Connected! to db"));
+if (!mongoURI) {
+  throw new Error("MONGODB_URI is not defined in the environment variables.");
+}
+mongoose.connect(mongoURI).then(() => console.log("Connected! to db"));
 
 interface Users {
   id: string;
@@ -135,7 +138,8 @@ io.on("connection", (socket) => {
         return;
       }
       users[data.room].push({ id: socket.id, name: data.name });
-      socket.to(data.room).emit("roomId", data.name);
+      socket.to(data.room).emit("name_joined", data.name);
+      socket.broadcast.emit("roomId", data.room);
       socket.to(socket.id).emit("socket_id", socket.id);
     } else {
       users[data.room] = [{ id: socket.id, name: data.name }];
@@ -158,35 +162,32 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send-code", (text: string) => {
-    console.log(text);
+    console.log("code in server", text);
 
     socket.broadcast.emit("receive-code", text);
   });
 
+  //TextEditor
   socket.on("send-changes", (delta) => {
     console.log("text is in server");
 
     socket.broadcast.emit("receive-changes", delta);
   });
-
+  //TextEditor
   socket.on(
     "save-doc",
     async (data: { roomId: string; delta: DeltaStatic }) => {
-      console.log("hm ? in save-doc? ");
+      console.log("hm ? in save-doc? ", data);
       console.log("asggadsgsdgddsds", data.roomId, data.delta);
       await Document.findByIdAndUpdate(data.roomId, { doc: data.delta });
     }
   );
-  socket.on(
-    "save-code",
-    async (data: { roomId: string; editorContent: string }) => {
-      console.log("hm ? in save-code? ", data);
-      await Document.findByIdAndUpdate(data.roomId, {
-        code: data.editorContent,
-      });
-    }
-  );
-
+  //Draw
+  socket.on("send-data", (data) => {
+    console.log(`${data} is in server`);
+    socket.broadcast.emit("receive-data", data);
+  });
+  //Draw
   socket.on("save-draw", async (data) => {
     console.log("hm ? in save-draw? ");
     console.log("asggadsgsdgddsds", data.elements);
@@ -198,6 +199,15 @@ io.on("connection", (socket) => {
 
     socket.broadcast.emit("receive-contents", contents);
   });
+  socket.on(
+    "save-code",
+    async (data: { roomId: string; editorContent: string }) => {
+      console.log("hm ? in save-code? ", data);
+      await Document.findByIdAndUpdate(data.roomId, {
+        code: data.editorContent,
+      });
+    }
+  );
 
   socket.on("leaveRoom", (userId, roomId) => {
     socket.leave(userId);
@@ -209,11 +219,6 @@ io.on("connection", (socket) => {
 
     // Broadcast to others in the same room that this user left
     socket.to(roomId).emit("userLeft", socket.id);
-  });
-
-  socket.on("send-data", (data) => {
-    console.log(`${data} is in server`);
-    socket.broadcast.emit("receive-data", data);
   });
 
   socket.on("start_call", (roomId: string, callerId: string) => {
