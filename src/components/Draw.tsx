@@ -38,7 +38,7 @@ function Draw({
   socket?.on("receive-data", (scene: readonly ExcalidrawElement[] | null) => {
     debouncedUpdateScene(scene);
   });
-
+  // to load scene initially
   useEffect(() => {
     if (clickedIcon !== "Draw" || roomId === "") return;
     const fetchDocument = async () => {
