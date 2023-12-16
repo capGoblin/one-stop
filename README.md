@@ -20,9 +20,10 @@ OneStop offers a comprehensive suite of features enabling seamless remote collab
 ## Local Development 🛠️
 
 ### Setup
-
 ```bash
 git clone https://github.com/your-username/OneStop.git
+```
+```bash
 
 # Install dependencies for client
 yarn install
@@ -32,7 +33,7 @@ cd server
 yarn install
 ```
 
-```
+```bash
 # Start the frontend server
 yarn run dev
 
