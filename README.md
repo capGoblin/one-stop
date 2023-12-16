@@ -1,27 +1,55 @@
-# React + TypeScript + Vite
+# OneStop - Video Collaboration Platform 💻🚀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+OneStop is a collaborative Video-Collaboration Platform designed for real-time communication and collaboration among remote teams. The application integrates various features like Video Calls with Whiteboard, Whitesheet, and Code Editor Live to collaborate w/ seemless switch between them.
 
-Currently, two official plugins are available:
+## Features 🌟
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Real-time Video Calls:** Conduct seamless video calls with multiple participants.
+- **Whiteboard & Whitesheet:** Collaborate visually using a whiteboard and annotate ideas together.
+- **Code Editor:** Simultaneously edit code in real-time, enabling collaborative programming.
 
-## Expanding the ESLint configuration
+## Tech Stack ⚙️
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Frontend:** React.js, TailwindCSS
+- **Backend:** Node.js, Express
+- **Real-time Communication:** WebRTC, Socket.io
+- **Database:** MongoDB Atlas
 
-- Configure the top-level `parserOptions` property like this:
+## Local Development 🛠️
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+### Setup
+
+```bash
+git clone https://github.com/your-username/OneStop.git
+cd OneStop
+
+# Install dependencies for client
+@ root dir
+yarn install
+
+# Install dependencies for server
+cd server
+yarn install
+
+
+```
+```
+# Start the frontend server
+cd client
+yarn run dev
+
+# Start the backend server
+cd ../server
+yarn start
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+## Accessing the Application 🌐
+
+Access the application at [one-stop-tau.vercel.app](one-stop-tau.vercel.app).
+
+
+## About ℹ️
+
+The OneStop Video Collaboration Platform showcases proficiency in React.js, Node.js, Express, Socket.io, and WebRTC, enabling enhanced real-time communication protocols and fostering productive remote collaboration.
+
