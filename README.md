@@ -6,9 +6,9 @@ OneStop is a collaborative Video-Collaboration Platform designed for real-time c
 OneStop offers a comprehensive suite of features enabling seamless remote collaboration:
 
 - **Real-time Video Calls:** Seamlessly connect multiple participants in video calls.
-- **Interactive Whiteboard:** Collaborate visually with a robust whiteboard for collective brainstorming and ideation.
-- **Whitesheet:** Utilize a separate whitesheet for additional collaborative space and brainstorming.
-- **Simultaneous Code Editing:** Empower collaborative programming through a real-time code editor.
+- **Simple Collaborative Whiteboard (Excalidraw):** Collaborate visually with a robust whiteboard for collective brainstorming and ideation.
+- **Whitesheet Collaboration (Quill):** Utilize a separate whitesheet for additional collaborative space and brainstorming.
+- **Live Collaborative Code Editor (Monaco):** Empower collaborative programming through a real-time code editor.
 
 ## Tech Stack ⚙️
 
