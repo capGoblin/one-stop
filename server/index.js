@@ -23,13 +23,7 @@ const socketToRoom = {};
 const maximum = 10;
 const io = new socket_io_1.Server(server, {
     cors: {
-        origin: [
-            "http://127.0.0.1:5173",
-            "http://127.0.0.1:5174",
-            "http://localhost:5173",
-            "http://localhost:5174",
-            "http://localhost:5175",
-        ],
+        origin: "*",
         methods: ["GET", "POST"],
     },
 });
