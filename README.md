@@ -46,7 +46,7 @@ yarn start
 ## Accessing the Application 🌐
 
 Access the application at [one-stop-tau.vercel.app](one-stop-tau.vercel.app).
-
+(works for chrome, but Edge and Safari faces issue w/ webRTC api navigator.getUserMedia camera doesn't load)
 
 ## About ℹ️
 
