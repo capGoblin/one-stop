@@ -1,16 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import Editor from "@monaco-editor/react";
-// import { editor } from "monaco-editor";
-// import * as monaco from "monaco-editor";
-// import * as Y from "yjs";
-// import { WebrtcProvider } from "y-webrtc";
 import { Socket, io } from "socket.io-client";
 
-// const ydocument = new Y.Doc();
-// const provider = new WebrtcProvider("monaco", ydocument);
-// const type = ydocument.getText("monaco");
 const SAVE_INTERVAL_MS = 2000;
-// const server_URL = process.env.SERVER_URL;
 
 type File = {
   name: string;
@@ -59,10 +51,7 @@ function Code({
   clickedIcon: string;
   user: string | null | undefined;
 }) {
-  // const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
-
   const [socket, setSocket] = useState<Socket>();
-  // const [defaultLanguage, setDefaultLanguage] = useState<string>();
   const [fileName, setFileName] = useState<string>("Javascript");
 
   const file = files[fileName];
@@ -73,29 +62,7 @@ function Code({
 
   const [fetchOnce, setFetchOnce] = useState<boolean>(false);
 
-  // const [langClicked, setLangClicked] = useState<boolean>(true);
-  // useEffect(() => {
-  //   if (editorRef.current) {
-  //     const editor = monaco.editor.create(editorRef.current, {
-  //       value: code,
-  //       language: language,
-  //       theme: "vs-dark", // Adjust theme as needed
-  //     });
-
-  //     return () => {
-  //       editor.dispose();
-  //     };
-  //   }
-  // }, [language, code]);
-
   useEffect(() => {
-    // Connect to the socket server
-    // if (!server_URL) {
-    //   throw new Error(
-    //     "SERVER_URL is not defined in the environment variables."
-    //   );
-    // }
-
     const socket = io("https://video-call-app-production-d4a0.up.railway.app");
 
     setSocket(socket);
@@ -199,25 +166,7 @@ function Code({
     console.log("handleClick called", clickedLang);
     setIsOpen(false);
 
-    // let editorContent = "";
-
-    // // Check the clicked language and set editor content accordingly
-    // if (clickedLang === "script.js") {
-    //   editorContent = "console.log('Hello, world!');";
-    // } else if (clickedLang === "script.py") {
-    //   editorContent = "print('Hello, world!')";
-    // }
-
-    // else if (clickedLang === "Java") {
-    //   editorContent =
-    //     'public class HelloWorld {\n\tpublic static void main(String[] args) {\n\t\tSystem.out.println("Hello, world!");\n\t}\n}';
-    // }
-
     setFileName(clickedLang);
-    // if (clickedLang) setLangClicked(false);
-    // setEditorContent(editorContent);
-    // setDefaultLanguage(clickedLang);
-    // console.log(defaultLanguage);
   };
 
   const handleClickOutside = (event: MouseEvent) => {

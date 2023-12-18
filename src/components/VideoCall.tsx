@@ -10,14 +10,9 @@ import Draw from "./Draw";
 import HomePage from "./HomePage";
 import SideBar from "./SideBar";
 import TextEditor from "./TextEditor";
-import Video from "./Video";
+import Video from "./VideoWrapper";
 import Code from "./Code";
-// config();
-// const server_URL = process.env.SERVER_URL;
 
-// if (!server_URL) {
-//   throw new Error("SERVER_URL is not defined in the environment variables.");
-// }
 const socket = io("https://video-call-app-production-d4a0.up.railway.app");
 
 const VideoCall: React.FC = () => {
@@ -45,7 +40,6 @@ const VideoCall: React.FC = () => {
   };
 
   const [roomId, setRoomId] = useState<string>("");
-  // const [socketId, setSocketId] = useState<string>("");
   const [toastOnce, setToastOnce] = useState<boolean>(true);
 
   const createPeerConnection = async () => {
@@ -118,7 +112,6 @@ const VideoCall: React.FC = () => {
     }
   };
   const joinRoom = (id: string) => {
-    // const room = joinRoomInputRef.current?.value;
     const room = id;
     console.log(room);
     if (room) {
@@ -160,22 +153,7 @@ const VideoCall: React.FC = () => {
       localVideo.srcObject = null;
     }
 
-    // console.log(rtcPeerConnection);
-    // // console.log(localStream);
-    // if (rtcPeerConnection) {
-    //   rtcPeerConnection.close();
-    // }
-
     socket?.emit("leaveRoom", roomId);
-
-    // const remoteVideo = remoteVideoRef.current;
-    // if (remoteVideo) {
-    //   remoteVideo.srcObject = null;
-    // }
-    // const localVideo = localVideoRef.current;
-    // if (localVideo) {
-    //   localVideo.srcObject = null;
-    // }
 
     socket?.disconnect();
 
@@ -284,7 +262,6 @@ const VideoCall: React.FC = () => {
   useEffect(() => {
     if (user?.fullName && roomId) {
       const fetchDocument = async () => {
-        // console.log(user);
         const name = user?.fullName;
         try {
           const response = await fetch(
@@ -315,7 +292,6 @@ const VideoCall: React.FC = () => {
       const analyser = audioContext.createAnalyser();
       const source = audioContext.createMediaStreamSource(localStream);
       source.connect(analyser);
-      // setLocalAudioContext(audioContext);
 
       // Visualize audio using border color for the video element
       const updateAudioBorder = () => {
@@ -326,7 +302,6 @@ const VideoCall: React.FC = () => {
 
         const avg =
           dataArray.reduce((acc, val) => acc + val, 0) / dataArray.length;
-        // let borderThickness = 0;
 
         if (avg > borderThreshold) {
           borderThickness = Math.min(avg * 0.5, 2); // Adjust the maximum border thickness
@@ -395,9 +370,7 @@ const VideoCall: React.FC = () => {
   useEffect(() => {
     socket.on("name_joined", (name: string) => {
       if (toastOnce) {
-        // toast.success(`${name} has joined the Stop!`);
         toast(`${name} has joined the Stop!`, {
-          // icon: "👏",
           style: {
             borderRadius: "10px",
             background: "#333",
@@ -645,7 +618,6 @@ const VideoCall: React.FC = () => {
                   style={{
                     height: clickedIcon !== "Video" ? "30vh" : "60vh",
                     width: clickedIcon !== "Video" ? "30vh" : "80vh",
-                    // border: "solid orange px", // Initialize with no border
                   }}
                   clickedIcon={clickedIcon}
                 />
