@@ -3,6 +3,7 @@
 OneStop is a collaborative Video-Collaboration Platform designed for real-time communication and collaboration among remote teams. The application integrates various features like Video Calls with Whiteboard, Whitesheet, and Code Editor Live to collaborate w/ seemless switch between them.
 
 ## Features 🌟
+
 OneStop offers a comprehensive suite of features enabling seamless remote collaboration:
 
 - **Real-time Video Calls (webRTC implementation from stratch):** Seamlessly connect multiple participants in video calls.
@@ -20,9 +21,11 @@ OneStop offers a comprehensive suite of features enabling seamless remote collab
 ## Local Development 🛠️
 
 ### Setup
+
 ```bash
 git clone https://github.com/your-username/OneStop.git
 ```
+
 ```bash
 
 # Install dependencies for client
@@ -42,15 +45,11 @@ cd server
 yarn start
 ```
 
-
 ## Accessing the Application 🌐
 
 Access the application at [one-stop-tau.vercel.app](one-stop-tau.vercel.app).
-(works for chrome, but Edge and Safari faces issue w/ webRTC api navigator.getUserMedia camera doesn't load)
+(works for chrome, just have to allow permissions before start, but Edge and Safari faces issue w/ webRTC api navigator.getUserMedia camera doesn't load)
 
 ## About ℹ️
 
 OneStop is a real-time Video Collaboration Platform crafted with React.js, Node.js, Express, Socket.io, and WebRTC. It enables seamless remote collaboration through video calls, whiteboard, whitesheet, code editor. Designed for enhanced productivity, it showcases proficiency in robust communication protocols.
-
-
-
