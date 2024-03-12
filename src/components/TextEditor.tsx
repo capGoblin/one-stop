@@ -29,7 +29,7 @@ function TextEditor({
   const { editorValue, setEditorValue } = useMeetStore();
 
   useEffect(() => {
-    const socket = io("https://video-call-app-production-d4a0.up.railway.app");
+    const socket = io("https://video-call-app-cp-depoly-render.onrender.com");
 
     setSocket(socket);
     return () => {

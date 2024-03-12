@@ -17,7 +17,7 @@ const SocketProvider = () => {
     // }
     // Initialize the socket when the component mounts
     const newSocket = io(
-      "https://video-call-app-production-d4a0.up.railway.app"
+      "https://video-call-app-cp-depoly-render.onrender.com"
     );
     console.log("connetced ? ftopm socketProveider");
     // setSocket(newSocket);

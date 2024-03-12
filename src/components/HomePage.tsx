@@ -39,7 +39,7 @@ const HomePage = ({
       console.log(user);
       try {
         const response = await fetch(
-          `https://video-call-app-production-d4a0.up.railway.app/find_recent_stops/${user}`
+          `https://video-call-app-cp-depoly-render.onrender.com/find_recent_stops/${user}`
         );
         if (response.ok) {
           const data = await response.json();

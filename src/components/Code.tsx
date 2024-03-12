@@ -63,7 +63,7 @@ function Code({
   const [fetchOnce, setFetchOnce] = useState<boolean>(false);
 
   useEffect(() => {
-    const socket = io("https://video-call-app-production-d4a0.up.railway.app");
+    const socket = io("https://video-call-app-cp-depoly-render.onrender.com");
 
     setSocket(socket);
 
@@ -105,7 +105,7 @@ function Code({
     const fetchDocument = async () => {
       try {
         const response = await fetch(
-          `https://video-call-app-production-d4a0.up.railway.app/find_code/${roomId}/${user}`
+          `https://video-call-app-cp-depoly-render.onrender.com/find_code/${roomId}/${user}`
         );
         if (response.ok) {
           const data = await response.json();

@@ -6,7 +6,7 @@ import debounce from "lodash.debounce";
 import { io } from "socket.io-client";
 import useMeetStore from "../store";
 
-const socket = io("https://video-call-app-production-d4a0.up.railway.app");
+const socket = io("https://video-call-app-cp-depoly-render.onrender.com");
 
 function Draw({
   clickedIcon,
@@ -38,7 +38,7 @@ function Draw({
     const fetchDocument = async () => {
       try {
         const response = await fetch(
-          `https://video-call-app-production-d4a0.up.railway.app/find_draw/${roomId}/${user}`
+          `https://video-call-app-cp-depoly-render.onrender.com/find_draw/${roomId}/${user}`
         );
         if (response.ok) {
           const data = await response.json();

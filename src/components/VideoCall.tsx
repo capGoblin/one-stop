@@ -13,7 +13,7 @@ import TextEditor from "./TextEditor";
 import Video from "./VideoWrapper";
 import Code from "./Code";
 
-const socket = io("https://video-call-app-production-d4a0.up.railway.app");
+const socket = io("https://video-call-app-cp-depoly-render.onrender.com");
 
 const VideoCall: React.FC = () => {
   const { rtcPeerConnection, setRtcPeerConnection } = useMeetStore();
@@ -265,7 +265,7 @@ const VideoCall: React.FC = () => {
         const name = user?.fullName;
         try {
           const response = await fetch(
-            `https://video-call-app-production-d4a0.up.railway.app/create_doc/${roomId}/${name}`
+            `https://video-call-app-cp-depoly-render.onrender.com/create_doc/${roomId}/${name}`
           );
           if (response.ok) {
             console.log("doc created successfully");
